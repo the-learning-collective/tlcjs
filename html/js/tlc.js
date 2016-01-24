@@ -110,12 +110,16 @@ function image(location) {
 }
 
 /* draw :: scene -> nothing */
-function draw(scene) {
+function draw(scene, givenCanvas) {
 
-  canvas = document.createElement("canvas");
-
+  if (givenCanvas) {
+    var canvas = givenCanvas;
+  } else {
+    var canvas = document.createElement("canvas");
+  }
+  
   var ctx = canvas.getContext("2d");
-
+  
   canvas.width = scene.width;
   canvas.height = scene.height;
 
@@ -149,8 +153,9 @@ function draw(scene) {
     }
   }
 
-  _addOutput(canvas);
-
+  if (!givenCanvas) {
+    _addOutput(canvas);
+  }
 }
 
 /* emptyScene :: number -> number -> scene */
@@ -186,6 +191,22 @@ function placeImage(foreground, background, x, y) {
     scene.elements.concat(centeredElements);
 
   return scene;
+}
+
+/* animate :: (tick -> scene) -> nothing */
+function animate(tickToScene) {
+
+  var canvas = document.createElement("canvas");
+  _addOutput(canvas);
+
+  var ticks = 0;
+  function step() {
+    draw(tickToScene(ticks), canvas);
+    ticks = ticks + 1;
+    window.requestAnimationFrame(step);
+  }
+
+  step();
 }
 
 var smile = "smile.gif";
