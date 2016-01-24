@@ -13,7 +13,6 @@ if (body === null) {
   source.id = "source";
 
   body.appendChild(source);
-  body.appendChild(images);
   body.appendChild(output);
 
   var style = document.createElement("style");
