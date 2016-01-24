@@ -171,50 +171,74 @@ to look at the solutions.
 
 endif::book_target[]
 
-(((developer tools)))(((JavaScript console)))If you want to run the
-programs defined in this book outside of the book's sandbox, some care
-is required. Many examples stand on their own and should work in any
-JavaScript environment. But code in later chapters is mostly written
-for a specific environment (the browser or Node.js) and can run only
-there. In addition, many chapters define bigger programs, and the
-pieces of code that appear in them depend on each other or on external
-files. The http://eloquentjavascript.net/code[sandbox] on the website
-provides links to Zip files containing all of the scripts and data
-files necessary to run the code for a given chapter.
 
 == Programming Environment and TLC Library ==
 
-Libby, Daniel P, and Tim have started on this.
+To work through this curriculum, you will need to have a way to write
+and run Javascript programs. Javascript programs can be run in various
+ways, but the most common way is to run them with a web browser like
+Firefox. In order to run a Javascript program with a web browser, you
+need a small page that tells the browser what to do. Browsers read
+HTML pages that tell them not only what text and images to display on
+the screen, but also any Javascript that should be run. For examples
+in this text or your own programs, you should create two files. You
+should do this with a _Text Editor_, which is like a word
+processor but for programs. A (mostly) free good one that runs on
+Macs, Windows, and Linux is called http://www.sublimetext.com/[_Sublime Text_] (mostly free means
+that it costs money, but it has a free trial that lasts forever).
 
-Ideas:
+You should open up Sublime Text and create two new files:
+`example1.html` and `example1.js`. You should create a folder where
+you will hold all the programs you write throughout this curiculum,
+for example, `tlcjs` could be the name of the folder. In
+"example1.html", which is the file that you will open with your web
+browser, we need to tell the web browser that we want to run
+`example1.js`. We also want to include some pre-constructed
+functionality for this curiculum. All HTML files start with a declaration of the particular version of HTML that we are using. HTML dates back to 1993, and many changes have happened, but to tell the browser that we want the current version, we start every file with:
 
-Browser based. Editing files and loading them into the browser. Reason: pictures!
+----
+<!doctype html>
+----
 
-We probably need to have some simple standard library that will create
-somewhere to print output to (a <pre>? Or something?). It should also
-be able to put canvas output, so that people can write, in their program:
-
-`circle(10, "green")`
-
-And have it show up somewhere!
-
-The boilerplate will need to be:
+Then we need to start a section of the HTML document called the
+"body". There are different parts of HTML documents, but this is the only one we need:
 
 ----
 <body>
-  <script src="http://tlcjs.dbp.io/tlc.js">
-  <script src="myprogram.js"></script>
 ----
 
-Then we can write myprogram like:
+Finally, we need to tell the browser that we want to run some
+Javascript. There is a _tag_ (the name for these words inside
+`<` and `>` that instruct the browser to do things) called `script`
+that tells the browser to run a particular javascript file. First, we
+need to include some common functionality (called `libraries`) - one
+that is a popular open source library, and one that was written for
+this curriculum:
 
----
-circle(10, "green");
-circle(30, "red");
-print("Hello world!");
-circle(50, "black");
-print(1 + 2 - 3);
----
+----
+  <script src="http://tlcjs.org/js/lodash.min.js"></script>
+  <script src="http://tlcjs.org/js/tlc.js"></script>
+----
+
+Lastly, we need to tell it to include our `example1.js` file (which we
+haven't written yet):
+
+----
+  <script src="example1.js"></script>
+----
+
+Now save that file, and open up the other, `example1.js`. To start, we will use one of the simplest operations, `print`, which simply prints a value on the page. In this case, we'll just print out the number 1:
+
+----
+print(1);
+----
+
+The `;` at the end of the line is an indication that we've finished
+the current operations. We'll get into this more later.
+
+Now save that file too, and open up `example1.html` in a web browser. You can do this either by going to `File->Open` in the browser or dragging the file onto the application icon (if applicable). When you do that, you should see a page with `1` on it.
+
+Congratulations! You've just written your first program!
 
 == Typographic conventions ==
 
