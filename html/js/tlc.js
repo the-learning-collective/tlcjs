@@ -13,7 +13,6 @@ if (body === null) {
   source.id = "source";
 
   body.appendChild(source);
-  body.appendChild(images);
   body.appendChild(output);
 
   var style = document.createElement("style");
@@ -119,10 +118,12 @@ function image(location) {
   return [imgShape];
 }
 
-
-function _drawInt(cont, scene) {
-
-  canvas = document.createElement("canvas");
+function _drawInternal(cont, scene, givenCanvas) {
+  if (givenCanvas) {
+    var canvas = givenCanvas;
+  } else {
+    var canvas = document.createElement("canvas");
+  }
 
   var ctx = canvas.getContext("2d");
 
@@ -159,14 +160,15 @@ function _drawInt(cont, scene) {
     }
   }
 
-  cont(canvas);
-
+  if (!givenCanvas) {
+    cont(canvas);
+  }
 }
 
 
 /* draw :: scene -> nothing */
 function draw(scene) {
-  return _drawInt(_addOutput, scene);
+  return _drawInternal(_addOutput, scene);
 }
 
 /* emptyScene :: number -> number -> scene */
@@ -204,7 +206,25 @@ function placeImage(foreground, background, x, y) {
   return scene;
 }
 
-var smile = "smile.gif";
+function _animateInternal(withCanvas, tickToScene) {
+
+  var canvas = document.createElement("canvas");
+  withCanvas(canvas);
+
+  var ticks = 0;
+  function step() {
+    _drawInternal(withCanvas, tickToScene(ticks), canvas);
+    ticks = ticks + 1;
+    window.requestAnimationFrame(step);
+  }
+
+  step();
+}
+
+/* animate :: (tick -> scene) -> nothing */
+function animate(tickToScene) {
+  return _animateInternal(_addOutput, tickToScene);
+}
 
 
 /* Incorporating into EJS sandbox */
@@ -215,8 +235,16 @@ function tlc_sandbox_functions(win) {
     rectangle: rectangle,
     overlay: overlay,
     placeImage: placeImage,
+    emptyScene: emptyScene,
+    animate: function(tick) {
+      _animateInternal(function (canvas) {
+        var div = document.createElement("div");
+        div.appendChild(canvas);
+        win.output.div.appendChild(div);
+      }, tick);
+    },
     draw: function(scene) {
-      _drawInt(function (canvas) {
+      _drawInternal(function (canvas) {
         var div = document.createElement("div");
         div.appendChild(canvas);
         win.output.div.appendChild(div);
