@@ -26,8 +26,8 @@ result if we run the program above.
 
 One of the most common things we want to do is print values to the
 screen. This is helpful not only in figuring out if our programs are
-working, but also to let people actually use them. In Javascript, we can
-print any value to the screen with the "console.log" operation. This is done like:
+working, but also to let people actually use them. In Javascript (NOTE: This uses functionality from the TLC library code), we can
+print a value to the screen with the "print" operation. This is done like:
 
 [source,javascript]
 ----

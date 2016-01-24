@@ -204,7 +204,7 @@ Then we need to start a section of the HTML document called the
 "body". There are different parts of HTML documents, but this is the only one we need:
 
 ----
-<body>
+<body id="tlc-body">
 ----
 
 Finally, we need to tell the browser that we want to run some
