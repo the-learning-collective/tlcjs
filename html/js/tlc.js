@@ -118,7 +118,7 @@ function image(location) {
   return [imgShape];
 }
 
-function _drawInt(cont, scene, givenCanvas) {
+function _drawInternal(cont, scene, givenCanvas) {
   if (givenCanvas) {
     var canvas = givenCanvas;
   } else {
@@ -168,7 +168,7 @@ function _drawInt(cont, scene, givenCanvas) {
 
 /* draw :: scene -> nothing */
 function draw(scene) {
-  return _drawInt(_addOutput, scene);
+  return _drawInternal(_addOutput, scene);
 }
 
 /* emptyScene :: number -> number -> scene */
@@ -206,15 +206,14 @@ function placeImage(foreground, background, x, y) {
   return scene;
 }
 
-/* animate :: (tick -> scene) -> nothing */
-function animate(tickToScene) {
+function _animateInternal(withCanvas, tickToScene) {
 
   var canvas = document.createElement("canvas");
-  _addOutput(canvas);
+  withCanvas(canvas);
 
   var ticks = 0;
   function step() {
-    _drawInt(_addOutput, tickToScene(ticks), canvas);
+    _drawInternal(withCanvas, tickToScene(ticks), canvas);
     ticks = ticks + 1;
     window.requestAnimationFrame(step);
   }
@@ -222,7 +221,10 @@ function animate(tickToScene) {
   step();
 }
 
-var smile = "smile.gif";
+/* animate :: (tick -> scene) -> nothing */
+function animate(tickToScene) {
+  return _animateInternal(_addOutput, tickToScene);
+}
 
 
 /* Incorporating into EJS sandbox */
@@ -233,8 +235,16 @@ function tlc_sandbox_functions(win) {
     rectangle: rectangle,
     overlay: overlay,
     placeImage: placeImage,
+    emptyScene: emptyScene,
+    animate: function(tick) {
+      _animateInternal(function (canvas) {
+        var div = document.createElement("div");
+        div.appendChild(canvas);
+        win.output.div.appendChild(div);
+      }, tick);
+    },
     draw: function(scene) {
-      _drawInt(function (canvas) {
+      _drawInternal(function (canvas) {
         var div = document.createElement("div");
         div.appendChild(canvas);
         win.output.div.appendChild(div);
