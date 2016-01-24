@@ -186,6 +186,13 @@
           self.frames.push(val);
         return val;
       };
+
+      if (typeof tlc_sandbox_functions !== "undefined") {
+        var tfs = tlc_sandbox_functions(self);
+        Object.keys(tfs).forEach(function(k) {
+          win[k] = tfs[k];
+        });
+      }
     },
     resizeFrame: function() {
       this.frame.style.height = Math.max(80, Math.min(this.win.document.documentElement.offsetHeight + 10, 500)) + "px";

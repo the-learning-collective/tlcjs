@@ -2,45 +2,55 @@ console.log("TLC is starting up...");
 
 /* OUTPUT AND INFRASTRUCTURE */
 
-var output = document.createElement("div");
-output.id = "output";
+var body = document.getElementById("tlc-body");
+if (body === null) {
+  console.log("TLC: not creating output, no body.");
+} else {
+  var output = document.createElement("div");
+  output.id = "output";
 
-var source = document.createElement("div");
-source.id = "source";
+  var source = document.createElement("div");
+  source.id = "source";
 
-var body = document.getElementsByTagName("body")[0];
-body.appendChild(source);
-body.appendChild(output);
+  body.appendChild(source);
+  body.appendChild(images);
+  body.appendChild(output);
 
-var style = document.createElement("style");
+  var style = document.createElement("style");
 
-style.textContent = "#output { width: 45%; float: left; } #source { width: 45%; float: left; } .output { border-bottom: 1px solid #ccc; padding: 10px 0; }";
+  style.textContent = "#output { width: 45%; float: left; } #source { width: 45%; float: left; } .output { border-bottom: 1px solid #ccc; padding: 10px 0; } #images { width: 45%; float: right; } ";
 
-body.appendChild(style);
+  body.appendChild(style);
 
-output.style.margin = "10px";
-output.style.padding = "10px";
-output.style.background = "#eee";
-output.style.border = "1px solid #ccc";
+  output.style.margin = "10px";
+  output.style.padding = "10px";
+  output.style.background = "#eee";
+  output.style.border = "1px solid #ccc";
+}
 
 function _addOutput(content) {
   var output = document.getElementById("output");
-  var container = document.createElement("div");
-  container.className = "output";
-  container.appendChild(content);
-  output.appendChild(container);
-  return container;
+  if (output !== null) {
+    var container = document.createElement("div");
+    container.className = "output";
+    container.appendChild(content);
+    output.appendChild(container);
+    return container;
+  }
 }
 
 function show_source(url) {
-  var client = new XMLHttpRequest();
-  client.open('GET', url);
-  var pre = document.createElement("pre");
-  source.appendChild(pre);
-  client.onreadystatechange = function() {
-    pre.textContent = client.responseText;
+  var source = document.getElementById("source");
+  if (source !== null) {
+    var client = new XMLHttpRequest();
+    client.open('GET', url);
+    var pre = document.createElement("pre");
+    source.appendChild(pre);
+    client.onreadystatechange = function() {
+      pre.textContent = client.responseText;
+    }
+    client.send();
   }
-  client.send();
 }
 
 
@@ -109,17 +119,15 @@ function image(location) {
   return [imgShape];
 }
 
-/* draw :: scene -> nothing */
-function draw(scene, givenCanvas) {
-
+function _drawInt(cont, scene, givenCanvas) {
   if (givenCanvas) {
     var canvas = givenCanvas;
   } else {
     var canvas = document.createElement("canvas");
   }
-  
+
   var ctx = canvas.getContext("2d");
-  
+
   canvas.width = scene.width;
   canvas.height = scene.height;
 
@@ -154,8 +162,14 @@ function draw(scene, givenCanvas) {
   }
 
   if (!givenCanvas) {
-    _addOutput(canvas);
+    cont(canvas);
   }
+}
+
+
+/* draw :: scene -> nothing */
+function draw(scene) {
+  return _drawInt(_addOutput, scene);
 }
 
 /* emptyScene :: number -> number -> scene */
@@ -201,7 +215,7 @@ function animate(tickToScene) {
 
   var ticks = 0;
   function step() {
-    draw(tickToScene(ticks), canvas);
+    _drawInt(_addOutput, tickToScene(ticks), canvas);
     ticks = ticks + 1;
     window.requestAnimationFrame(step);
   }
@@ -210,3 +224,22 @@ function animate(tickToScene) {
 }
 
 var smile = "smile.gif";
+
+
+/* Incorporating into EJS sandbox */
+function tlc_sandbox_functions(win) {
+  return {
+    print: function() { win.out("log", arguments); },
+    circle: circle,
+    rectangle: rectangle,
+    overlay: overlay,
+    placeImage: placeImage,
+    draw: function(scene) {
+      _drawInt(function (canvas) {
+        var div = document.createElement("div");
+        div.appendChild(canvas);
+        win.output.div.appendChild(div);
+      }, scene);
+    }
+  };
+}

@@ -26,8 +26,8 @@ result if we run the program above.
 
 One of the most common things we want to do is print values to the
 screen. This is helpful not only in figuring out if our programs are
-working, but also to let people actually use them. In Javascript, we can
-print any value to the screen with the "console.log" operation. This is done like:
+working, but also to let people actually use them. In Javascript (NOTE: This uses functionality from the TLC library code), we can
+print a value to the screen with the "print" operation. This is done like:
 
 [source,javascript]
 ----
@@ -74,6 +74,8 @@ print((1 + 2) * 3 - 4)
 This prints out `5` right now. Try adding parenthesis so that it
 prints out `-3`. Now try changing the parenthesis so that it prints
 out 3.
+
+== Strings ==
 
 But programs aren't all about numbers! Indeed, most programs deal with
 more interesting forms of data. "String"s are used to represent
@@ -146,6 +148,49 @@ The following line will produce the string `"concatenate"`:
 
 There are more ways of manipulating strings, which we will discuss
 when we get to methods in link:04_data.html#methods[Chapter 4].
+
+== Images ==
+
+We can also draw pictures. There are a few basic functions available
+that create pictures, and ways of combining them to create new
+pictures. One of the most basic one is a circle. You can create a small red circle by writing `circle(10, "red")`, where 10 is the radius is pixels.
+
+Like with normal values, you have to tell Javascript to show you an image. The operator to do that is called `draw`. We can display our example as:
+
+
+[source,javascript]
+----
+draw(circle(10, "red"))
+----
+
+We can also draw rectangles, which take a width, height, and color:
+
+
+[source,javascript]
+----
+draw(rectangle(80, 30, "black"))
+----
+
+But plain rectangles and circles are a little boring. Fortunately, we
+can combine them together with the operator `overlay`, which takes as
+_arguments_ two images, and places the first on the center of the
+second. The resulting image will be the same size as the second one,
+so if the first image is bigger, you may get strange (and
+interesting!) results. For example:
+
+
+[source,javascript]
+----
+draw(overlay(rectangle(20, 20, "red"), rectangle(80, 30, "black")))
+----
+
+Of course, the result of `overlay`-ing two images is another image, which means it too can be the input for another `overlay`.
+
+What kind of pictures can you draw with this?
+
+What are the limitations?
+
+
 
 == Unary operators ==
 
