@@ -2,6 +2,35 @@ console.log("TLC is starting up...");
 
 /* OUTPUT AND INFRASTRUCTURE */
 
+/* These constants are provided for convenience, so that you don't
+ * accidentally write "nmber" in a call to _type. If you write TNmber,
+ * you'll get an error, whereas if you write the wrong string, it
+ * won't be until the _use_ of the resulting function that bizarre
+ * things will happen. */
+var tNumber = "number";
+var tString = "string";
+var tObject = "object";
+var tBoolean = "boolean";
+var tFunction = "function";
+var tAny = "anything";
+
+
+/* This function helps make errors better by asserting that the
+ * arguments to the function `f` have the number and type specified by
+ * `args`. If they don't, the message `err` is raised. */
+function _type(args, err, f) {
+  return function() {
+    if (arguments.length !== args.length
+        || !_.every(_.zip(arguments, args), function(x) {
+          return x[1] === tAny || typeof x[0] === x[1];
+        })) {
+      throw new TypeError(err);
+    } else {
+      return f.apply(this, arguments);
+    }
+  };
+}
+
 var body = document.getElementById("tlc-body");
 if (body === null) {
   console.log("TLC: not creating output, no body.");
@@ -38,7 +67,8 @@ function _addOutput(content) {
   }
 }
 
-function show_source(url) {
+var show_source_usage = "show_source(): Requires one arguments, a url, which should be a string. For example: show_source('some-file.js')";
+var show_source = _type([tString], show_source_usage, function (url) {
   var source = document.getElementById("source");
   if (source !== null) {
     var client = new XMLHttpRequest();
@@ -50,21 +80,23 @@ function show_source(url) {
     }
     client.send();
   }
-}
+});
 
 
 /* LIBRARY FOR DRAWING ETC */
 
 /* print :: anything -> nothing */
-function print(value) {
+var print_usage = "print(): Requires one argument, which can be anything. For example: print(10).";
+var print = _type([tAny], print_usage, function(value) {
   var pre = document.createElement("pre");
   pre.textContent = String(value);
 
   _addOutput(pre);
-}
+});
 
 /* circle :: number -> color -> shape */
-function circle(radius, color) {
+var circle_usage = "circle(): Requires two arguments, a radius and a color, which should be a number and a string. For example: circle(100, 'red').";
+var circle = _type([tNumber, tString], circle_usage, function(radius, color) {
 
   var circ = { tlc_dt: "circle",
                radius: radius,
@@ -75,10 +107,11 @@ function circle(radius, color) {
   return { elements: [circ],
            width: radius * 2,
            height: radius * 2 }
-}
+});
 
 /* rectangle :: number -> number -> color -> shape */
-function rectangle(width, height, color) {
+var rectangle_usage = "rectangle(): Requires three arguments, a width, a height, and a color. The first two should be numbers, the last a string. For example: rectangle(100, 50, 'black').";
+var rectangle = _type([tNumber, tNumber, tString], rectangle_usage, function(width, height, color) {
 
   var rect = { tlc_dt: "rectangle",
                width: width,
@@ -90,10 +123,11 @@ function rectangle(width, height, color) {
   return { elements: [rect],
            width: width,
            height: height };
-}
+});
 
 /* image :: url -> shape */
-function image(location) {
+var image_usage = "image(): Requires one argument, a url, which should be a string. For example, image('cat.jpg').";
+var image = _type([tString], image_usage, function(location) {
   var img = new Image()
   //img.src = location;
   //img.style.visibility = "hidden"
@@ -116,7 +150,7 @@ function image(location) {
   img.src = location;
 
   return [imgShape];
-}
+});
 
 function _drawInternal(cont, scene, givenCanvas) {
   if (givenCanvas) {
@@ -167,29 +201,33 @@ function _drawInternal(cont, scene, givenCanvas) {
 
 
 /* draw :: scene -> nothing */
-function draw(scene) {
+var draw_usage = "draw(): Requires one argument, a scene. For example, draw(circle(10, 'red')).";
+var draw = _type([tObject], draw_usage, function(scene) {
   return _drawInternal(_addOutput, scene);
-}
+});
 
 /* emptyScene :: number -> number -> scene */
-function emptyScene(width, height) {
+var emptyScene_usage = "emptyScene(): Requires two arguments, a width and a height, both numbers. For example: emptyScene(300, 200).";
+var emptyScene = _type([tNumber, tNumber], emptyScene_usage, function(width, height) {
   return { elements: [],
            width: width,
            height: height };
-}
+});
 
-/* overlay :: scene-> scene -> scene */
-function overlay(foreground, background) {
+/* overlay :: scene -> scene -> scene */
+var overlay_usage = "overlay(): Requires two arguments, a foreground and a background scene. For example, overlay(circle(10, 'red'), emptyScene(100, 100)).";
+var overlay = _type([tObject, tObject], overlay_usage, function(foreground, background) {
   var newX = background.width/2
              - foreground.width/2;
   var newY = background.height/2
              - foreground.height/2;
 
   return placeImage(foreground, background, newX, newY);
-}
+});
 
 /* placeImage :: scene -> scene -> x -> y -> scene  */
-function placeImage(foreground, background, x, y) {
+var placeImage_usage = "placeImage(): Requires four arguments: a forgeground scene, a background scene, and the x and y coordinates for the top left of the foreground to be placed on the background (both numbers). For example, placeImage(rectangle(10,10,'red'), rectangle(100,100,'black'), 40, 40).";
+var placeImage = _type([tObject, tObject, tNumber, tNumber], placeImage_usage, function(foreground, background, x, y) {
   var centeredElements =
       _.map(foreground.elements, function(e) {
         var newE = _.clone(e);
@@ -204,7 +242,7 @@ function placeImage(foreground, background, x, y) {
     scene.elements.concat(centeredElements);
 
   return scene;
-}
+});
 
 function _animateInternal(withCanvas, tickToScene) {
 
@@ -222,33 +260,34 @@ function _animateInternal(withCanvas, tickToScene) {
 }
 
 /* animate :: (tick -> scene) -> nothing */
-function animate(tickToScene) {
+var animate_usage = "animate(): Requires one argument, a function that takes a number and produces a scene. For example: animate(function(n) { return overlay(circle(n, 'red'), emptyScene(100,100));}).";
+var animate = _type([tFunction], animate_usage, function(tickToScene) {
   return _animateInternal(_addOutput, tickToScene);
-}
+});
 
 
 /* Incorporating into EJS sandbox */
 function tlc_sandbox_functions(win) {
   return {
-    print: function() { win.out("log", arguments); },
+    print: _type([tAny], print_usage, function() { win.out("log", arguments); }),
     circle: circle,
     rectangle: rectangle,
     overlay: overlay,
     placeImage: placeImage,
     emptyScene: emptyScene,
-    animate: function(tick) {
+    animate: _type([tFunction], animate_usage, function(tick) {
       _animateInternal(function (canvas) {
         var div = document.createElement("div");
         div.appendChild(canvas);
         win.output.div.appendChild(div);
       }, tick);
-    },
-    draw: function(scene) {
+    }),
+    draw: _type([tObject], draw_usage, function(scene) {
       _drawInternal(function (canvas) {
         var div = document.createElement("div");
         div.appendChild(canvas);
         win.output.div.appendChild(div);
       }, scene);
-    }
+    })
   };
 }
