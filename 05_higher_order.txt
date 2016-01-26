@@ -6,20 +6,7 @@
 
 = Higher-Order Functions =
 
-ifdef::interactive_target[]
 
-____
-
-endif::interactive_target[]
-
-[chapterquote="true"]
-[quote, C.A.R. Hoare, 1980 ACM Turing Award Lecture]
-____
-(((Hoare+++,+++ C.A.R.)))There are two ways of constructing a software
-design: One way is to make it so simple that there are obviously no
-deficiencies, and the other way is to make it so complicated that
-there are no obvious deficiencies.
-____
 
 (((program size)))A large program is a costly program, and not just
 because of the time it takes to build. Size almost always involves
