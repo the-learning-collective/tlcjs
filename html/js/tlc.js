@@ -132,6 +132,27 @@ var rectangle = _type([tNumber, tNumber, tString], rectangle_usage, function(wid
            height: height };
 });
 
+
+var text_usage = "text(): Requires two arguments, text to place in the graphic and a number, the size of the text in pixele. Example: text('Hello', 20).";
+// input: string (text to print), number (size of font in pixels); output: image
+var text = _type([tString, tNumber], text_usage, function(words, fontSize){
+
+  var txt = { tlc_dt: "text",
+              text: words,
+              fontSize: fontSize,
+              x: 0,
+              y: 0
+            };
+
+  return { elements: [txt],
+           // ziggy: I'm not sure this is the "proper" way to determine the width
+           // of a text phrase...but it seems to work okay.
+           width: words.length * fontSize,
+           height: fontSize
+         };
+
+});
+
 /* image :: url -> shape */
 var image_usage = "image(): Requires one argument, a url, which should be a string. For example, image('cat.jpg').";
 var image = _type([tString], image_usage, function(location) {
@@ -194,7 +215,11 @@ function _drawInternal(cont, image, givenCanvas) {
         ctx.drawImage(shape.img,
                       shape.x,
                       shape.y);
-      }
+      };
+      break;
+    case "text":
+      ctx.font = '' +  shape.fontSize + "px serif";
+      ctx.fillText(shape.text, shape.x, fontSizeHelper(shape.y, shape.fontSize));
       break;
     default:
       break;
@@ -212,6 +237,18 @@ var draw_usage = "draw(): Requires one argument, a image. For example, draw(circ
 var draw = _type([tObject], draw_usage, function(image) {
   return _drawInternal(_addOutput, image);
 });
+
+// text/fontsize helper function
+// ensures the y value for fill text is, at minimum, equal to the fontsize.
+// input: number (shape.y), number (shape.fontSize)
+// output: number
+function fontSizeHelper(y, fontSize) {
+  if (y >= fontSize) {
+    return y;
+  } else {
+    return fontSize;
+  }
+}
 
 /* emptyScene :: number -> number -> image */
 var emptyScene_usage = "emptyScene(): Requires two arguments, a width and a height, both numbers. For example: emptyScene(300, 200).";
