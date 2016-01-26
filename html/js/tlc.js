@@ -330,6 +330,7 @@ function tlc_sandbox_functions(win) {
     }),
     circle: circle,
     rectangle: rectangle,
+    text: text,
     overlay: overlay,
     placeImage: placeImage,
     emptyScene: emptyScene,
