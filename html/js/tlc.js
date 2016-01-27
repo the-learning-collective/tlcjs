@@ -92,7 +92,6 @@ var print = _type([tAny], print_usage, function(value) {
   if (typeof value === "object" && value.hasOwnProperty("tlc_dt")) {
     draw(value);
   } else {
-
     var pre = document.createElement("pre");
     pre.textContent = String(value);
 
@@ -276,9 +275,22 @@ var animate = _type([tFunction], animate_usage, function(tickToImage) {
 
 
 /* Incorporating into EJS sandbox */
+function sandbox_draw(win, image) {
+  _drawInternal(function (canvas) {
+      var div = document.createElement("div");
+      div.appendChild(canvas);
+      win.output.div.appendChild(div);
+  }, image);
+}
 function tlc_sandbox_functions(win) {
   return {
-    print: _type([tAny], print_usage, function() { win.out("log", arguments); }),
+    print: _type([tAny], print_usage, function(value) {
+      if (typeof value === "object" && value.hasOwnProperty("tlc_dt")) {
+        sandbox_draw(win, value);
+      } else {
+        win.out("log", value);
+      }
+    }),
     circle: circle,
     rectangle: rectangle,
     overlay: overlay,
@@ -292,11 +304,7 @@ function tlc_sandbox_functions(win) {
       }, tick);
     }),
     draw: _type([tObject], draw_usage, function(image) {
-      _drawInternal(function (canvas) {
-        var div = document.createElement("div");
-        div.appendChild(canvas);
-        win.output.div.appendChild(div);
-      }, image);
+      sandbox_draw(win, image);
     })
   };
 }

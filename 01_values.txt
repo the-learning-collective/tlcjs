@@ -150,7 +150,7 @@ The following line will produce the string `"concatenate"`:
 
 [source,javascript]
 ----
-yrint("con" + "cat" + "e" + "nate")
+print("con" + "cat" + "e" + "nate")
 ----
 
 == Images ==
@@ -188,7 +188,7 @@ interesting!) results. For example:
 
 [source,javascript]
 ----
-draw(overlay(rectangle(20, 20, "red"), rectangle(80, 30, "black")))
+print(overlay(rectangle(20, 20, "red"), rectangle(80, 30, "black")))
 ----
 
 Of course, the result of `overlay`-ing two images is another image, which means it too can be the input for another `overlay`.
