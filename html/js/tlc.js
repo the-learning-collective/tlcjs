@@ -88,10 +88,16 @@ var show_source = _type([tString], show_source_usage, function (url) {
 /* print :: anything -> nothing */
 var print_usage = "print(): Requires one argument, which can be anything. For example: print(10).";
 var print = _type([tAny], print_usage, function(value) {
-  var pre = document.createElement("pre");
-  pre.textContent = String(value);
 
-  _addOutput(pre);
+  if (typeof value === "object" && value.hasOwnProperty("tlc_dt")) {
+    draw(value);
+  } else {
+
+    var pre = document.createElement("pre");
+    pre.textContent = String(value);
+
+    _addOutput(pre);
+  }
 });
 
 /* circle :: number -> color -> shape */
