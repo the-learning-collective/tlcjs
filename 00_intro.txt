@@ -10,7 +10,7 @@ understand. To many, they remain alien, slightly threatening things.
 
 image::img/generated/computer.png[alt="Communicating with a computer"]
 
-(((graphical user interface)))We've found two effective ways of
+(((Graphical user interface)))We've found two effective ways of
 bridging the communication gap between us, squishy biological
 organisms with a talent for social and spatial reasoning, and
 computers, unfeeling manipulators of meaningless data. The first is to
@@ -177,7 +177,9 @@ endif::book_target[]
 To work through this curriculum, you will need to have a way to write
 and run Javascript programs. Javascript programs can be run in various
 ways, but the most common way is to run them with a web browser like
-Firefox. In order to run a Javascript program with a web browser, you
+Firefox.
+
+In order to run a Javascript program with a web browser, you
 need a small page that tells the browser what to do. Browsers read
 HTML pages that tell them not only what text and images to display on
 the screen, but also any Javascript that should be run. For examples
@@ -187,18 +189,22 @@ processor but for programs. A (mostly) free good one that runs on
 Macs, Windows, and Linux is called http://www.sublimetext.com/[_Sublime Text_] (mostly free means
 that it costs money, but it has a free trial that lasts forever).
 
-You should open up Sublime Text and create two new files:
-`example1.html` and `example1.js`. You should create a folder where
+You should create a folder where
 you will hold all the programs you write throughout this curiculum,
-for example, `tlcjs` could be the name of the folder. In
+for example, `tlcjs` could be the name of the folder. Then open up
+Sublime Text and create two new files:
+`example1.html` and `example1.js`.  In
 "example1.html", which is the file that you will open with your web
 browser, we need to tell the web browser that we want to run
 `example1.js`. We also want to include some pre-constructed
-functionality for this curiculum. All HTML files start with a declaration of the particular version of HTML that we are using. HTML dates back to 1993, and many changes have happened, but to tell the browser that we want the current version, we start every file with:
+functionality for this curiculum. All HTML files start with a declaration of the particular version of HTML that we are using. HTML dates back to 1993, and many changes have happened, but to tell the browser that we want the current version, we start every HTML file with:
 
 ----
 <!doctype html>
 ----
+
+(By the way, we recommend typing, not copying this, so you
+get the muscle memory of coding in your fingers!)
 
 Then we need to start a section of the HTML document called the
 "body". There are different parts of HTML documents, but this is the only one we need:
@@ -227,16 +233,18 @@ haven't written yet):
   <script src="example1.js"></script>
 ----
 
-Now save that file, and open up the other, `example1.js`. To start, we will use one of the simplest operations, `print`, which simply prints a value on the page. In this case, we'll just print out the number 1:
+Now save that file. It should look something like http://tlcjs.org/html/example.html[this]. Next open up the other file, `example1.js`. To start, we will use one of the simplest operations, `print`, which simply prints a value on the page. In this case, we'll just print out the number 1:
 
 ----
 print(1);
 ----
 
 The `;` at the end of the line is an indication that we've finished
-the current operations. We'll get into this more later.
+the current operation. We'll get into this more later.
 
 Now save that file too, and open up `example1.html` in a web browser. You can do this either by going to `File->Open` in the browser or dragging the file onto the application icon (if applicable). When you do that, you should see a page with `1` on it.
+
+image::img/screenshot.png[alt="Your first program: a '1'!"]
 
 Congratulations! You've just written your first program!
 
