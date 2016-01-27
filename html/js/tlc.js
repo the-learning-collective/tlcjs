@@ -110,9 +110,10 @@ var circle = _type([tNumber, tString], circle_usage, function(radius, color) {
                x: 0,
                y: 0 };
 
-  return { elements: [circ],
+  return { tlc_dt: "image",
+           elements: [circ],
            width: radius * 2,
-           height: radius * 2 }
+           height: radius * 2 };
 });
 
 /* rectangle :: number -> number -> color -> shape */
@@ -126,7 +127,8 @@ var rectangle = _type([tNumber, tNumber, tString], rectangle_usage, function(wid
                x: 0,
                y: 0 };
 
-  return { elements: [rect],
+  return { tlc_dt: "image",
+           elements: [rect],
            width: width,
            height: height };
 });
@@ -215,7 +217,8 @@ var draw = _type([tObject], draw_usage, function(image) {
 /* emptyScene :: number -> number -> image */
 var emptyScene_usage = "emptyScene(): Requires two arguments, a width and a height, both numbers. For example: emptyScene(300, 200).";
 var emptyScene = _type([tNumber, tNumber], emptyScene_usage, function(width, height) {
-  return { elements: [],
+  return { tlc_dt: "image",
+           elements: [],
            width: width,
            height: height };
 });
