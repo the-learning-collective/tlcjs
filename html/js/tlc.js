@@ -152,7 +152,7 @@ var image = _type([tString], image_usage, function(location) {
   return [imgShape];
 });
 
-function _drawInternal(cont, scene, givenCanvas) {
+function _drawInternal(cont, image, givenCanvas) {
   if (givenCanvas) {
     var canvas = givenCanvas;
   } else {
@@ -161,11 +161,11 @@ function _drawInternal(cont, scene, givenCanvas) {
 
   var ctx = canvas.getContext("2d");
 
-  canvas.width = scene.width;
-  canvas.height = scene.height;
+  canvas.width = image.width;
+  canvas.height = image.height;
 
-  for (var i = 0; i < scene.elements.length; i++) {
-    var shape = scene.elements[i];
+  for (var i = 0; i < image.elements.length; i++) {
+    var shape = image.elements[i];
     switch (shape.tlc_dt) {
     case "rectangle":
       ctx.fillStyle = shape.color;
@@ -200,13 +200,13 @@ function _drawInternal(cont, scene, givenCanvas) {
 }
 
 
-/* draw :: scene -> nothing */
-var draw_usage = "draw(): Requires one argument, a scene. For example, draw(circle(10, 'red')).";
-var draw = _type([tObject], draw_usage, function(scene) {
-  return _drawInternal(_addOutput, scene);
+/* draw :: image -> nothing */
+var draw_usage = "draw(): Requires one argument, a image. For example, draw(circle(10, 'red')).";
+var draw = _type([tObject], draw_usage, function(image) {
+  return _drawInternal(_addOutput, image);
 });
 
-/* emptyScene :: number -> number -> scene */
+/* emptyScene :: number -> number -> image */
 var emptyScene_usage = "emptyScene(): Requires two arguments, a width and a height, both numbers. For example: emptyScene(300, 200).";
 var emptyScene = _type([tNumber, tNumber], emptyScene_usage, function(width, height) {
   return { elements: [],
@@ -214,8 +214,8 @@ var emptyScene = _type([tNumber, tNumber], emptyScene_usage, function(width, hei
            height: height };
 });
 
-/* overlay :: scene -> scene -> scene */
-var overlay_usage = "overlay(): Requires two arguments, a foreground and a background scene. For example, overlay(circle(10, 'red'), emptyScene(100, 100)).";
+/* overlay :: image -> image -> image */
+var overlay_usage = "overlay(): Requires two arguments, a foreground and a background image. For example, overlay(circle(10, 'red'), emptyScene(100, 100)).";
 var overlay = _type([tObject, tObject], overlay_usage, function(foreground, background) {
   var newX = background.width/2
              - foreground.width/2;
@@ -225,8 +225,8 @@ var overlay = _type([tObject, tObject], overlay_usage, function(foreground, back
   return placeImage(foreground, background, newX, newY);
 });
 
-/* placeImage :: scene -> scene -> x -> y -> scene  */
-var placeImage_usage = "placeImage(): Requires four arguments: a forgeground scene, a background scene, and the x and y coordinates for the top left of the foreground to be placed on the background (both numbers). For example, placeImage(rectangle(10,10,'red'), rectangle(100,100,'black'), 40, 40).";
+/* placeImage :: image -> image -> x -> y -> image  */
+var placeImage_usage = "placeImage(): Requires four arguments: a forgeground image, a background image, and the x and y coordinates for the top left of the foreground to be placed on the background (both numbers). For example, placeImage(rectangle(10,10,'red'), rectangle(100,100,'black'), 40, 40).";
 var placeImage = _type([tObject, tObject, tNumber, tNumber], placeImage_usage, function(foreground, background, x, y) {
   var centeredElements =
       _.map(foreground.elements, function(e) {
@@ -236,22 +236,22 @@ var placeImage = _type([tObject, tObject, tNumber, tNumber], placeImage_usage, f
         return newE;
       });
 
-  var scene = _.clone(background);
+  var image = _.clone(background);
 
-  scene.elements =
-    scene.elements.concat(centeredElements);
+  image.elements =
+    image.elements.concat(centeredElements);
 
-  return scene;
+  return image;
 });
 
-function _animateInternal(withCanvas, tickToScene) {
+function _animateInternal(withCanvas, tickToImage) {
 
   var canvas = document.createElement("canvas");
   withCanvas(canvas);
 
   var ticks = 0;
   function step() {
-    _drawInternal(withCanvas, tickToScene(ticks), canvas);
+    _drawInternal(withCanvas, tickToImage(ticks), canvas);
     ticks = ticks + 1;
     window.requestAnimationFrame(step);
   }
@@ -259,10 +259,10 @@ function _animateInternal(withCanvas, tickToScene) {
   step();
 }
 
-/* animate :: (tick -> scene) -> nothing */
-var animate_usage = "animate(): Requires one argument, a function that takes a number and produces a scene. For example: animate(function(n) { return overlay(circle(n, 'red'), emptyScene(100,100));}).";
-var animate = _type([tFunction], animate_usage, function(tickToScene) {
-  return _animateInternal(_addOutput, tickToScene);
+/* animate :: (tick -> image) -> nothing */
+var animate_usage = "animate(): Requires one argument, a function that takes a number and produces a image. For example: animate(function(n) { return overlay(circle(n, 'red'), emptyScene(100,100));}).";
+var animate = _type([tFunction], animate_usage, function(tickToImage) {
+  return _animateInternal(_addOutput, tickToImage);
 });
 
 
@@ -282,12 +282,12 @@ function tlc_sandbox_functions(win) {
         win.output.div.appendChild(div);
       }, tick);
     }),
-    draw: _type([tObject], draw_usage, function(scene) {
+    draw: _type([tObject], draw_usage, function(image) {
       _drawInternal(function (canvas) {
         var div = document.createElement("div");
         div.appendChild(canvas);
         win.output.div.appendChild(div);
-      }, scene);
+      }, image);
     })
   };
 }
