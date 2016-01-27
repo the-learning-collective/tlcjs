@@ -162,14 +162,12 @@ small red circle by writing `circle(10, "red")`, where 10 is the
 radius is pixels (Note: This is also functionality brought by the TLC
 library, not strictly speaking ).
 
-Like with normal values, you have to tell Javascript to show you an
-image. The operator to do that is called `draw`. We can display our
-example as:
-
+Like with normal values, you have to tell Javascript to `print`
+images:
 
 [source,javascript]
 ----
-draw(circle(10, "red"))
+print(circle(10, "red"))
 ----
 
 We can also draw rectangles, which are created with a width, height, and color:
@@ -177,7 +175,7 @@ We can also draw rectangles, which are created with a width, height, and color:
 
 [source,javascript]
 ----
-draw(rectangle(80, 30, "black"))
+print(rectangle(80, 30, "black"))
 ----
 
 But plain rectangles and circles are a little boring. Fortunately, we
