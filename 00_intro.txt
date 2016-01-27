@@ -233,7 +233,17 @@ haven't written yet):
   <script src="example1.js"></script>
 ----
 
-Now save that file. It should look something like http://tlcjs.org/html/example.html[this]. Next open up the other file, `example1.js`. To start, we will use one of the simplest operations, `print`, which simply prints a value on the page. In this case, we'll just print out the number 1:
+Now save that file. It should look something like:
+
+---
+<!doctype html>
+<body id="tlc-body">
+  <script src="http://tlcjs.org/js/lodash.min.js"></script>
+  <script src="http://tlcjs.org/js/tlc.js"></script>
+  <script src="example1.js"></script>
+---
+
+Next open up the other file, `example1.js`. To start, we will use one of the simplest operations, `print`, which simply prints a value on the page. In this case, we'll just print out the number 1:
 
 ----
 print(1);
