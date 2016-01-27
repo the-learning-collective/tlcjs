@@ -26,8 +26,10 @@ result if we run the program above.
 
 One of the most common things we want to do is print values to the
 screen. This is helpful not only in figuring out if our programs are
-working, but also to let people actually use them. In Javascript (NOTE: This uses functionality from the TLC library code), we can
-print a value to the screen with the "print" operation. This is done like:
+working, but also to let people actually use them. In Javascript
+(NOTE: This uses functionality from the TLC library code, but there is
+a similar built in operator called `console.log`), we can print a
+value to the screen with the `print` operation. This is done like:
 
 [source,javascript]
 ----
@@ -35,16 +37,21 @@ print(1 + 2)
 ----
 
 You put what you want to print out inside the parethesis that follow
-`print`. This might remind you of functions in algebra class,
-where you may have seen `f(x)` or similar.
+`print`. This might remind you of functions in algebra class, where
+you may have seen `f(x)` or similar. We'll see a lot of different
+operations, and soon be writing our own!
 
 If you want to print multiple expressions out, you can do that as well:
 
 [source,javascript]
 ----
-print(1 + 2)
-print(3 - 2)
+print(1 + 2);
+print(3 - 2);
 ----
+
+We put `;` at the end of the line to indicate that we are doing
+multiple things. Generally, you should do this after each line, though
+sometimes Javascript will permit you to skip them.
 
 You can also do other basic arithmetic, and you can write more
 complicated expressions:
@@ -56,13 +63,13 @@ print(1 + 2 * 3 - 4)
 
 Like human languages, programming languages have a grammar, which
 often allows certain expressions (or entire programs) to be embedded
-within other programs, as we can see with our program `1 + 2` in the
-second example. As in arithmetic, sometimes a program could be
-ambiguous. For example, in the previous example, if we first evaluated
-`1 + 2` before multiplying by `3` we would get a different
-answer. These kind of ambiguities are resolved in the same way as
-arithmetic - with rules of "precedence" (what operations "precede"
-others) and parenthesis to override them.
+within other programs, as we can see with our program `1 + 2` embedded
+within `print()` in the second example. As in arithmetic, sometimes a
+program could be ambiguous. For example, in the previous example, if
+we first evaluated `1 + 2` before multiplying by `3` we would get a
+different answer. These kind of ambiguities are resolved in the same
+way as arithmetic - with rules of "precedence" (what operations
+"precede" others) and parenthesis to override them.
 
 As an exercise, consider the following:
 
@@ -143,19 +150,21 @@ The following line will produce the string `"concatenate"`:
 
 [source,javascript]
 ----
-"con" + "cat" + "e" + "nate"
+yrint("con" + "cat" + "e" + "nate")
 ----
-
-There are more ways of manipulating strings, which we will discuss
-when we get to methods in link:04_data.html#methods[Chapter 4].
 
 == Images ==
 
 We can also draw pictures. There are a few basic functions available
 that create pictures, and ways of combining them to create new
-pictures. One of the most basic one is a circle. You can create a small red circle by writing `circle(10, "red")`, where 10 is the radius is pixels.
+pictures. One of the most basic one is a circle. You can create a
+small red circle by writing `circle(10, "red")`, where 10 is the
+radius is pixels (Note: This is also functionality brought by the TLC
+library, not strictly speaking ).
 
-Like with normal values, you have to tell Javascript to show you an image. The operator to do that is called `draw`. We can display our example as:
+Like with normal values, you have to tell Javascript to show you an
+image. The operator to do that is called `draw`. We can display our
+example as:
 
 
 [source,javascript]
@@ -163,7 +172,7 @@ Like with normal values, you have to tell Javascript to show you an image. The o
 draw(circle(10, "red"))
 ----
 
-We can also draw rectangles, which take a width, height, and color:
+We can also draw rectangles, which are created with a width, height, and color:
 
 
 [source,javascript]
@@ -190,43 +199,6 @@ What kind of pictures can you draw with this?
 
 What are the limitations?
 
-
-
-== Unary operators ==
-
-(((operator)))(((typeof operator)))(((type)))Not all operators are
-symbols. Some are written as words. One example is the `typeof`
-operator, which produces a string value naming the type of the value
-you give it.
-
-[source,javascript]
-----
-print(typeof 4.5)
-// → number
-print(typeof "x")
-// → string
-----
-
-[[print]]
-
-(((print)))(((output)))(((JavaScript console)))We will use
-`print` in example code to indicate that we want to see the
-result of evaluating something. When you run such code, the value
-produced should be shown on the screen, though how it appears will
-depend on the JavaScript environment you use to run it.
-
-(((negation)))(((- operator)))(((binary operator)))(((unary
-operator)))The other operators we saw all operated on two values, but
-`typeof` takes only one. Operators that use two values are called
-_binary_ operators, while those that take one are called _unary_
-operators. The minus operator can be used both as a binary operator
-and as a unary operator.
-
-[source,javascript]
-----
-print(- (10 - 2))
-// → -8
-----
 
 == Boolean values ==
 
@@ -268,20 +240,18 @@ so `"Z" < "a"` is true, and non-alphabetic characters (!, -, and so on)
 are also included in the ordering. The actual comparison is based on
 the _((Unicode))_ standard. This standard assigns a number to
 virtually every character you would ever need, including characters
-from Greek, Arabic, Japanese, Tamil, and so on. Having such numbers is
-useful for storing strings inside a computer because it makes it
-possible to represent them as a sequence of numbers. When comparing
+from Greek, Arabic, Japanese, Tamil, and so on. When comparing
 strings, JavaScript goes over them from left to right, comparing the
 numeric codes of the characters one by one.
 
-(((equality)))(((>= operator)))(((pass:[<=] operator)))(((==
-operator)))(((!= operator)))Other similar operators are `>=` (greater
-than or equal to), `<=` (less than or equal to), `==` (equal to), and
-`!=` (not equal to).
+(((equality)))(((>= operator)))(((pass:[<=] operator)))(((===
+operator)))(((!== operator)))Other similar operators are `>=` (greater
+than or equal to), `<=` (less than or equal to), `===` (equal to), and
+`!==` (not equal to).
 
 [source,javascript]
 ----
-print("Itchy" != "Scratchy")
+print("Itchy" !== "Scratchy")
 // → true
 ----
 
@@ -291,7 +261,7 @@ a number”.
 
 [source,javascript]
 ----
-print(NaN == NaN)
+print(NaN === NaN)
 // → false
 ----
 
@@ -337,35 +307,17 @@ produces `false` and `!false` gives `true`.
 and other operators, it is not always obvious when parentheses are
 needed. In practice, you can usually get by with knowing that of the
 operators we have seen so far, `||` has the lowest precedence, then
-comes `&&`, then the comparison operators (`>`, `==`, and so on), and
+comes `&&`, then the comparison operators (`>`, `===`, and so on), and
 then the rest. This order has been chosen such that, in typical
 expressions like the following one, as few parentheses as possible are
 necessary:
 
 [source,javascript]
 ----
-1 + 1 == 2 && 10 * 10 > 50
+1 + 1 === 2 && 10 * 10 > 50
 ----
 
-(((conditional execution)))(((ternary operator)))(((?:
-operator)))(((conditional operator)))(((colon character)))(((question
-mark)))The last logical operator I will discuss is not unary, not
-binary, but _ternary_, operating on three values. It is written with a
-question mark and a colon, like this:
-
-[source,javascript]
-----
-print(true ? 1 : 2);
-// → 1
-print(false ? 1 : 2);
-// → 2
-----
-
-This one is called the _conditional_ operator (or sometimes just
-_ternary_ operator since it is the only such operator in the
-language). The value on the left of the question mark “picks” which of
-the other two values will come out. When it is true, the middle value
-is chosen, and when it is false, the value on the right comes out.
+But, to make your life easier, it is safer to just include parethesis!
 
 == Undefined values ==
 
@@ -399,8 +351,6 @@ print("5" + 1)
 // → 51
 print("five" * 2)
 // → NaN
-print(false == 0)
-// → true
 ----
 
 (((+ operator)))(((arithmetic)))(((pass:[*] operator)))(((-
@@ -413,51 +363,8 @@ to number). Yet in the third expression, `+` tries string
 concatenation before numeric addition, so the `1` is converted to
 `"1"` (from number to string).
 
-(((type coercion)))(((number,conversion to)))When something that
-doesn't map to a number in an obvious way (such as `"five"` or
-`undefined`) is converted to a number, the value `NaN` is produced.
-Further arithmetic operations on `NaN` keep producing `NaN`, so if you
-find yourself getting one of those in an unexpected place, look for
-accidental type conversions.
-
-(((null)))(((undefined)))(((comparison,of undefined values)))(((==
-operator)))When comparing values of the same type using `==`, the
-outcome is easy to predict: you should get true when both values are
-the same, except in the case of `NaN`. But when the types differ,
-JavaScript uses a complicated and confusing set of rules to determine
-what to do. In most cases, it just tries to convert one of the values
-to the other value's type. However, when `null` or `undefined` occurs
-on either side of the operator, it produces true only if both sides
-are one of `null` or `undefined`.
-
-[source,javascript]
-----
-print(null == undefined);
-// → true
-print(null == 0);
-// → false
-----
-
-That last piece of behavior is often useful. When you want to test
-whether a value has a real value instead of `null` or `undefined`, you
-can simply compare it to `null` with the `==` (or `!=`) operator.
-
-(((type coercion)))(((Boolean,conversion to)))(((=== operator)))(((!==
-operator)))(((comparison)))But what if you want to test whether
-something refers to the precise value `false`? The rules for
-converting strings and numbers to Boolean values state that `0`,
-`NaN`, and the empty string (`""`) count as `false`, while all the
-other values count as `true`. Because of this, expressions like `0 ==
-false` and `"" == false` are also true. For cases like this, where you
-do _not_ want any automatic type conversions to happen, there are two
-extra operators: `===` and `!==`. The first tests whether a value is
-precisely equal to the other, and the second tests whether it is not
-precisely equal. So `"" === false` is false as expected.
-
-I recommend using the three-character comparison operators defensively to
-prevent unexpected type conversions from tripping you up. But when you're
-certain the types on both sides will be the same, there is no problem with
-using the shorter operators.
+This can be really confusing and hard to figure out, so you should
+_not_ depend on it in your programs.
 
 === Short-circuiting of logical operators ===
 
@@ -513,7 +420,7 @@ strings, Booleans, and undefined values.
 Such values are created by typing in their name (`true`, `null`) or
 value (`13`, `"abc"`). You can combine and transform values with
 operators. We saw binary operators for arithmetic (`+`, `-`, `*`, `/`,
-and `%`), string concatenation (`+`), comparison (`==`, `!=`, `===`,
+and `%`), string concatenation (`+`), comparison (`===`,
 `!==`, `<`, `>`, `<=`, `>=`), and logic (`&&`, `||`), as well as
 several unary operators (`-` to negate a number, `!` to negate
 logically, and `typeof` to find a value's type) and a ternary
