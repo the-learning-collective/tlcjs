@@ -428,3 +428,13 @@ This gives you enough information to use JavaScript as a pocket
 calculator, but not much more. The
 link:02_program_structure.html#program_structure[next chapter] will
 start tying these expressions together into basic programs.
+
+== Exercises ==
+
+As an exercise, try creating some interesting drawings.
+
+For example, draw a cat!
+
+Or a panda:
+
+image::img/panda.png[alt="A panda"]
