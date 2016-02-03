@@ -21,7 +21,7 @@ a part.
 
 (((literal expression)))A fragment of code that produces a value is
 called an _((expression))_. Every value that is written literally
-(such as `22` or `"psychoanalysis"`) is an expression. An expression
+(such as `22` or `"socialism"`) is an expression. An expression
 between ((parentheses)) is also an expression, as is a ((binary
 operator)) applied to two expressions or a unary operator applied to
 one.
