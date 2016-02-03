@@ -325,7 +325,7 @@ function tlc_sandbox_functions(win) {
       if (typeof value === "object" && value.hasOwnProperty("tlc_dt")) {
         sandbox_draw(win, value);
       } else {
-        win.out("log", value);
+        win.out("log", arguments);
       }
     }),
     circle: circle,
