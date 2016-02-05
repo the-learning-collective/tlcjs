@@ -41,12 +41,16 @@ if (body === null) {
   var source = document.createElement("div");
   source.id = "source";
 
+  var images = document.createElement("div");
+  images.id = "images";
+
   body.appendChild(source);
   body.appendChild(output);
+  body.appendChild(images);
 
   var style = document.createElement("style");
 
-  style.textContent = "#output { width: 45%; float: left; } #source { width: 45%; float: left; } .output { border-bottom: 1px solid #ccc; padding: 10px 0; } #images { width: 45%; float: right; } ";
+  style.textContent = "#output { width: 45%; float: left; } #source { width: 45%; float: left; } .output { border-bottom: 1px solid #ccc; padding: 10px 0; } #images { width: 45%; display: none; float: right; } ";
 
   body.appendChild(style);
 
@@ -84,6 +88,27 @@ var show_source = _type([tString], show_source_usage, function (url) {
 
 
 /* LIBRARY FOR DRAWING ETC */
+
+/* loadImage :: name -> location -> nothing */
+var loadImage_usage = "loadImage(): Requires two arguments, a name ID for an image, and a location for that image. For example: loadImage('smile', 'js/smile.gif')";
+var loadImage = _type([tString, tString], loadImage_usage, function(name, loc) {
+
+  // don't allow spaces in names
+  if (name.split(' ').length > 1) {
+      var suggestion = name.split(' ').join('');
+      throw ("Image name ID can't contain spaces; try '" + suggestion +
+            "' instead of '" + name + "'.");
+  } else if (document.getElementById(name)) {
+      throw ("An image with that name already exists! Try another name ID.");
+  }
+
+  var img = document.createElement("img");
+  img.id = name;
+
+  img.src = loc;
+
+  images.appendChild(img);
+});
 
 /* print :: anything -> nothing */
 var print_usage = "print(): Requires one argument, which can be anything. For example: print(10).";
@@ -154,30 +179,24 @@ var text = _type([tString, tNumber], text_usage, function(words, fontSize){
 });
 
 /* image :: url -> shape */
-var image_usage = "image(): Requires one argument, a url, which should be a string. For example, image('cat.jpg').";
-var image = _type([tString], image_usage, function(location) {
-  var img = new Image()
-  //img.src = location;
-  //img.style.visibility = "hidden"
+var image_usage = "image(): Requires one argument, a name ID, which should be a string. For example, image('smile').";
+var image = _type([tString], image_usage, function(name) {
 
-  // append the node, get the dimensions, and remove it again
-  //document.body.appendChild(img);
-  //var imgClone = img.cloneNode();
-  //document.body.removeChild(img);
+  var img = document.getElementById(name);
 
   var imgShape = { tlc_dt: "image",
                    img: img,
-                   locaton: location
+                   locaton: location,
+                   width: img.width,
+                   height: img.height,
+                   x: 0,
+                   y: 0,
                  };
 
-  img.onload = function() {
-    imgShape.width = img.width;
-    imgShape.height = img.height;
-  };
+  return { elements: [imgShape],
+           width: img.width,
+           height: img.height };
 
-  img.src = location;
-
-  return [imgShape];
 });
 
 function _drawInternal(cont, image, givenCanvas) {
@@ -211,11 +230,18 @@ function _drawInternal(cont, image, givenCanvas) {
       ctx.fill();
       break;
     case "image":
-      shape.img.onload = function() {
+       // if image has loaded, draw it, else add callback
+     /* if (shape.img.complete || shape.img.naturalWidth) {*/
         ctx.drawImage(shape.img,
                       shape.x,
                       shape.y);
-      };
+      /*} else {
+        shape.img.onload = function() {
+          ctx.drawImage(shape.img,
+                        shape.x,
+                        shape.y);
+        };
+        /*}*/
       break;
     case "text":
       ctx.font = '' +  shape.fontSize + "px serif";
@@ -320,7 +346,10 @@ function sandbox_draw(win, image) {
   }, image);
 }
 function tlc_sandbox_functions(win) {
-  return {
+    return {
+    loadImage: _type([tString, tString], loadImage_usage,
+                         function(name, location) {
+                             _loadImageInternal(function(){})}),
     print: _type([tAny], print_usage, function(value) {
       if (typeof value === "object" && value.hasOwnProperty("tlc_dt")) {
         sandbox_draw(win, value);
@@ -331,6 +360,7 @@ function tlc_sandbox_functions(win) {
     circle: circle,
     rectangle: rectangle,
     text: text,
+    image: image,
     overlay: overlay,
     placeImage: placeImage,
     emptyScene: emptyScene,

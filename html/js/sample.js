@@ -44,10 +44,14 @@ function tanWiggle(n) {
   return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
 }
 
-  
+
 animate(sinWiggle);
 animate(cosWiggle);
 animate(tanWiggle);
 
 draw(text('hi there', 20));
 draw(placeImage(text('hello world', 16), emptyScene(200,200), 100, 100));
+
+loadImage("smile", "js/smile.gif");
+
+draw(image("smile"));
