@@ -76,7 +76,7 @@ whole thing tick, we have to consider the ways in which these parts
 interconnect and contribute to the operation of the whole.
 
 (((computer)))A computer is a machine built to act as a host for these
-immaterial machines. Computers themselves can do only stupidly
+immaterial machines. Computers themselves can do only incredibly
 straightforward things. The reason they are so useful is that they do
 these things at an incredibly high speed. A program can ingeniously
 combine an enormous number of these simple actions in order to do very
