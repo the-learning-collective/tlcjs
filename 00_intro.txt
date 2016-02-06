@@ -45,8 +45,8 @@ want.
 
 == On programming ==
 
-(((programming,difficulty of)))Besides explaining JavaScript, I also
-will introduce the basic principles of programming. Programming, it
+(((programming,difficulty of)))Besides explaining JavaScript, we'll
+also introduce the basic principles of programming. Programming, it
 turns out, is hard. The fundamental rules are typically simple and
 clear. But programs built on top of these rules tend to become complex
 enough to introduce their own rules and complexity. You're building
