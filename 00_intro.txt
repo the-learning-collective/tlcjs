@@ -145,9 +145,9 @@ at first, but I promise that you will quickly get the hang of it. The
 same goes for the ((exercises)). Don't assume you understand them
 until you've actually written a working solution.
 
-(((interpretation)))I recommend you try your solutions to exercises
+(((interpretation)))We recommend you try your solutions to exercises
 in an actual JavaScript interpreter. That way, you'll get immediate feedback on
-whether what you are doing is working, and, I hope, you'll be
+whether what you are doing is working, and, we hope, you'll be
 tempted to ((experiment)) and go beyond the exercises.
 
 ifdef::interactive_target[]
