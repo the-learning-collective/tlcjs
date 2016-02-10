@@ -102,12 +102,6 @@ var loadImage = _type([tString, tString], loadImage_usage, function(name, loc) {
       throw ("An image with that name already exists! Try another name ID.");
   }
 
-  var img = document.createElement("img");
-  img.id = name;
-
-  img.src = loc;
-
-  images.appendChild(img);
 });
 
 /* print :: anything -> nothing */
@@ -184,8 +178,19 @@ var image = _type([tString], image_usage, function(name) {
 
   var img = document.getElementById(name);
 
+
+  var img = document.createElement("img");
+  img.id = name;
+
+  img.src = loc;
+
+  images.appendChild(img);
+
   var imgShape = { tlc_dt: "image",
-                   img: img,
+                   img: img
+                   drawImage: function () {
+                           ???
+                   }
                    locaton: location,
                    width: img.width,
                    height: img.height,
@@ -231,17 +236,14 @@ function _drawInternal(cont, image, givenCanvas) {
       break;
     case "image":
        // if image has loaded, draw it, else add callback
-     /* if (shape.img.complete || shape.img.naturalWidth) {*/
+        while (!(shape.img.complete || shape.img.naturalWidth)) {
+
+            console.log("waiting");
+        }
+
         ctx.drawImage(shape.img,
                       shape.x,
                       shape.y);
-      /*} else {
-        shape.img.onload = function() {
-          ctx.drawImage(shape.img,
-                        shape.x,
-                        shape.y);
-        };
-        /*}*/
       break;
     case "text":
       ctx.font = '' +  shape.fontSize + "px serif";
