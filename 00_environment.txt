@@ -34,7 +34,7 @@ functionality for this curiculum. All HTML files start with a declaration of the
 get the muscle memory of coding in your fingers!)
 
 Then we need to start a section of the HTML document called the
-"body". There are different parts of HTML documents, but this is the only one we need:
+"body." There are different parts of HTML documents, but this is the only one we need:
 
 ----
 <body id="tlc-body">
