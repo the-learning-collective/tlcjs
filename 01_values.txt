@@ -155,11 +155,11 @@ print("con" + "cat" + "e" + "nate")
 
 == Images ==
 
-We can also draw pictures. The TLC.js library adds a few basic functions 
+We can also draw pictures. The TLC.js library adds a few basic functions
 that create pictures, and ways of combining them to create new
 pictures. One of the most basic ones is a circle. You can create a
 small red circle by writing `circle(10, "red")`, where 10 is the
-radius is pixels. 
+radius is pixels.
 
 Like with normal values, you have to tell Javascript to `print`
 images:
@@ -362,47 +362,6 @@ concatenation before numeric addition, so the `1` is converted to
 
 This can be really confusing and hard to figure out, so you should
 _not_ depend on it in your programs.
-
-=== Short-circuiting of logical operators ===
-
-(((type coercion)))(((Boolean,conversion to)))(((operator)))The
-logical operators `&&` and `||` handle values of different types in a
-peculiar way. They will convert the value on their left side to
-Boolean type in order to decide what to do, but depending on the
-operator and the result of that conversion, they return either the
-_original_ left-hand value or the right-hand value.
-
-(((|| operator)))The `||` operator, for example, will return the value
-to its left when that can be converted to true and will return the
-value on its right otherwise. This conversion works as you'd expect
-for Boolean values and should do something analogous for values of
-other types.
-
-[source,javascript]
-----
-print(null || "user")
-// → user
-print("Karl" || "user")
-// → Karl
-----
-
-(((default value)))This functionality allows the `||` operator to be
-used as a way to fall back on a default value. If you give it an
-expression that might produce an empty value on the left, the value on
-the right will be used as a replacement in that case.
-
-(((&& operator)))The `&&` operator works similarly, but the other way
-around. When the value to its left is something that converts to
-false, it returns that value, and otherwise it returns the value on
-its right.
-
-(((short-circuit evaluation)))Another important property of these two
-operators is that the expression to their right is evaluated only when
-necessary. In the case of `true || X`, no matter what `X` is—even if
-it's an expression that does something __terrible__—the result will be
-true, and `X` is never evaluated. The same goes for `false && X`,
-which is false and will ignore `X`. This is called _short-circuit
-evaluation_.
 
 
 == Summary ==

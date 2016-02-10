@@ -365,19 +365,9 @@ two statements.
 
 [source,javascript]
 ----
-print(10);
+print(bike);
 print(circle(100, "green"));
 ----
-
-NOTE(dbp) -- continue here!
-
-(((number,conversion to)))(((type coercion)))(((Number
-function)))(((String function)))(((Boolean
-function)))(((Boolean,conversion to)))The function `Number` converts a
-value to a number. We need that conversion because the result of
-`prompt` is a string value, and we want a number. There are similar
-functions called `String` and `Boolean` that convert values to those
-types.
 
 Here is the rather trivial schematic representation of straight
 control flow:
@@ -396,104 +386,63 @@ image::img/controlflow-if.svg[alt="Conditional control flow",width="4cm"]
 (((syntax)))(((Number function)))(((if keyword)))Conditional execution
 is written with the `if` keyword in JavaScript. In the simple case, we
 just want some code to be executed if, and only if, a certain
-condition holds. For example, in the previous program, we might want
-to show the square of the input only if the input is actually a
-number.
+condition holds. For example, we can write a function that returns one message if a number is bigger than zero and another if it is smaller!
 
 [source,javascript]
 ----
-var theNumber = Number(prompt("Pick a number", ""));
-if (!isNaN(theNumber))
-  alert("Your number is the square root of " +
-        theNumber * theNumber);
+var sign = function(number) {
+  if (number > 0) {
+    return "it's a positive number";
+  } else {
+    return "it's not a positive number";
+  }
+};
+
+print(sign(8));
+print(sign(0));
+print(sign(-15));
 ----
 
-With this modification, if you enter “cheese”, no output will be shown.
-
-The keyword `if` executes or skips a statement depending on the value
-of a Boolean expression. The deciding expression is written after the
-keyword, between ((parentheses)), followed by the statement to execute.
-
-(((isNaN function)))The `isNaN` function is a standard JavaScript
-function that returns `true` only if the argument it is given is
-`NaN`. The `Number` function happens to return `NaN` when you give it
-a string that doesn't represent a valid number. Thus, the condition
-translates to “unless `theNumber` is not-a-number, do this”.
-
-(((else keyword)))You often won't just have code that executes when a
-condition holds true, but also code that handles the other case. This
-alternate path is represented by the second arrow in the
-diagram. The `else` keyword can be used, together with `if`, to create
-two separate, alternative execution paths.
+If we have more than two paths to choose from, multiple if/else pairs can be “chained” together. We can use that to make our message more informative:
 
 [source,javascript]
 ----
-var theNumber = Number(prompt("Pick a number", ""));
-if (!isNaN(theNumber))
-  alert("Your number is the square root of " +
-        theNumber * theNumber);
-else
-  alert("Hey. Why didn't you give me a number?");
+var sign = function(number) {
+  if (number > 0) {
+    return "it's a positive number";
+  } else if (number === 0) {
+    return "it's zero";
+  } else {
+    return "it's a negative number";
+  }
+};
+
+print(sign(8));
+print(sign(0));
+print(sign(-15));
 ----
-
-(((if keyword,chaining)))If we have more than two paths to choose
-from, multiple `if`/`else` pairs can be “chained” together. Here's an
-example:
-
-[source,javascript]
-----
-var num = Number(prompt("Pick a number", "0"));
-
-if (num < 10)
-  alert("Small");
-else if (num < 100)
-  alert("Medium");
-else
-  alert("Large");
-----
-
-The program will first check whether `num` is less than 10. If it is,
-it chooses that branch, shows `"Small"`, and is done. If it isn't, it
-takes the `else` branch, which itself contains a second `if`. If the
-second condition (`< 100`) holds, that means the number is between 10
-and 100, and `"Medium"` is shown. If it doesn't, the second, and last,
-`else` branch is chosen.
 
 The flow chart for this program looks something like this:
 
 image::img/controlflow-nested-if.svg[alt="Nested if control flow",width="4cm"]
 
 
-== Capitalization ==
+We can also use this to improve our bike animation. Previously, when
+the bike reached the edge of the scene, it kept going. Instead, we can
+make it stop!
 
-(((capitalization)))(((variable,naming)))(((whitespace)))Variable
-names may not contain spaces, yet it is often helpful to use multiple
-words to clearly describe what the variable represents. These are
-pretty much your choices for writing a variable name with several
-words in it:
-
+[source,javascript]
 ----
-fuzzylittleturtle
-fuzzy_little_turtle
-FuzzyLittleTurtle
-fuzzyLittleTurtle
+var draw_bike = function(position) {
+  if (position > 300) {
+    return placeImage(bike, emptyScene(400,100), 300, 30);
+  } else {
+    return placeImage(bike, emptyScene(400,100), position, 30);
+  }
+};
+animate(draw_bike);
 ----
 
-(((camel case)))(((programming style)))(((underscore character)))The
-first style can be hard to read. Personally, I like the look of the
-underscores, though that style is a little painful to type. The
-((standard)) JavaScript functions, and most JavaScript programmers,
-follow the bottom style—they capitalize every word except the first.
-It is not hard to get used to little things like that, and code with
-mixed naming styles can be jarring to read, so we will just follow
-this ((convention)).
-
-(((Number function)))(((constructor)))In a few cases, such as the
-`Number` function, the first letter of a variable is also capitalized.
-This was done to mark this function as a constructor. What a
-constructor is will become clear in
-link:06_object.html#constructors[Chapter 6]. For now, the important
-thing is not to be bothered by this apparent lack of ((consistency)).
 
 == Comments ==
 
@@ -509,19 +458,6 @@ JavaScript has two ways of writing comments. To write a single-line
 comment, you can use two slash characters (`//`) and then the comment
 text after it.
 
-// test: no
-
-[source,javascript]
-----
-var accountBalance = calculateBalance(account);
-// It's a green hollow where a river sings
-accountBalance.adjust();
-// Madly catching white tatters in the grass.
-var report = new Report();
-// Where the sun on the proud mountain rings:
-addToReport(accountBalance, report);
-// It's a little valley, foaming like light in a glass.
-----
 
 (((block comment)))A `//` comment goes only to the end of the line. A
 section of text between `/*` and `*/` will be ignored, regardless of
@@ -540,6 +476,10 @@ blocks of information about a file or a chunk of program.
 var myNumber = 11213;
 ----
 
+== Exercises ==
+
+As an exercise,
+
 == Summary ==
 
 You now know that a program is built out of statements, which
@@ -549,14 +489,14 @@ expressions.
 
 Putting statements after one another gives you a program that is
 executed from top to bottom. You can introduce disturbances in the
-flow of control by using conditional (`if`, `else`, and `switch`) statements.
+flow of control by using conditional (`if`, `else if`, `else`) statements.
 
 Variables can be used to file pieces of data under a name, and they
-are useful for tracking state in your program. The environment is the
+are useful for organizing your program. The environment is the
 set of variables that are defined. JavaScript systems
 always put a number of useful standard variables into your
 environment.
 
 Functions are special values that encapsulate a piece of program. You
 can invoke them by writing `functionName(argument1, argument2)`. Such
-a function call is an expression, and may produce a value.
+a function call is an expression, and produces a value.
