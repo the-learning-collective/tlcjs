@@ -201,7 +201,7 @@ What are the limitations?
 
 (((Boolean)))(((operator)))(((true)))(((false)))(((bit)))Often,
 you will need a value that simply distinguishes between two
-possibilities, like “yes” and “no” or “on” and “off”. For this,
+possibilities, like “yes” and “no” or “on” and “off.” For this,
 JavaScript has a _Boolean_ type, which has just two values: true and
 false (which are written simply as those words).
 
