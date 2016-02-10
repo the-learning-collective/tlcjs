@@ -306,8 +306,55 @@ print(my_function());
 
 == Animations ==
 
-TODO
+You can create an empty scene with:
 
+[source,javascript]
+----
+var scene = emptyScene(400,100);
+print(scene);
+----
+
+And we can place a bicycle on that scene:
+
+[source,javascript]
+----
+var scene = placeImage(bike, emptyScene(400,100), 0, 30);
+print(scene);
+----
+
+We can move the bike across the scene:
+
+[source,javascript]
+----
+print(placeImage(bike, emptyScene(400,100), 0, 30));
+print(placeImage(bike, emptyScene(400,100), 100, 30));
+print(placeImage(bike, emptyScene(400,100), 200, 30));
+print(placeImage(bike, emptyScene(400,100), 300, 30));
+----
+
+Instead of just creating those scenes, we can write a function that,
+given the position of the bike, draws the scene.
+
+[source,javascript]
+----
+var draw_bike = function(position) {
+  return placeImage(bike, emptyScene(400,100), position, 30);
+};
+print(draw_bike(100));
+print(draw_bike(200));
+print(draw_bike(300));
+----
+
+There is a function `animate` that takes a function like our
+`draw_bike`, and calls it for increasing numbers. As long as our `draw_bike` function returns scenes that go together, we can create animations!
+
+[source,javascript]
+----
+var draw_bike = function(position) {
+  return placeImage(bike, emptyScene(400,100), position, 30);
+};
+animate(draw_bike);
+----
 
 == Control flow ==
 
@@ -416,75 +463,6 @@ The flow chart for this program looks something like this:
 
 image::img/controlflow-nested-if.svg[alt="Nested if control flow",width="4cm"]
 
-
-
-== Indenting Code ==
-
-(((block)))(((code structure)))(((whitespace)))(((programming
-style)))You've probably noticed the spaces I put in front of some
-statements. In JavaScript, these are not required—the computer will
-accept the program just fine without them. In fact, even the ((line))
-breaks in programs are optional. You could write a program as a single
-long line if you felt like it. The role of the ((indentation)) inside
-blocks is to make the structure of the code stand out. In complex
-code, where new blocks are opened inside other blocks, it can become
-hard to see where one block ends and another begins. With proper
-indentation, the visual shape of a program corresponds to the shape of
-the blocks inside it. I like to use two spaces for every open block,
-but tastes differ—some people use four spaces, and some people use
-((tab character))s.
-
-
-== Dispatching on a value with switch ==
-
-(((syntax)))(((conditional execution)))(((dispatching)))(((if
-keyword,chaining)))It is common for code to look like this:
-
-// test: no
-
-[source,javascript]
-----
-if (variable == "value1") action1();
-else if (variable == "value2") action2();
-else if (variable == "value3") action3();
-else defaultAction();
-----
-
-(((colon character)))(((switch keyword)))There is a construct called
-`switch` that is intended to solve such a “dispatch” in a more direct
-way. Unfortunately, the syntax JavaScript uses for this (which it
-inherited from the C/Java line of programming languages) is somewhat
-awkward—a chain of `if` statements often looks better. Here is an
-example:
-
-[source,javascript]
-----
-switch (prompt("What is the weather like?")) {
-  case "rainy":
-    console.log("Remember to bring an umbrella.");
-    break;
-  case "sunny":
-    console.log("Dress lightly.");
-  case "cloudy":
-    console.log("Go outside.");
-    break;
-  default:
-    console.log("Unknown weather type!");
-    break;
-}
-----
-
-(((fallthrough)))(((comparison)))(((break keyword)))(((case
-keyword)))(((default keyword)))You may put any number of `case` labels
-inside the block opened by `switch`. The program will jump to the
-label that corresponds to the value that `switch` was given or to
-`default` if no matching value is found. It starts executing
-statements there, even if they're under another label, until it
-reaches a `break` statement. In some cases, such as the `"sunny"` case
-in the example, this can be used to share some code between cases (it
-recommends going outside for both sunny and cloudy weather). But
-beware: it is easy to forget such a `break`, which will cause the
-program to execute code you do not want executed.
 
 == Capitalization ==
 

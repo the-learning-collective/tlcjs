@@ -155,12 +155,11 @@ print("con" + "cat" + "e" + "nate")
 
 == Images ==
 
-We can also draw pictures. There are a few basic functions available
+We can also draw pictures. The TLC.js library adds a few basic functions 
 that create pictures, and ways of combining them to create new
-pictures. One of the most basic one is a circle. You can create a
+pictures. One of the most basic ones is a circle. You can create a
 small red circle by writing `circle(10, "red")`, where 10 is the
-radius is pixels (Note: This is also functionality brought by the TLC
-library, not strictly speaking ).
+radius is pixels. 
 
 Like with normal values, you have to tell Javascript to `print`
 images:
@@ -202,7 +201,7 @@ What are the limitations?
 
 (((Boolean)))(((operator)))(((true)))(((false)))(((bit)))Often,
 you will need a value that simply distinguishes between two
-possibilities, like “yes” and “no” or “on” and “off”. For this,
+possibilities, like “yes” and “no,” or “on” and “off.” For this,
 JavaScript has a _Boolean_ type, which has just two values: true and
 false (which are written simply as those words).
 
@@ -298,7 +297,7 @@ print(false || false)
 ----
 
 (((negation)))(((! operator)))_Not_ is written as an exclamation mark
-(`!`). It is a unary operator that flips the value given to it—`!true`
+(`!`). It is a unary operator that flips the value given to it -- `!true`
 produces `false` and `!false` gives `true`.
 
 (((precedence)))When mixing these Boolean operators with arithmetic

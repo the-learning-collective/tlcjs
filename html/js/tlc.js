@@ -279,10 +279,8 @@ function fontSizeHelper(y, fontSize) {
 /* emptyScene :: number -> number -> image */
 var emptyScene_usage = "emptyScene(): Requires two arguments, a width and a height, both numbers. For example: emptyScene(300, 200).";
 var emptyScene = _type([tNumber, tNumber], emptyScene_usage, function(width, height) {
-  return { tlc_dt: "image",
-           elements: [],
-           width: width,
-           height: height };
+  return overlay(rectangle(width-2, height-2, "white"),
+                 rectangle(width, height, "black"));
 });
 
 /* overlay :: image -> image -> image */
@@ -354,6 +352,7 @@ function tlc_sandbox_functions(win) {
         win.out("log", arguments);
       }
     }),
+    bike: circle(30, "red"),
     circle: circle,
     rectangle: rectangle,
     text: text,
