@@ -14,17 +14,15 @@ HTML pages that tell them not only what text and images to display on
 the screen, but also any Javascript that should be run. For examples
 in this text or your own programs, you should create two files. You
 should do this with a _Text Editor_, which is like a word
-processor but for programs. A (mostly) free good one that runs on
+processor but for programs. A good (mostly) free one that runs on
 Macs, Windows, and Linux is called http://www.sublimetext.com/[_Sublime Text_] (mostly free means
 that it costs money, but it has a free trial that lasts forever).
 
-You should create a folder where
-you will hold all the programs you write throughout this curiculum,
-for example, `tlcjs` could be the name of the folder. Then open up
-Sublime Text and create two new files:
+Create a folder where you can hold all the programs you will write throughout this curiculum; name the folder `tlcjs`. Then open up
+Sublime Text and create two new files in this folder:
 `example1.html` and `example1.js`.  In
-"example1.html", which is the file that you will open with your web
-browser, we need to tell the web browser that we want to run
+"example1.html" -- which is the file that you will open with your web
+browser -- we need to tell the web browser that we want to run
 `example1.js`. We also want to include some pre-constructed
 functionality for this curiculum. All HTML files start with a declaration of the particular version of HTML that we are using. HTML dates back to 1993, and many changes have happened, but to tell the browser that we want the current version, we start every HTML file with:
 
