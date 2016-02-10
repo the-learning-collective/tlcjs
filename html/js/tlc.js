@@ -132,6 +132,26 @@ var rectangle = _type([tNumber, tNumber, tString], rectangle_usage, function(wid
            height: height };
 });
 
+var line_usage = "line(): Requires four arguments, all numbers --  StartX, StartY, EndX, EndY. Line draws a line from one point to another. The first two arguments are the X,Y coordinates of the starting point. The last two arguments are the X,Y coordinates of the ending point. For example: line(0,0, 100, 200)";
+var line = _type([tNumber,tNumber,tNumber,tNumber], line_usage, function(startX, startY, endX, endY) {
+
+  var line = { tlc_dt: "line",
+               startX: startX,
+               startY: startY,
+               endX: endX,
+               endY: endY,
+               x:0,
+               y:0
+             };
+  
+  return { tlc_dt: "line",
+           elements: [line],
+           width: endX,
+           height: endY
+         };
+
+});
+
 
 var text_usage = "text(): Requires two arguments, text to place in the graphic and a number, the size of the text in pixele. Example: text('Hello', 20).";
 // input: string (text to print), number (size of font in pixels); output: image
@@ -220,6 +240,12 @@ function _drawInternal(cont, image, givenCanvas) {
     case "text":
       ctx.font = '' +  shape.fontSize + "px serif";
       ctx.fillText(shape.text, shape.x, fontSizeHelper(shape.y, shape.fontSize));
+      break;
+    case "line":
+      ctx.beginPath();
+      ctx.moveTo(shape.startX,shape.startY);
+      ctx.lineTo(shape.endX,shape.endY);
+      ctx.stroke();
       break;
     default:
       break;
@@ -332,6 +358,7 @@ function tlc_sandbox_functions(win) {
     rectangle: rectangle,
     text: text,
     overlay: overlay,
+    line: line,
     placeImage: placeImage,
     emptyScene: emptyScene,
     animate: _type([tFunction], animate_usage, function(tick) {
