@@ -314,7 +314,7 @@ necessary:
 1 + 1 === 2 && 10 * 10 > 50
 ----
 
-But, to make your life easier, it is safer to just include parethesis!
+But, to make your life easier, it is safer to just include parenthesis!
 
 == Undefined values ==
 
