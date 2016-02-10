@@ -60,7 +60,7 @@ haven't written yet):
   <script src="example1.js"></script>
 ----
 
-Now save that file. It should look something like:
+Now save that file. It should look something like (for why the `<script>` lines are further in than the rest, see the next section, "Indenting Code"):
 
 ----
 <!doctype html>
@@ -69,6 +69,23 @@ Now save that file. It should look something like:
   <script src="http://tlcjs.org/js/tlc.js"></script>
   <script src="example1.js"></script>
 ----
+
+== Indenting Code (and HTML) ==
+
+(((block)))(((code structure)))(((whitespace)))(((programming
+style)))You've probably noticed the spaces I put in front of some
+statements. In JavaScript, these are not required—the computer will
+accept the program just fine without them. In fact, even the ((line))
+breaks in programs are optional. You could write a program as a single
+long line if you felt like it. The role of the ((indentation)) inside
+blocks is to make the structure of the code stand out. In complex
+code, where new blocks are opened inside other blocks, it can become
+hard to see where one block ends and another begins. With proper
+indentation, the visual shape of a program corresponds to the shape of
+the blocks inside it. I like to use two spaces for every open block,
+but tastes differ—some people use four spaces, and some people use
+((tab character))s.
+
 
 Next open up the other file, `example1.js`. To start, we will use one of the simplest operations, `print`, which simply prints a value on the page. In this case, we'll just print out the number 1:
 
