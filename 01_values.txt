@@ -329,7 +329,7 @@ yield _some_ value.
 
 The difference in meaning between `undefined` and `null` is an accident
 of JavaScript's design, and it doesn't matter most of the time. In the cases
-where you actually have to concern yourself with these values, I
+where you actually have to concern yourself with these values, we
 recommend treating them as interchangeable (more on that in a moment).
 
 == Automatic type conversion ==
