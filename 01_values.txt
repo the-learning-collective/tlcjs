@@ -157,7 +157,7 @@ print("con" + "cat" + "e" + "nate")
 
 We can also draw pictures. There are a few basic functions available
 that create pictures, and ways of combining them to create new
-pictures. One of the most basic one is a circle. You can create a
+pictures. One of the most basic ones is a circle. You can create a
 small red circle by writing `circle(10, "red")`, where 10 is the
 radius is pixels (Note: This is also functionality brought by the TLC
 library, not strictly speaking ).
