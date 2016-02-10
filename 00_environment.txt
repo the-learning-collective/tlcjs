@@ -11,8 +11,9 @@ Firefox.
 In order to run a Javascript program with a web browser, you
 need a small page that tells the browser what to do. Browsers read
 HTML pages that tell them not only what text and images to display on
-the screen, but also any Javascript that should be run. For examples
-in this text or your own programs, you should create two files. You
+the screen, but also any Javascript that should be run.
+
+To try examples in this text or write your own programs, you should create two files. You
 should do this with a _Text Editor_, which is like a word
 processor but for programs. A good (mostly) free one that runs on
 Macs, Windows, and Linux is called http://www.sublimetext.com/[_Sublime Text_] (mostly free means
