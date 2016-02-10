@@ -328,6 +328,7 @@ function tlc_sandbox_functions(win) {
         win.out("log", arguments);
       }
     }),
+    bike: circle(30, "red"),
     circle: circle,
     rectangle: rectangle,
     text: text,

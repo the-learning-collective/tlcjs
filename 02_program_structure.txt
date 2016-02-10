@@ -306,7 +306,34 @@ print(my_function());
 
 == Animations ==
 
-TODO
+You can create an empty scene with:
+
+[source,javascript]
+----
+var scene = emptyScene(400,400);
+print(scene);
+----
+
+And we can place a bicycle on that scene:
+
+[source,javascript]
+----
+var scene = placeImage(bike, emptyScene(400,400), 0, 0);
+print(scene);
+----
+
+
+
+We can define a function that draws a scene:
+
+[source,javascript]
+----
+var draw_scene = function() {
+
+};
+print(my_function());
+----
+
 
 
 == Control flow ==
