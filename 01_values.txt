@@ -297,7 +297,7 @@ print(false || false)
 ----
 
 (((negation)))(((! operator)))_Not_ is written as an exclamation mark
-(`!`). It is a unary operator that flips the value given to it—`!true`
+(`!`). It is a unary operator that flips the value given to it -- `!true`
 produces `false` and `!false` gives `true`.
 
 (((precedence)))When mixing these Boolean operators with arithmetic
