@@ -314,7 +314,7 @@ var scene = emptyScene(400,100);
 print(scene);
 ----
 
-And we can place a bicycle on that scene:
+And we can place a bicycle on that scene using the `placeImage` function, which is like `overlay` but it takes, additionally, how far from the left and top to place the first over the second image:
 
 [source,javascript]
 ----
