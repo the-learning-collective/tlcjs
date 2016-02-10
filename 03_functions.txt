@@ -4,14 +4,6 @@
 
 = Functions =
 
-[chapterquote="true"]
-[quote, Donald Knuth]
-____
-People think that computer science is the art of
-geniuses but the actual reality is the opposite, just many people
-doing things that build on each other, like a wall of mini stones.
-____
-
 (((Knuth+++,+++ Donald)))(((function)))(((code structure)))You've seen function values, such
 as `alert`, and how to call them. Functions are the bread and butter
 of JavaScript programming. The concept of wrapping a piece of program
@@ -30,67 +22,6 @@ commands built in. And the vocabulary that _is_ available tends to be
 more precisely defined, and thus less flexible, than in human
 language. Therefore, we usually _have_ to add some of our own
 vocabulary to avoid repeating ourselves too much.
-
-== Defining a function ==
-
-(((square)))(((function,definition)))A function definition is just a
-regular ((variable)) definition where the value given to the variable
-happens to be a function. For example, the following code defines the
-variable `square` to refer to a function that produces the square of a
-given number:
-
-[source,javascript]
-----
-var square = function(x) {
-  return x * x;
-};
-
-console.log(square(12));
-// → 144
-----
-
-indexsee:[braces,curly braces]
-(((curly braces)))(((block)))(((syntax)))(((function
-keyword)))(((function,body)))(((function,as value)))A function is
-created by an expression that starts with the keyword `function`.
-Functions have a set of _((parameter))s_ (in this case, only `x`) and
-a _body_, which contains the statements that are to be executed when
-the function is called. The function body must always be wrapped in
-braces, even when it consists of only a single ((statement)) (as
-in the previous example).
-
-(((power example)))A function can have multiple parameters or no
-parameters at all. In the following example, `makeNoise` does not list
-any parameter names, whereas `power` lists two:
-
-[source,javascript]
-----
-var makeNoise = function() {
-  console.log("Pling!");
-};
-
-makeNoise();
-// → Pling!
-
-var power = function(base, exponent) {
-  var result = 1;
-  for (var count = 0; count < exponent; count++)
-    result *= base;
-  return result;
-};
-
-console.log(power(2, 10));
-// → 1024
-----
-
-(((return value)))(((return keyword)))(((undefined)))Some functions
-produce a value, such as `power` and `square`, and some don't, such as
-`makeNoise`, which produces only a ((side effect)). A `return`
-statement determines the value the function returns. When control
-comes across such a statement, it immediately jumps out of the current
-function and gives the returned value to the code that called the
-function. The `return` keyword without an expression after it will
-cause the function to return `undefined`.
 
 == Parameters and scopes ==
 
@@ -178,7 +109,7 @@ var landscape = function() {
       result += "'";
     result += "\\";
   };
- 
+
   flat(3);
   mountain(4);
   flat(6);

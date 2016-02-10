@@ -4,11 +4,9 @@
 
 = Program Structure =
 
-In this chapter, we will start to do
-things that can actually be called _programming_. We will expand our
-command of the JavaScript language beyond the nouns and sentence
-fragments we've seen so far, to the point where we can
-express some meaningful prose.
+In this chapter, we will expand our command of the JavaScript language
+beyond the nouns and sentence fragments we've seen so far, to the
+point where we can express some meaningful prose.
 
 == Expressions and statements ==
 
@@ -84,9 +82,8 @@ var caught = 5 * 5;
 
 (((var keyword)))And that gives us our second kind of ((statement)).
 The special word (_((keyword))_) `var` indicates that this sentence is
-going to define a variable. It is followed by the name of the variable
-and, if we want to immediately give it a value, by an `=` operator and
-an expression.
+going to define a variable. It is followed by the name of the
+variable, an `=` operator, and an expression.
 
 The previous statement creates a variable called `caught` and uses it
 to grab hold of the number that is produced by multiplying 5 by 5.
@@ -166,147 +163,166 @@ indexsee:[calling (of functions),function application]
 function)))(((message box)))A lot of the values provided in the
 default environment have the type _((function))_. A function is a
 piece of program wrapped in a value. Such values can be _applied_ in
-order to run the wrapped program. For example, in a ((browser))
-environment, the variable `alert` holds a function that shows a little
-((dialog box)) with a message. It is used like this:
+order to run the wrapped program. For example, our `print` is just
+such a function (previously, we referred to `print` as an operator, to
+make it analogous to `+` or `*`, but function is the proper name).
 
 [source,javascript]
 ----
-alert("Good morning!");
+print("Good morning!");
 ----
-
-image::img/alert.png[alt="An alert dialog",width="8cm"]
 
 (((parameter)))(((function,application)))Executing a function is
 called _invoking_, _calling_, or _applying_ it. You can call a
-function by putting ((parentheses)) after an expression that produces a
-function value. Usually you'll directly use the name of the variable
-that holds the function. The values between the parentheses are given to
-the program inside the function. In the example, the `alert` function
-uses the string that we give it as the text to show in the dialog box.
-Values given to functions are called _((argument))s_. The `alert`
-function needs only one of them, but other functions might need a
-different number or different types of arguments.
+function by putting ((parentheses)) after an expression that produces
+a function value. Usually you'll directly use the name of the variable
+that holds the function. `print` is just such an example of a variable
+that contains a function. We can also define a new name for `print`,
+and use that instead:
 
-== The print function ==
-
-TODO(dbp 2016-01-21): Rewrite this for our print!
-
-(((JavaScript console)))(((developer
-tools)))(((Node.js)))(((console.log)))(((output)))The `alert` function
-can be useful as an output device when experimenting, but clicking
-away all those little windows will get on your nerves. In past
-examples, we've used `console.log` to output values. Most JavaScript
-systems (including all modern web ((browser))s and Node.js) provide a
-`console.log` function that writes out its arguments to _some_ text
-output device. In browsers, the output lands in the ((JavaScript
-console)). This part of the browser interface is hidden by default,
-but most browsers open it when you press F12 or, on Mac, when you
-press Command-Option-I. If that does not work, search through the
-menus for an item named “web console” or “developer tools”.
-
-ifdef::interactive_target[]
-
-When running the examples, or your own code, on the pages of this
-book, `console.log` output will be shown after the example, instead of
-in the browser's JavaScript console.
-
-endif::interactive_target[]
 
 [source,javascript]
 ----
-var x = 30;
-console.log("the value of x is", x);
-// → the value of x is 30
+var my_better_print = print;
+my_better_print("Good morning!");
 ----
 
-(((object)))Though ((variable)) names cannot contain ((period
-character))s, `console.log` clearly has one. This is because
-`console.log` isn't a simple variable. It is actually an expression
-that retrieves the `log` ((property)) from the value held by the
-`console` variable. We will find out exactly what this means in
-link:04_data.html#properties[Chapter 4].
+
+The values between the parentheses are given to the program inside the
+function. In the example, the `print` function uses the string that we
+give it as the text to show.  Values given to functions are called
+_((argument))s_. The `print` function needs only one of them, but
+other functions might need a different number or different types of
+arguments.
 
 [[return_values]]
 == Return values ==
 
 (((comparison,of numbers)))(((return value)))(((Math.max
-function)))(((maximum)))Showing a dialog box or writing text to
-the screen is a _((side effect))_. A lot of functions are useful
-because of the side effects they produce. Functions may also produce
-values, and in that case, they don't need to have a side effect to be
-useful. For example, the function `Math.max` takes any number of
-number values and gives back the greatest.
+function)))(((maximum)))Writing text to the screen is a _((side
+effect))_. But all functions produce values, and these are often why
+we want to use them. For example, the function `Math.max` takes any
+number of number values and gives back the greatest.
 
 [source,javascript]
 ----
-console.log(Math.max(2, 4));
+print(Math.max(2, 4));
 // → 4
 ----
 
-(((function,application)))(((minimum)))(((Math.min
-function)))When a function produces a value, it is said to _return_
-that value. Anything that produces a value is an ((expression)) in
-JavaScript, which means function calls can be used within larger
-expressions. Here a call to `Math.min`, which is the opposite of
-`Math.max`, is used as an input to the plus operator:
+
+(((function,application)))(((minimum)))(((Math.min function)))The
+value that a function produces is called the _return_ value, and the
+function is said to have _returned_ the value. Anything that produces
+a value is an ((expression)) in JavaScript, which means function calls
+can be used within larger expressions. Here a call to `Math.min`,
+which is the opposite of `Math.max`, is used as an input to the plus
+operator:
 
 [source,javascript]
 ----
-console.log(Math.min(2, 4) + 100);
+print(Math.min(2, 4) + 100);
 // → 102
 ----
 
-The link:03_functions.html#functions[next chapter] explains how to
-write your own functions.
+== Dots in function names ==
 
-== prompt and confirm ==
+(((object)))Though ((variable)) names cannot contain ((period
+character))s, `Math.max` clearly has one. This is because `Math.max`
+isn't a simple variable. It is actually an expression that retrieves
+the `max` ((property)) from the value held by the `Math` variable. We
+will go into more detail on this later, but for now, you can use these
+identifiers the same way you would your own variables.
 
-(((dialog box)))(((input)))(((browser)))(((confirm function)))Browser
-environments contain other functions besides `alert` for popping up
-windows. You can ask the user an OK/Cancel question using
-`confirm`. This returns a Boolean: `true` if the user clicks OK and
-`false` if the user clicks Cancel.
 
-[source,javascript]
-----
-confirm("Shall we, then?");
-----
+== Defining Functions ==
 
-image::img/confirm.png[alt="A confirm dialog",width="8cm"]
-
-(((input)))(((prompt function)))(((text input)))The `prompt` function
-can be used to ask an “open” question. The first argument is the
-question, the second one is the text that the user starts with. A line
-of text can be typed into the dialog window, and the function will
-return this text as a string.
+(((square)))(((function,definition)))A function definition is just a
+regular ((variable)) definition where the value given to the variable
+happens to be a function. For example, the following code defines the
+variable `square` to refer to a function that produces the square of a
+given number:
 
 [source,javascript]
 ----
-prompt("Tell me everything you know.", "...");
+var square = function(x) {
+  return x * x;
+};
+
+print(square(12));
+// → 144
 ----
 
-image::img/prompt.png[alt="An prompt dialog",width="8cm"]
+indexsee:[braces,curly braces]
+(((curly braces)))(((block)))(((syntax)))(((function
+keyword)))(((function,body)))(((function,as value)))A function is
+created by an expression that starts with the keyword `function`.
+Functions have a set of _((parameter))s_ (in this case, only `x`) and
+a _body_, which contains the statements that are to be executed when
+the function is called. The function body must always be wrapped in
+braces, even when it consists of only a single ((statement)) (as
+in the previous example).
 
-These two functions aren't used much in modern web programming, mostly
-because you have no control over the way the resulting windows look,
-but they are useful for toy programs and experiments.
+(((power example)))A function can have multiple parameters or no
+parameters at all. In the following example, `makeNoise` does not list
+any parameter names, whereas `power` lists two:
+
+[source,javascript]
+----
+var makeNoise = function() {
+  print("Pling!");
+};
+
+makeNoise();
+// → Pling!
+
+var emphasize = function(string) {
+  return string + "!!!!";
+};
+
+print(emphasize("hello there"));
+// → hello there!!!!
+----
+
+(((return value)))(((return keyword)))(((undefined)))Some functions
+explicitly `return` a value, such as `power` and `square`, and some
+don't, such as `makeNoise`. A `return` statement determines the value
+the function returns. When control comes across such a statement, it
+immediately jumps out of the current function and gives the returned
+value to the code that called the function. The `return` keyword
+without an expression after it will cause the function to return
+`undefined`. If there is no `return` statement, your function also
+returns `undefined`.
+
+For example:
+
+[source,javascript]
+----
+var my_function = function() {
+
+};
+print(my_function());
+----
+
+== Animations ==
+
+TODO
+
 
 == Control flow ==
 
 (((execution order)))(((program)))(((control flow)))When your program
 contains more than one ((statement)), the statements are executed,
 predictably, from top to bottom. As a basic example, this program has
-two statements. The first one asks the user for a number, and the
-second, which is executed afterward, shows the ((square)) of that
-number.
+two statements.
 
 [source,javascript]
 ----
-var theNumber = Number(prompt("Pick a number", ""));
-alert("Your number is the square root of " +
-      theNumber * theNumber);
+print(10);
+print(circle(100, "green"));
 ----
+
+NOTE(dbp) -- continue here!
 
 (((number,conversion to)))(((type coercion)))(((Number
 function)))(((String function)))(((Boolean
