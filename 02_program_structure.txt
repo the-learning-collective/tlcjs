@@ -480,7 +480,7 @@ var myNumber = 11213;
 
 1. __Magical Teleporting Bike__ 
 
-Let's try making a magical teleportating bike!
+Let's try making a magical teleporting bike!
 
 This magical bike rides on the ground for the first part of its journey. When it reaches the carefully guarded, top secret, Original Magic Teleportation Point (known to UFO buffs as Position 80), it jumps up into the sky! When it reaches the next Magical Teleportation Point (known by the initiate as Position 160), it jumps back down to the ground. When it reaches the end of its Magical Road (at the pitstop locals like to call Position 320), it stops.
 
