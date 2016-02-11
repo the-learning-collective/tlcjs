@@ -478,7 +478,50 @@ var myNumber = 11213;
 
 == Exercises ==
 
-As an exercise,
+1. __Magical Teleporting Bike__ 
+
+Let's try making a magical teleportating bike!
+
+This magical bike rides on the ground for the first part of its journey. When it reaches the carefully guarded, top secret, Original Magic Teleportation Point (known to UFO buffs as Position 80), it jumps up into the sky! When it reaches the next Magical Teleportation Point (known by the initiate as Position 160), it jumps back down to the ground. When it reaches the end of its Magical Road (at the pitstop locals like to call Position 320), it stops.
+
+We've sketched out a skeleton of what a program for creating such a Magical Teleporting Bike might look like below. Try replacing the comments with running code and giving the Magical Teleporting Bike for a spin!
+
+[source,javascript]
+----
+var draw_bike = function(position) {
+  if (position < 80) {
+    return placeImage(bike, emptyScene(400,100), position, 30);
+  } else if (position < 160) {
+    // jump to the top!
+  } else if (position < 320){
+    // jump back to the bottom!
+  } else {
+    // stop!
+  }
+};
+
+animate(draw_bike);
+----
+
+2. __Extra credit: Go Backwards!__
+
+Can you think of a way to replace the comment with code that will make the bike go backwards once it reaches the right-most part of the scene?
+
+[source,javascript]
+----
+var draw_bike = function(position) {
+  if (position < 400) {
+    return placeImage(bike, emptyScene(400, 100), position, 30);
+  } else {
+    return placeImage(bike, emptyScene(400, 100), /*what goes here?*/, 30)
+  };
+};
+
+animate(draw_bike);
+----
+
+
+
 
 == Summary ==
 
