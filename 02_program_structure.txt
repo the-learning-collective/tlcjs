@@ -190,7 +190,7 @@ print(square(12));
 // → 144
 ----
 
-The `function` keyword is followed by parethesis, and without those
+The `function` keyword is followed by parethesis, and within those
 are a comma-separated list of argument names. When you _apply_ the
 function, these names will be where the input values are. The body of
 the function (between the `{` and `}`) should eventually produce a
