@@ -143,7 +143,7 @@ var line = _type([tNumber,tNumber,tNumber,tNumber], line_usage, function(startX,
                x:0,
                y:0
              };
-  
+
   return { tlc_dt: "line",
            elements: [line],
            width: endX,
@@ -332,6 +332,43 @@ function _animateInternal(withCanvas, tickToImage) {
 var animate_usage = "animate(): Requires one argument, a function that takes a number and produces a image. For example: animate(function(n) { return overlay(circle(n, 'red'), emptyScene(100,100));}).";
 var animate = _type([tFunction], animate_usage, function(tickToImage) {
   return _animateInternal(_addOutput, tickToImage);
+});
+
+function _bigBangInternal(withCanvas, world, to_draw, on_tick, on_key) {
+
+    var canvas = document.createElement("canvas");
+    withCanvas(canvas);
+
+    _drawInternal(withCanvas, to_draw(world), canvas);
+
+    var currentKey = undefined;
+
+    // from the MDN KeyboardEvent.key article
+    window.addEventListener("keydown", function(event) {
+        currentKey = event.key;
+    }, true)
+
+    window.addEventListener("keyup", function(event) {
+        currentKey = undefined;
+    }, true);
+
+
+    var newWorld = world;
+    function step() {
+        _drawInternal(withCanvas, to_draw(newWorld), canvas);
+        newWorld = on_tick(on_key(newWorld, currentKey));
+        window.requestAnimationFrame(step);
+    }
+
+    step();
+}
+
+/* big_bang??? */
+var bigBang_usage = "big_bang(): TODO";
+var bigBang = _type([tAny, tFunction, tFunction, tFunction], bigBang_usage, function(world, to_draw, on_tick, on_key) {
+
+    return _bigBangInternal(_addOutput, world, to_draw, on_tick, on_key);
+
 });
 
 

@@ -44,10 +44,32 @@ function tanWiggle(n) {
   return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
 }
 
-  
+
 animate(sinWiggle);
 animate(cosWiggle);
 animate(tanWiggle);
 
 draw(text('hi there', 20));
 draw(placeImage(text('hello world', 16), emptyScene(200,200), 100, 100));
+
+function grow(number) {
+    return overlay(circle(number, "red"), emptyScene(200, 200));
+}
+
+function inc1(n) {
+    if (n < 100) {
+        return n + 1;
+    } else {
+        return n;
+    }
+}
+
+function startAgain (world, initialSize) {
+    if (initialSize >= 0 && initialSize < 10) {
+        return (10 * parseInt(initialSize, 10)); // eek
+    } else {
+        return world;
+    }
+}
+
+bigBang(0, grow, inc1, startAgain);
