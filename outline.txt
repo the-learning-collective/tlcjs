@@ -1,0 +1,40 @@
+Right now, the outline of topics thus far (order they are introduced):
+
+1.
+
+numbers
+arithmetic
+print
+precedence
+strings
+images - circle, rectangle
+overlay
+booleans
+comparisons
+&& and ||
+undefined / null
+type coercion
+
+2.
+
+expresions vs statements
+variables
+keywords
+environment
+functions (built in)
+return values
+defining functions
+emptyScene
+placeImage
+scene function based on position
+animate
+if/else if/else
+animation with branching
+comments
+
+
+NOTE(dbp 2016-02-11): Proposed changes:
+- move variables/keywords/environment into chapter 1, after images
+- move booleans / comparisons / &&/|| to chapter 2, to be near if.
+- move placeImage/emptyScene to chapter 1, as they are helpful to draw nice images.
+- move comments to be right at the beginning

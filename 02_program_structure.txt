@@ -20,9 +20,9 @@ a part.
 (((literal expression)))A fragment of code that produces a value is
 called an _((expression))_. Every value that is written literally
 (such as `22` or `"socialism"`) is an expression. An expression
-between ((parentheses)) is also an expression, as is a ((binary
-operator)) applied to two expressions or a unary operator applied to
-one.
+between ((parentheses)) is also an expression (like `(1 + 2)`), as is
+a ((binary operator)) applied to two expressions (like `"hello " +
+"there!"`) or a unary operator applied to one (like `!true`).
 
 (((nesting,of expressions)))(((human language)))This shows part of the
 beauty of a language-based interface. Expressions can nest in a way
@@ -50,11 +50,11 @@ expression. A ((statement)) stands on its own and amounts to something
 only if it affects the world. It could display something on the
 screen—that counts as changing the world—or it could change the
 internal state of the machine in a way that will affect the statements
-that come after it. These changes are called _((side effect))s_. The
-statements in the previous example just produce the values `1` and
-`true` and then immediately throw them away. This leaves no impression
-on the world at all. When executing the program, nothing observable
-happens.
+that come after it. These changes are called _((side effect))s_ (we'll
+see an example of a side effect in the next section!). The statements
+in the previous example just produce the values `1` and `true` and
+then immediately throw them away. This leaves no impression on the
+world at all. When executing the program, nothing observable happens.
 
 (((programming style)))(((automatic semicolon
 insertion)))(((semicolon)))In some cases, JavaScript allows you to
@@ -478,7 +478,7 @@ var myNumber = 11213;
 
 == Exercises ==
 
-1. __Magical Teleporting Bike__ 
+1. __Magical Teleporting Bike__
 
 Let's try making a magical teleporting bike!
 
