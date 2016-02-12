@@ -68,7 +68,7 @@ within `print()` in the second example. As in arithmetic, sometimes a
 program could be ambiguous. For example, in the previous example, if
 we first evaluated `1 + 2` before multiplying by `3` we would get a
 different answer. These kind of ambiguities are resolved in the same
-way as arithmetic - with rules of "precedence" (what operations
+way as arithmetic—with rules of "precedence" (what operations
 "precede" others) and parenthesis to override them.
 
 As an exercise, consider the following:
