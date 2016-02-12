@@ -1,0 +1,23 @@
+:prev_link: 15_something
+:next_link: 16_something_else
+
+= TLC.js Reference =
+
+print(): Requires one argument, which can be anything. For example: `print(10)`.
+
+circle(): Requires two arguments, a radius and a color, which should be a number and a string. For example: `circle(100, 'red')`.
+
+rectangle(): Requires three arguments, a width, a height, and a color. The first two should be numbers, the last a string. For example: `rectangle(100, 50, 'black')`.
+
+line(): Requires four arguments, all numbers --  StartX, StartY, EndX, EndY. Line draws a line from one point to another. The first two arguments are the X,Y coordinates of the starting point. The last two arguments are the X,Y coordinates of the ending point. For example: `line(0,0, 100, 200)`.
+
+text(): Requires two arguments, text to place in the graphic and a number, the size of the text in pixele. Example: `text('Hello', 20)`.
+
+emptyScene(): Requires two arguments, a width and a height, both numbers. For example: `emptyScene(300, 200)`.
+
+overlay(): Requires two arguments, a foreground and a background
+image. For example, `overlay(circle(10, 'red'), emptyScene(100, 100))`.
+
+placeImage(): Requires four arguments: a forgeground image, a background image, and the x and y coordinates for the top left of the foreground to be placed on the background (both numbers). For example, `placeImage(rectangle(10,10,'red'), rectangle(100,100,'black'), 40, 40)`.
+
+animate(): Requires one argument, a function that takes a number and produces a image. For example: `animate(function(n) { return overlay(circle(n, 'red'), emptyScene(100,100));})`.
