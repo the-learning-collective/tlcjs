@@ -364,6 +364,36 @@ var draw_bike = function(position) {
 animate(draw_bike);
 ----
 
+== Making animations move ==
+
+Two helpful functions for making animations are `Math.sin` and
+`Math.cos`. These are the _sin_ and _cos_ functions from math. You can
+fiddle with this to get interesting things to happen:
+
+[source,javascript]
+----
+function sinWiggle(n) {
+  var xPosition = Math.sin(n/20) * 90 + 90;
+  return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
+}
+
+function cosWiggle(n) {
+  var xPosition = Math.cos(n/20) * 90 + 90;
+  return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
+}
+
+animate(sinWiggle);
+animate(cosWiggle);
+----
+
+A helpful operator is `%`, which is pronounced _mod_. It takes the
+_remainder_ after diving the right side by the left side.
+
+For example, `10 % 3` is `1`. while `10 % 2` is `0`. This can be
+helpful when you want things to repeat, as if `n` counts from `0` to
+infinity, `n % 10` counts `0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5...`.
+
+
 == Control flow ==
 
 (((execution order)))(((program)))(((control flow)))When your program
