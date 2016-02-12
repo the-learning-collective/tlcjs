@@ -482,6 +482,7 @@ animate(draw_bike);
 ----
 
 
+
 == Comments ==
 
 (((readability)))Often, raw code does not convey all the information
@@ -513,6 +514,21 @@ blocks of information about a file or a chunk of program.
 */
 var myNumber = 11213;
 ----
+
+
+== A shorter way to define functions ==
+
+Since giving names to functions by storing them in variables is really
+common, there is a shorter way to do these two things:
+
+[source,javascript]
+----
+var name = function(arg) { return arg; };
+// Is equivalent to:
+function name(arg) { return arg; }
+----
+
+The second is a little shorter and doesn't have a semicolon at the end.
 
 == Exercises ==
 
