@@ -160,48 +160,83 @@ indexsee:[application (of functions),function application]
 indexsee:[invoking (of functions),function application]
 indexsee:[calling (of functions),function application]
 (((output)))(((function)))(((function,application)))(((alert
-function)))(((message box)))A lot of the values provided in the
-default environment have the type _((function))_. A function is a
-piece of program wrapped in a value. Such values can be _applied_ in
-order to run the wrapped program. For example, our `print` is just
-such a function (previously, we referred to `print` as an operator, to
-make it analogous to `+` or `*`, but function is the proper name).
+function)))(((message box)))Up until now, every value (numbers,
+images, booleans) we have created have been unchanging - even with our
+most complicated images, they don't change. Sometimes, we want to be
+able to create values that are based on other values. For example, we
+might want to make an image where the color could vary, based on how
+we wanted to use it. To do this, we create _functions_. A function is
+a specification for how to create a value depending on some other
+values, which are alternatively called _arguments_ or
+_parameters_. Functions can also cause side effects (for example, our
+`print` function causes values to be shown on the screen - previously,
+we referred to `print` as an operator, to make it analogous to `+` or
+`*`, but function is the proper name). Even though they are quite a
+bit more sophisticated, functions are values just like numbers,
+strings, and images - they can be passed as arguments, stored in
+variables, etc.
+
+We define functions with the `function` keyword. For example, the
+following code defines the variable `square` to refer to a function
+that produces the square of a given number:
 
 [source,javascript]
 ----
-print("Good morning!");
+var square = function(x) {
+  return x * x;
+};
+
+print(square(12));
+// → 144
 ----
 
-(((parameter)))(((function,application)))Executing a function is
+The `function` keyword is followed by parethesis, and without those
+are a comma-separated list of argument names. When you _apply_ the
+function, these names will be where the input values are. The body of
+the function (between the `{` and `}`) should eventually produce a
+value (it can also do other things first). To produce a value, you use
+the `return` keyword. There is a little more about `return` in the
+next section.
+
+(((parameter)))(((function,application)))Using a function is
 called _invoking_, _calling_, or _applying_ it. You can call a
 function by putting ((parentheses)) after an expression that produces
 a function value. Usually you'll directly use the name of the variable
-that holds the function. `print` is just such an example of a variable
-that contains a function. We can also define a new name for `print`,
+that holds the function. We can also define a new name for `square`,
 and use that instead:
 
+[source,javascript]
+----
+var square = function(x) {
+  return x * x;
+};
+
+var my_better_square = square;
+print(square(12));
+----
+
+Built in functions like `print` can also be given new names:
 
 [source,javascript]
 ----
 var my_better_print = print;
-my_better_print("Good morning!");
+my_better_print("Hello there!");
 ----
 
-
 The values between the parentheses are given to the program inside the
-function. In the example, the `print` function uses the string that we
-give it as the text to show.  Values given to functions are called
-_((argument))s_. The `print` function needs only one of them, but
-other functions might need a different number or different types of
-arguments.
+function. In the example, the `square` function uses the integer `12`
+that we give it as the text to show.  Values given to functions are
+called _((argument))s_. The `square` function needs only one of them,
+but other functions might need a different number or different types
+of arguments.
 
 [[return_values]]
 == Return values ==
 
 (((comparison,of numbers)))(((return value)))(((Math.max
 function)))(((maximum)))Writing text to the screen is a _((side
-effect))_. But all functions produce values, and these are often why
-we want to use them. For example, the function `Math.max` takes any
+effect))_. But functions produce values, and these are usually why we
+want to use them. For example, the function `Math.max` takes any
 number of number values and gives back the greatest.
 
 [source,javascript]
@@ -234,34 +269,7 @@ the `max` ((property)) from the value held by the `Math` variable. We
 will go into more detail on this later, but for now, you can use these
 identifiers the same way you would your own variables.
 
-
-== Defining Functions ==
-
-(((square)))(((function,definition)))A function definition is just a
-regular ((variable)) definition where the value given to the variable
-happens to be a function. For example, the following code defines the
-variable `square` to refer to a function that produces the square of a
-given number:
-
-[source,javascript]
-----
-var square = function(x) {
-  return x * x;
-};
-
-print(square(12));
-// → 144
-----
-
-indexsee:[braces,curly braces]
-(((curly braces)))(((block)))(((syntax)))(((function
-keyword)))(((function,body)))(((function,as value)))A function is
-created by an expression that starts with the keyword `function`.
-Functions have a set of _((parameter))s_ (in this case, only `x`) and
-a _body_, which contains the statements that are to be executed when
-the function is called. The function body must always be wrapped in
-braces -- `{ }` -- even when it consists of only a single ((statement)) (as
-in the previous example).
+== More functions ==
 
 (((power example)))A function can have multiple parameters or no
 parameters at all. In the following example, `makeNoise` does not list
