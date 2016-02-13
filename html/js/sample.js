@@ -51,3 +51,7 @@ animate(tanWiggle);
 
 draw(text('hi there', 20));
 draw(placeImage(text('hello world', 16), emptyScene(200,200), 100, 100));
+
+draw(polygon(3, 100, "red"));
+draw(polygon(4, 100, "red"));
+draw(polygon(5, 100, "red"));

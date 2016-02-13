@@ -132,6 +132,24 @@ var rectangle = _type([tNumber, tNumber, tString], rectangle_usage, function(wid
            height: height };
 });
 
+var polygon_usage = "polygon(): Creates a shape with at least three sides, all of the sides the same length. Requires three arguments: a number of sides, a length for each side, and a color. The first two should numbers, the last a string. For example: polygon(5, 20, 'red').";
+var polygon = _type([tNumber, tNumber, tString], polygon_usage, function(sides, length, color) {
+  
+  var shape = { tlc_dt: "polygon",
+                sides: sides,
+                length: length,
+                radius: Math.sin(Math.PI * 2 / sides) * length,
+                color: color,
+                x: 0,
+                y: 0 };
+
+  return { tlc_dt: "image",
+           elements: [shape],
+           width: shape.radius * 2,
+           height: shape.radius * 2
+         };
+});
+
 var line_usage = "line(): Requires four arguments, all numbers --  StartX, StartY, EndX, EndY. Line draws a line from one point to another. The first two arguments are the X,Y coordinates of the starting point. The last two arguments are the X,Y coordinates of the ending point. For example: line(0,0, 100, 200)";
 var line = _type([tNumber,tNumber,tNumber,tNumber], line_usage, function(startX, startY, endX, endY) {
 
@@ -151,7 +169,6 @@ var line = _type([tNumber,tNumber,tNumber,tNumber], line_usage, function(startX,
          };
 
 });
-
 
 var text_usage = "text(): Requires two arguments, text to place in the graphic and a number, the size of the text in pixele. Example: text('Hello', 20).";
 // input: string (text to print), number (size of font in pixels); output: image
@@ -228,6 +245,35 @@ function _drawInternal(cont, image, givenCanvas) {
       ctx.arc(shape.x + shape.radius,
               shape.y + shape.radius,
               shape.radius, 0, 2 * Math.PI);
+      ctx.fill();
+      break;
+    case "polygon":
+      var center = {x: shape.x + shape.radius,
+                    y: shape.y + shape.radius };
+      var number_sides = shape.sides;
+      if (shape.rotation) {
+        var rot = shape.rotation; // rotation in ??? it works tho?
+      } else {
+        var rot = Math.PI * 1.25;
+      }
+      var rad = Math.PI * 2 / number_sides; // angle of each corner
+      var len = shape.length; // length of each side
+      
+      ctx.beginPath();
+      ctx.fillStyle = shape.color;
+      pos = { x: center.x + shape.radius * Math.cos(rad + rot), 
+              y: center.y + shape.radius * Math.sin(rad + rot)};
+      ctx.moveTo(pos.x, pos.y);
+      
+      for (var i = 0; i < number_sides; i ++) {
+	pos = { x: center.x + (Math.cos(rad) * (pos.x - center.x) +
+  	                       (Math.sin(rad) * (center.y - pos.y))), 
+    	        y: center.y + (Math.cos(rad) * (pos.y - center.y) +
+      	                       (Math.sin(rad) * (pos.x - center.x))) };
+	ctx.lineTo(pos.x, pos.y);
+      }
+
+      ctx.closePath();
       ctx.fill();
       break;
     case "image":
