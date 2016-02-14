@@ -2,6 +2,28 @@ console.log("TLC is starting up...");
 
 /* OUTPUT AND INFRASTRUCTURE */
 
+
+function test(desc, expected, given) {
+  function err(r) {
+    console.log("TEST FAILED: " + desc + ". Got " + r + ", but expected " + expected);
+  }
+  try {
+    var res = given();
+    if (expected !== res) {
+      err(res);
+    }
+  } catch (e) {
+    err("exception");
+  }
+}
+
+function testRaises(desc, given) {
+  try {
+    given();
+    console.log("TEST FAILED: " + desc + ". Expected exception, but  " + given + ", but expected " + expected);
+  } catch (e) {}
+}
+
 /* These constants are provided for convenience, so that you don't
  * accidentally write "nmber" in a call to _type. If you write TNmber,
  * you'll get an error, whereas if you write the wrong string, it
@@ -14,21 +36,77 @@ var tBoolean = "boolean";
 var tFunction = "function";
 var tAny = "anything";
 
+var tArrow = function(args, ret) {
+  return { tag: "arrow", args: args, ret: ret };
+};
+
+/* This checks a value against a type, or in the case of a function,
+ * wraps the function so that when it is used, the proper check
+ * occurs. The type can be a flat type, like `tNumber`, or it can be
+ * an arrow type, like `tArrow([tNumber], tNumber)`. The latter allows
+ * us to ensure that arguments passed to, for example, `animate`, are
+ * indeed functions of the right type.
+ */
+function __type(ty, err, val) {
+  // NOTE(dbp 2016-02-13): String types are flat checks.
+  if (typeof ty === "string") {
+    if (!(ty === tAny || typeof val === ty)) {
+      throw new TypeError(err);
+    } else {
+      return val;
+    }
+  } else {
+    if (ty.tag === "arrow") {
+      if (val.length !== ty.args.length) {
+        throw new TypeError(err);
+      }
+      return function () {
+        // First, check arity.
+        if (arguments.length !== ty.args.length) {
+          throw new TypeError(err);
+        }
+
+        // Next, check/wrap arguments.
+        var args = _.map(_.zip(arguments, ty.args), function(x) {
+          var arg_ty = x[1];
+          var arg = x[0];
+          return __type(arg_ty, err, arg);
+        });
+
+        // Finally, call function and check return value.
+        var res = val.apply(this, arguments);
+        return __type(ty.ret, err, res);
+      };
+    }
+  }
+}
+
+test("__type numbers", 10, function () { return __type(tNumber, "", 10); });
+test("__type strings", "foo", function () { return __type(tString, "", "foo"); });
+testRaises("__type numbers", function () { return __type(tNumber, "", "hello"); });
+testRaises("__type higher order arity", function () {
+  return __type(tArrow([tNumber], tAny), "", function () {})();
+});
+testRaises("__type higher order arg type", function () {
+  return __type(tArrow([tNumber], tAny), "", function (x) {})("foo");
+});
+testRaises("__type higher order return type", function () {
+  return __type(tArrow([], tNumber), "", function () { return "foo";})();
+});
+
 
 /* This function helps make errors better by asserting that the
  * arguments to the function `f` have the number and type specified by
- * `args`. If they don't, the message `err` is raised. */
-function _type(args, err, f) {
-  return function() {
-    if (arguments.length !== args.length
-        || !_.every(_.zip(arguments, args), function(x) {
-          return x[1] === tAny || typeof x[0] === x[1];
-        })) {
-      throw new TypeError(err);
-    } else {
-      return f.apply(this, arguments);
-    }
-  };
+ * `arg_types`. If they don't, the message `err` is raised. */
+function _type(arg_types, err, ret, f) {
+  // NOTE(dbp 2016-02-13): This check is for backwards compat; once
+  // all calls to _type have return type, can be eliminated.
+  if (typeof f === "undefined") {
+    f = ret;
+    ret = tAny;
+  }
+
+  return __type(tArrow(arg_types, ret), err, f);
 }
 
 var body = document.getElementById("tlc-body");
@@ -143,7 +221,7 @@ var line = _type([tNumber,tNumber,tNumber,tNumber], line_usage, function(startX,
                x:0,
                y:0
              };
-  
+
   return { tlc_dt: "line",
            elements: [line],
            width: endX,
@@ -330,7 +408,7 @@ function _animateInternal(withCanvas, tickToImage) {
 
 /* animate :: (tick -> image) -> nothing */
 var animate_usage = "animate(): Requires one argument, a function that takes a number and produces a image. For example: animate(function(n) { return overlay(circle(n, 'red'), emptyScene(100,100));}).";
-var animate = _type([tFunction], animate_usage, function(tickToImage) {
+var animate = _type([tArrow([tNumber], tObject)], animate_usage, function(tickToImage) {
   return _animateInternal(_addOutput, tickToImage);
 });
 
