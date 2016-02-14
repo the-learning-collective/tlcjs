@@ -68,7 +68,7 @@ within `print()` in the second example. As in arithmetic, sometimes a
 program could be ambiguous. For example, in the previous example, if
 we first evaluated `1 + 2` before multiplying by `3` we would get a
 different answer. These kind of ambiguities are resolved in the same
-way as arithmetic - with rules of "precedence" (what operations
+way as arithmetic—with rules of "precedence" (what operations
 "precede" others) and parenthesis to override them.
 
 As an exercise, consider the following:
@@ -85,7 +85,7 @@ out 3.
 == Strings ==
 
 But programs aren't all about numbers! Indeed, most programs deal with
-more interesting forms of data. "String"s are used to represent
+more interesting forms of data. "Strings" are used to represent
 text. They are written by enclosing their content in quotes.
 
 [source,javascript]
@@ -159,7 +159,7 @@ We can also draw pictures. The TLC.js library adds a few basic functions
 that create pictures, and ways of combining them to create new
 pictures. One of the most basic ones is a circle. You can create a
 small red circle by writing `circle(10, "red")`, where 10 is the
-radius is pixels.
+radius and red indicates the color of the pixels.
 
 Like with normal values, you have to tell Javascript to `print`
 images:

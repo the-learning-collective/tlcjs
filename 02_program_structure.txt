@@ -190,7 +190,7 @@ print(square(12));
 // → 144
 ----
 
-The `function` keyword is followed by parethesis, and within those
+The `function` keyword is followed by parenthesis, and within those
 are a comma-separated list of argument names. When you _apply_ the
 function, these names will be where the input values are. The body of
 the function (between the `{` and `}`) should eventually produce a
@@ -364,6 +364,36 @@ var draw_bike = function(position) {
 animate(draw_bike);
 ----
 
+== Making animations move ==
+
+Two helpful functions for making animations are `Math.sin` and
+`Math.cos`. These are the _sin_ and _cos_ functions from math. You can
+fiddle with this to get interesting things to happen:
+
+[source,javascript]
+----
+function sinWiggle(n) {
+  var xPosition = Math.sin(n/20) * 90 + 90;
+  return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
+}
+
+function cosWiggle(n) {
+  var xPosition = Math.cos(n/20) * 90 + 90;
+  return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
+}
+
+animate(sinWiggle);
+animate(cosWiggle);
+----
+
+A helpful operator is `%`, which is pronounced _mod_. It takes the
+_remainder_ after diving the right side by the left side.
+
+For example, `10 % 3` is `1`. while `10 % 2` is `0`. This can be
+helpful when you want things to repeat, as if `n` counts from `0` to
+infinity, `n % 10` counts `0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5...`.
+
+
 == Control flow ==
 
 (((execution order)))(((program)))(((control flow)))When your program
@@ -452,6 +482,7 @@ animate(draw_bike);
 ----
 
 
+
 == Comments ==
 
 (((readability)))Often, raw code does not convey all the information
@@ -483,6 +514,21 @@ blocks of information about a file or a chunk of program.
 */
 var myNumber = 11213;
 ----
+
+
+== A shorter way to define functions ==
+
+Since giving names to functions by storing them in variables is really
+common, there is a shorter way to do these two things:
+
+[source,javascript]
+----
+var name = function(arg) { return arg; };
+// Is equivalent to:
+function name(arg) { return arg; }
+----
+
+The second is a little shorter and doesn't have a semicolon at the end.
 
 == Exercises ==
 

@@ -4,24 +4,27 @@
 
 = Functions =
 
-(((Knuth+++,+++ Donald)))(((function)))(((code structure)))You've seen function values, such
-as `alert`, and how to call them. Functions are the bread and butter
-of JavaScript programming. The concept of wrapping a piece of program
-in a value has many uses. It is a tool to structure larger programs,
-to reduce repetition, to associate names with subprograms, and to
-isolate these subprograms from each other.
+Notes:
+* focus is on DESIGNING FUNCTIONS
+* mantra: "shape of the data hews as closely as possible to shape of the world, shape of the code follows shape of data"
+* a function is a transformation from one piece of data to another
+* a big computation is a series of transformations from one piece of data to another
+* input/output, consuming/producing
+* information
 
-(((human language)))The most obvious application of functions is
-defining new ((vocabulary)). Creating new words in regular,
-human-language prose is usually bad style. But in programming, it is
-indispensable.
+- The number (piece of data) 5 could represent a baseball player's number, a child's age, the number of boroughs in NYC (things in the world)
+- The string (piece of data) "Austin" could represent city, movie character, TLC member (things in the world)
+- The person Austin Guest (thing in the world) could be represented by: 35, "Austin Guest", "austin@example.com", "355 Broadway, Paris, TX" (pieces of data)
 
-(((abstraction)))Typical adult English speakers have some 20,000 words
-in their vocabulary. Few programming languages come with 20,000
-commands built in. And the vocabulary that _is_ available tends to be
-more precisely defined, and thus less flexible, than in human
-language. Therefore, we usually _have_ to add some of our own
-vocabulary to avoid repeating ourselves too much.
+# Actual recipe:
+1. Describe information in terms of data (define types)
+2. Signature (type of the function)
+3. Purpose Statement (what it does -- in human language!)
+4. Function Header (fn name, argument names, brackets, stub return value)
+5. Examples === Tests (run them, watch them fail)
+6. Mechanical Template (exapand template for every argument based on type)
+7. Now you may write the body! (run tests until they pass!)
+
 
 == Parameters and scopes ==
 
@@ -82,6 +85,8 @@ variable. By treating function-local variables as existing only within
 the function, the language makes it possible to read and understand
 functions as small universes, without having to worry about all the
 code at once.
+
+== WARNING: EVERYTHING BELOW THIS IS SUBJECT TO DEMOLITION!!!
 
 [[scoping]]
 == Nested scope ==
