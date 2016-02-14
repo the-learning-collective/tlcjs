@@ -433,17 +433,25 @@ function _bigBangInternal(withCanvas, world, to_draw, on_tick, on_key) {
 
     var newWorld = world;
     function step() {
-        _drawInternal(withCanvas, to_draw(newWorld), canvas);
-        newWorld = on_tick(on_key(newWorld, currentKey));
-        window.requestAnimationFrame(step);
+      _drawInternal(withCanvas, to_draw(newWorld), canvas);
+      if (currentKey) {
+        newWorld = on_key(newWorld, currentKey);
+      }
+      newWorld = on_tick(newWorld);
+      window.requestAnimationFrame(step);
     }
 
     step();
 }
 
-/* big_bang??? */
-var bigBang_usage = "big_bang(): TODO";
-var bigBang = _type([tAny, tFunction, tFunction, tFunction], bigBang_usage, function(world, to_draw, on_tick, on_key) {
+/* big_bang :: world -> (world -> image) ->
+                        (world -> world) ->
+                        (world -> string -> world) -> nothing */
+var bigBang_usage = "bigBang(): Requires four arguments. The first argument is the initial state of the world. The second argument is a function that takes one argument, a world, and returns an image. The third argument is a function that takes one argument, a world, and returns another world. The last argument takes a world and string. For example: bigBang(0, function(n) { return text(n.toString(), 16);}, function(n) { return n + 1; }, function(n, key) { return n - 10; }).";
+var bigBang = _type([tAny,
+                     tArrow([tAny], tAny),
+                     tArrow([tAny], tAny),
+                     tArrow([tAny, tString], tAny)], bigBang_usage, function(world, to_draw, on_tick, on_key) {
 
     return _bigBangInternal(_addOutput, world, to_draw, on_tick, on_key);
 
