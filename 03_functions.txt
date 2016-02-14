@@ -4,6 +4,8 @@
 
 = Functions =
 
+////
+
 Notes:
 * focus is on DESIGNING FUNCTIONS
 * mantra: "shape of the data hews as closely as possible to shape of the world, shape of the code follows shape of data"
@@ -24,6 +26,8 @@ Notes:
 5. Examples === Tests (run them, watch them fail)
 6. Mechanical Template (exapand template for every argument based on type)
 7. Now you may write the body! (run tests until they pass!)
+
+////
 
 In the previous chapter, we were introduced to how to write
 functions. We saw some simple ones that manipulated numbers, like
@@ -169,6 +173,35 @@ function watermarkImage(watermark, target) {
 Note that for the _stub_, I could have easily chosen `target` (which
 is also an image), or I could have written `emptyScene(1,1)` (which is
 also an image). The point of the _stub_ is not to have a sensible
+value, just to have something that matches the write type of data that
+your signature specified.
+
+The fifth step is to write down example uses of your function, which
+are usually called "tests" (as they "test" that your function behaves
+properly).
+
+In our case, we might write:
+
+[source,javascript]
+----
+var my_watermark = circle(10,"red");
+testEquals(watermarkImage(my_watermark, rectangle(100,50,"black")),
+           placeImage(my_watermark, rectangle(100,50,"black"), 0, 0));
+----
+
+In this case, the function is pretty simple, so it's possible that
+this could be enough examples, but in most cases you will want at
+least four or five (or possibly many more).
+
+When you run your program (which, at this point, you should), you
+should get a message (****NOTE: WHERE???****) that the test
+failed. This is good! Since you haven't written the body of the
+function yet, the tests should be failing. If they weren't, they
+couldn't be checking much!
+
+The sixth step is to fill in the body of the function with a
+_template_ for each of the arguments. A _template_ is a bit of code
+that is how you would normally use the particular value.
 
 == WARNING: EVERYTHING BELOW THIS IS SUBJECT TO DEMOLITION!!!
 
