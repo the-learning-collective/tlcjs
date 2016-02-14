@@ -25,66 +25,150 @@ Notes:
 6. Mechanical Template (exapand template for every argument based on type)
 7. Now you may write the body! (run tests until they pass!)
 
-
-== Parameters and scopes ==
-
-(((function,application)))(((variable,from parameter)))The
-((parameter))s to a function behave like regular variables, but their
-initial values are given by the _caller_ of the function, not the code
-in the function itself.
-
-(((function,scope)))(((scope)))(((local variable)))An
-important property of functions is that the variables created inside
-of them, including their parameters, are _local_ to the function. This
-means, for example, that the `result` variable in the `power` example
-will be newly created every time the function is called, and these
-separate incarnations do not interfere with each other.
-
-indexsee:[top-level scope,global scope]
-(((var keyword)))(((global scope)))(((variable,global)))This
-“localness” of variables applies only to the parameters and to variables
-declared with the `var` keyword inside the function body. Variables
-declared outside of any function are called _global_, because they are
-visible throughout the program. It is possible to access such
-variables from inside a function, as long as you haven't declared a
-local variable with the same name.
-
-(((variable,assignment)))The following code demonstrates this. It
-defines and calls two functions that both assign a value to the
-variable `x`. The first one declares the variable as local and thus
-changes only the local variable. The second does not declare `x`
-locally, so references to `x` inside of it refer to the global
-variable `x` defined at the top of the example.
+In the previous chapter, we were introduced to how to write
+functions. We saw some simple ones that manipulated numbers, like
+`square`:
 
 [source,javascript]
 ----
-var x = "outside";
-
-var f1 = function() {
-  var x = "inside f1";
-};
-f1();
-console.log(x);
-// → outside
-
-var f2 = function() {
-  x = "inside f2";
-};
-f2();
-console.log(x);
-// → inside f2
+function square(x) {
+  return x * x;
+}
 ----
 
-(((variable,naming)))(((scope)))(((global scope)))(((code,structure
-of)))This behavior helps prevent accidental interference between
-functions. If all variables were shared by the whole program, it'd
-take a lot of effort to make sure no name is ever used for two
-different purposes. And if you _did_ reuse a variable name, you might
-see strange effects from unrelated code messing with the value of your
-variable. By treating function-local variables as existing only within
-the function, the language makes it possible to read and understand
-functions as small universes, without having to worry about all the
-code at once.
+And we defined functions that produced images that we then used to
+construct animations. In this chapter, we are going to take a much
+deeper dive into functions, and focus on how we _design_ functions in
+order to solve problems. On the way, we'll explore programming in a
+more thorough way, and develop some concrete tools that we can use to
+approach problems.
+
+== Designing Functions ==
+
+When we introduced functions in the last chapter, we described them
+(first) as a way to produce values that differed - there are other
+ways of thinking about them, like reducing duplication (as we saw in
+the example with drawing the frames of the bike motion), but in this
+chapter we want discuss the process of actually creating them, as a
+creative _design_ process.
+
+Fundamentally, a function is a way of transforming one piece of
+information into another. In the example of `square` above, the first
+piece of information (on the _input_) was a number, and the second (or
+the _output_) was that number multiplied by itself. This relationship
+(between a number and it multiplied by itself) matches what we think
+of as _square_ing, so the name matches it well.
+
+All programming is about similar transformations. And, it is about the
+information. Up until now, we have introduced different types of data
+that we can represent with javascript (like numbers, strings, images,
+etc) but haven't talked much about how we choose what representation
+to use for a given task. It may seem, up until now, that there isn't
+really any choice - if we are dealing with a number, we represent it
+as a number, and so on. But, we are usually writing programs about
+bigger ideas than just numbers or strings.
+
+For example, let's say we wanted to represent our friend "Austin" in
+our program. How should we do it? We could use the string `"Austin"`,
+but later on, it's possible that we would want to represent another
+"Austin" in our program, and that might be problematic. Or we might
+realize that we want to send an email to them, so maybe we should
+represent them by the string "austin@tlcjs.org", which is their
+(fictional, at least for now!) email address. An email address seems
+more unique, but what if "Austin" changes their email? Perhaps we
+should just represent "Austin", and any other people we have to deal
+with in our program, by (unique) numbers (for example, "Austin" could
+be `42`), and if we need their email (or one of their emails) we can
+store that somewhere else, connected to `42`, our unique number for
+"Austin".
+
+Of course, we have the same problem in the opposite direction - if we
+have the number 42, what does it represent? It could be the number of
+members of TLC, it could be the age of someone, it could be someones
+favorite number, and any number of other things.
+
+Figuring out what data exist in our program, and how it relates to the
+(real) problem we are trying to solve is a critical part of
+programming, and more concretely, designing functions, because all
+functions have input and output data.
+
+== Design Recipe ==
+
+The first step in the _Design Recipe_ (which is what this chapter is
+teaching) is to figure out what data you need to solve your
+problem. You should describe what information you have, and how you
+will represent it in the program. This should be in comments, as it is
+crucial information both for yourself and anyone else who will see
+this later.
+
+As an example problem (which we'll follow through the whole recipe),
+we want to be able to easily identify who drew an image.
+
+Thinking about the type of information that we need, and how we'll
+represent it, we come up with:
+
+[source,javascript]
+----
+// We will watermark images, which means adding a particular image on top.
+// The mark will be an image, and so will be the input and output.
+----
+
+For this problem, it may seem pretty trivial - if we are talking about
+marking images, it makse sense that we would be dealing with images,
+but in many problems it isn't always clear how to represent a given
+part of the problem (and not understanding is a good way to get lost!).
+
+The second step is to figure out what the input and output to our
+function will be. In the first step, we should have figured out all
+the types of data that will appear, but we still have to define
+exactly what the _signature_ of the function is, where a _signature_
+is a description of the type of all the inputs and the type of the
+output of a function.
+
+You should also write this as a comment, as it is similarly very
+helpful information for yourself and others who might be looking at
+your program (or trying to change it). In our watermarking example, we
+end up with the following _signature_:
+
+[source,javascript]
+----
+// Image, Image -> Image
+----
+
+Where that is shorthand for the function taking two images as input
+(the watermark and the to-be-watermarked image) and producing an image
+as output.
+
+The third step is writing down the purpose of the function, in human
+language. Up until now, everything we have been writing down has been
+about the external attributes of the function - what it takes in and
+what it produces. This is the step where we describe, in the simplest
+possible way (but still, precisely), what the function should actually
+do. In our case, we might write:
+
+[source,javascript]
+----
+// Takes a watermark image and places it at the top left of the
+// to-be-watermarked image, producing the result of that overlay.
+----
+
+The fourth step is to write down the _header_ for the function, which
+is the name, arguments, and put in some _stub_ for the return value
+(where this _stub_ is a value that matches the signature, but is as
+simple as you can think up). Part of this step involves coming up with
+names for the function and all the arguments. In this case, we might
+write:
+
+[source,javascript]
+----
+function watermarkImage(watermark, target) {
+  return watermark;
+}
+----
+
+Note that for the _stub_, I could have easily chosen `target` (which
+is also an image), or I could have written `emptyScene(1,1)` (which is
+also an image). The point of the _stub_ is not to have a sensible
 
 == WARNING: EVERYTHING BELOW THIS IS SUBJECT TO DEMOLITION!!!
 

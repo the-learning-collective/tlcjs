@@ -423,7 +423,7 @@ function sandbox_draw(win, image) {
 }
 function tlc_sandbox_functions(win) {
   return {
-    print: _type([tAny], print_usage, function(value) {
+    print: _type([tAny], tNothing, print_usage, function(value) {
       if (typeof value === "object" && value.hasOwnProperty("tlc_dt")) {
         sandbox_draw(win, value);
       } else {
@@ -438,14 +438,14 @@ function tlc_sandbox_functions(win) {
     line: line,
     placeImage: placeImage,
     emptyScene: emptyScene,
-    animate: _type([tFunction], animate_usage, function(tick) {
+    animate: _type([tArrow([tNumber], tObject)], tNothing, animate_usage, function(tick) {
       _animateInternal(function (canvas) {
         var div = document.createElement("div");
         div.appendChild(canvas);
         win.output.div.appendChild(div);
       }, tick);
     }),
-    draw: _type([tObject], draw_usage, function(image) {
+    draw: _type([tObject], tNothing, draw_usage, function(image) {
       sandbox_draw(win, image);
     })
   };
