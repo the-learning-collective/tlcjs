@@ -5,7 +5,7 @@ console.log("TLC is starting up...");
 
 function test(desc, expected, given) {
   function err(r) {
-    console.log("TEST FAILED: " + desc + ". Got " + r + ", but expected " + expected);
+    console.error("TEST FAILED: " + desc + ". Got " + r + ", but expected " + expected);
   }
   try {
     var res = given();
@@ -19,8 +19,7 @@ function test(desc, expected, given) {
 
 function testRaises(desc, given) {
   try {
-    given();
-    console.log("TEST FAILED: " + desc + ". Expected exception, but  " + given + ", but expected " + expected);
+    console.error("TEST FAILED: " + desc + ". Expected exception, but got value: " + given());
   } catch (e) {}
 }
 
@@ -35,6 +34,7 @@ var tObject = "object";
 var tBoolean = "boolean";
 var tFunction = "function";
 var tAny = "anything";
+var tNothing = "undefined";
 
 var tArrow = function(args, ret) {
   return { tag: "arrow", args: args, ret: ret };
@@ -50,7 +50,13 @@ var tArrow = function(args, ret) {
 function __type(ty, err, val) {
   // NOTE(dbp 2016-02-13): String types are flat checks.
   if (typeof ty === "string") {
-    if (!(ty === tAny || typeof val === ty)) {
+    if (ty === tAny) {
+      if (typeof val === "undefined") {
+        throw new TypeError(err);
+      } else {
+        return val;
+      }
+    } else if (typeof val !== ty) {
       throw new TypeError(err);
     } else {
       return val;
@@ -84,6 +90,7 @@ function __type(ty, err, val) {
 test("__type numbers", 10, function () { return __type(tNumber, "", 10); });
 test("__type strings", "foo", function () { return __type(tString, "", "foo"); });
 testRaises("__type numbers", function () { return __type(tNumber, "", "hello"); });
+testRaises("__type tAny doesn't match undefined", function () { return __type(tAny, "", undefined); });
 testRaises("__type higher order arity", function () {
   return __type(tArrow([tNumber], tAny), "", function () {})();
 });
@@ -98,14 +105,7 @@ testRaises("__type higher order return type", function () {
 /* This function helps make errors better by asserting that the
  * arguments to the function `f` have the number and type specified by
  * `arg_types`. If they don't, the message `err` is raised. */
-function _type(arg_types, err, ret, f) {
-  // NOTE(dbp 2016-02-13): This check is for backwards compat; once
-  // all calls to _type have return type, can be eliminated.
-  if (typeof f === "undefined") {
-    f = ret;
-    ret = tAny;
-  }
-
+function _type(arg_types, ret, err, f) {
   return __type(tArrow(arg_types, ret), err, f);
 }
 
@@ -146,7 +146,7 @@ function _addOutput(content) {
 }
 
 var show_source_usage = "show_source(): Requires one arguments, a url, which should be a string. For example: show_source('some-file.js')";
-var show_source = _type([tString], show_source_usage, function (url) {
+var show_source = _type([tString], tNothing, show_source_usage, function (url) {
   var source = document.getElementById("source");
   if (source !== null) {
     var client = new XMLHttpRequest();
@@ -165,7 +165,7 @@ var show_source = _type([tString], show_source_usage, function (url) {
 
 /* print :: anything -> nothing */
 var print_usage = "print(): Requires one argument, which can be anything. For example: print(10).";
-var print = _type([tAny], print_usage, function(value) {
+var print = _type([tAny], tNothing, print_usage, function(value) {
 
   if (typeof value === "object" && value.hasOwnProperty("tlc_dt")) {
     draw(value);
@@ -179,7 +179,7 @@ var print = _type([tAny], print_usage, function(value) {
 
 /* circle :: number -> color -> shape */
 var circle_usage = "circle(): Requires two arguments, a radius and a color, which should be a number and a string. For example: circle(100, 'red').";
-var circle = _type([tNumber, tString], circle_usage, function(radius, color) {
+var circle = _type([tNumber, tString], tObject, circle_usage, function(radius, color) {
 
   var circ = { tlc_dt: "circle",
                radius: radius,
@@ -195,7 +195,7 @@ var circle = _type([tNumber, tString], circle_usage, function(radius, color) {
 
 /* rectangle :: number -> number -> color -> shape */
 var rectangle_usage = "rectangle(): Requires three arguments, a width, a height, and a color. The first two should be numbers, the last a string. For example: rectangle(100, 50, 'black').";
-var rectangle = _type([tNumber, tNumber, tString], rectangle_usage, function(width, height, color) {
+var rectangle = _type([tNumber, tNumber, tString], tObject, rectangle_usage, function(width, height, color) {
 
   var rect = { tlc_dt: "rectangle",
                width: width,
@@ -211,7 +211,7 @@ var rectangle = _type([tNumber, tNumber, tString], rectangle_usage, function(wid
 });
 
 var line_usage = "line(): Requires four arguments, all numbers --  StartX, StartY, EndX, EndY. Line draws a line from one point to another. The first two arguments are the X,Y coordinates of the starting point. The last two arguments are the X,Y coordinates of the ending point. For example: line(0,0, 100, 200)";
-var line = _type([tNumber,tNumber,tNumber,tNumber], line_usage, function(startX, startY, endX, endY) {
+var line = _type([tNumber,tNumber,tNumber,tNumber], tObject, line_usage, function(startX, startY, endX, endY) {
 
   var line = { tlc_dt: "line",
                startX: startX,
@@ -233,7 +233,7 @@ var line = _type([tNumber,tNumber,tNumber,tNumber], line_usage, function(startX,
 
 var text_usage = "text(): Requires two arguments, text to place in the graphic and a number, the size of the text in pixele. Example: text('Hello', 20).";
 // input: string (text to print), number (size of font in pixels); output: image
-var text = _type([tString, tNumber], text_usage, function(words, fontSize){
+var text = _type([tString, tNumber], tObject, text_usage, function(words, fontSize){
 
   var txt = { tlc_dt: "text",
               text: words,
@@ -253,7 +253,7 @@ var text = _type([tString, tNumber], text_usage, function(words, fontSize){
 
 /* image :: url -> shape */
 var image_usage = "image(): Requires one argument, a url, which should be a string. For example, image('cat.jpg').";
-var image = _type([tString], image_usage, function(location) {
+var image = _type([tString], tObject, image_usage, function(location) {
   var img = new Image()
   //img.src = location;
   //img.style.visibility = "hidden"
@@ -338,7 +338,7 @@ function _drawInternal(cont, image, givenCanvas) {
 
 /* draw :: image -> nothing */
 var draw_usage = "draw(): Requires one argument, a image. For example, draw(circle(10, 'red')).";
-var draw = _type([tObject], draw_usage, function(image) {
+var draw = _type([tObject], tNothing, draw_usage, function(image) {
   return _drawInternal(_addOutput, image);
 });
 
@@ -356,14 +356,14 @@ function fontSizeHelper(y, fontSize) {
 
 /* emptyScene :: number -> number -> image */
 var emptyScene_usage = "emptyScene(): Requires two arguments, a width and a height, both numbers. For example: emptyScene(300, 200).";
-var emptyScene = _type([tNumber, tNumber], emptyScene_usage, function(width, height) {
+var emptyScene = _type([tNumber, tNumber], tObject, emptyScene_usage, function(width, height) {
   return overlay(rectangle(width-2, height-2, "white"),
                  rectangle(width, height, "black"));
 });
 
 /* overlay :: image -> image -> image */
 var overlay_usage = "overlay(): Requires two arguments, a foreground and a background image. For example, overlay(circle(10, 'red'), emptyScene(100, 100)).";
-var overlay = _type([tObject, tObject], overlay_usage, function(foreground, background) {
+var overlay = _type([tObject, tObject], tObject, overlay_usage, function(foreground, background) {
   var newX = background.width/2
              - foreground.width/2;
   var newY = background.height/2
@@ -374,7 +374,7 @@ var overlay = _type([tObject, tObject], overlay_usage, function(foreground, back
 
 /* placeImage :: image -> image -> x -> y -> image  */
 var placeImage_usage = "placeImage(): Requires four arguments: a forgeground image, a background image, and the x and y coordinates for the top left of the foreground to be placed on the background (both numbers). For example, placeImage(rectangle(10,10,'red'), rectangle(100,100,'black'), 40, 40).";
-var placeImage = _type([tObject, tObject, tNumber, tNumber], placeImage_usage, function(foreground, background, x, y) {
+var placeImage = _type([tObject, tObject, tNumber, tNumber], tObject, placeImage_usage, function(foreground, background, x, y) {
   var centeredElements =
       _.map(foreground.elements, function(e) {
         var newE = _.clone(e);
@@ -408,7 +408,7 @@ function _animateInternal(withCanvas, tickToImage) {
 
 /* animate :: (tick -> image) -> nothing */
 var animate_usage = "animate(): Requires one argument, a function that takes a number and produces a image. For example: animate(function(n) { return overlay(circle(n, 'red'), emptyScene(100,100));}).";
-var animate = _type([tArrow([tNumber], tObject)], animate_usage, function(tickToImage) {
+var animate = _type([tArrow([tNumber], tObject)], tNothing, animate_usage, function(tickToImage) {
   return _animateInternal(_addOutput, tickToImage);
 });
 
