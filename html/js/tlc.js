@@ -419,24 +419,19 @@ function _bigBangInternal(withCanvas, world, to_draw, on_tick, on_key) {
 
     _drawInternal(withCanvas, to_draw(world), canvas);
 
-    var currentKey = undefined;
+    var keysPressed = [];
 
-    // from the MDN KeyboardEvent.key article
     window.addEventListener("keydown", function(event) {
-        currentKey = event.key;
+        keysPressed.push(event.key);
     }, true)
-
-    window.addEventListener("keyup", function(event) {
-        currentKey = undefined;
-    }, true);
-
 
     var newWorld = world;
     function step() {
       _drawInternal(withCanvas, to_draw(newWorld), canvas);
-      if (currentKey) {
-        newWorld = on_key(newWorld, currentKey);
-      }
+      newWorld = _.reduce(keysPressed, function (currentWorld, key) {
+          return on_key(currentWorld, key);
+      }, newWorld);
+      keysPressed = [];
       newWorld = on_tick(newWorld);
       window.requestAnimationFrame(step);
     }
