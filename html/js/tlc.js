@@ -2,7 +2,9 @@ console.log("TLC is starting up...");
 
 /* OUTPUT AND INFRASTRUCTURE */
 
-
+// NOTE(dbp 2016-02-15): These two functions are for tests _within_
+// tlc.js. We should probably replace these with mocha or something
+// better, as we don't need to have them be super simple.
 function test(desc, expected, given) {
   function err(r) {
     console.error("TEST FAILED: " + desc + ". Got " + r + ", but expected " + expected);
@@ -22,6 +24,40 @@ function testRaises(desc, given) {
     console.error("TEST FAILED: " + desc + ". Expected exception, but got value: " + given());
   } catch (e) {}
 }
+
+// NOTE(dbp 2016-02-15): On the other hand, _this_ function is for use
+// by TLC.js students.
+var testResults = { run: 0, passed: 0, failures: [] };
+function updateTestUi() {
+  var output = document.getElementById("tlc-test-results");
+  if (output === null) {
+    var output = document.createElement("pre");
+    output.id = "tlc-test-results";
+    _addOutput(output);
+  }
+
+  output.textContent = "Tests: " + String(testResults.passed) + "/" + String(testResults.run) + " passed.";
+  if (testResults.failures.length !== 0) {
+    output.textContent += "\n\nFailures:\n";
+  }
+  testResults.failures.forEach(function (f) {
+    output.textContent += "  " + f + "\n";
+  });
+}
+function shouldEqual(given, expected) {
+  testResults.run++;
+  if (given === expected) {
+    testResults.passed++;
+  } else {
+    // NOTE(dbp 2016-02-15): This is a hack to find out where the
+    // assertion was called from. Eeek!
+    var s = (new Error()).stack.split("\n")[1];
+    var loc = s.slice(s.lastIndexOf("/")+1, s.length - 2);
+    testResults.failures.push(loc + " - expected " + String(expected) + ", but got " + String(given) + ".");
+  }
+  updateTestUi();
+}
+
 
 /* These constants are provided for convenience, so that you don't
  * accidentally write "nmber" in a call to _type. If you write TNmber,
