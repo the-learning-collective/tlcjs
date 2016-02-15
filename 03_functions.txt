@@ -201,7 +201,130 @@ couldn't be checking much!
 
 The sixth step is to fill in the body of the function with a
 _template_ for each of the arguments. A _template_ is a bit of code
-that is how you would normally use the particular value.
+that is how you would normally use the particular value. Each type of
+data has its own template. Of the types of data that we've seen so far:
+
+- numbers
+- strings
+- images
+- booleans
+
+The first three have a very simple template - it is just the
+identifier of the argument. The template for booleans is an `if`
+expression. So if we had a function:
+
+[source,javascript]
+----
+// (1) Involves booleans.
+// (2) Boolean -> Boolean
+// This function inverts a boolean value, turning true to false and vice versa.
+function not(b) { // (4)
+  return true;
+}
+// (5)
+test(not(true), false);
+test(not(false), true);
+----
+
+Where I've identified each step of the design recipe completed thus
+far. To example the template for `b` (the only argument), we would write:
+
+
+[source,javascript]
+----
+// (1) Involves booleans.
+// (2) Boolean -> Boolean
+// This function inverts a boolean value, turning true to false and vice versa.
+function not(b) { // (4)
+  if (b) {
+    // ...
+  } else {
+    // ...
+  }
+  return true;
+}
+// (5)
+test(not(true), false);
+test(not(false), true);
+----
+
+The purpose of the template is to give you a place to start - if you
+have an argument that is a boolean, you are probably going to have an
+`if` somewhere. For our function, the template is just the
+identifier. Since we have two arguments, we should have both of those
+somewhere in our function:
+
+[source,javascript]
+----
+// We will watermark images, which means adding a particular image on top.
+// The mark will be an image, and so will be the input and output.
+// Image, Image -> Image
+// Takes a watermark image and places it at the top left of the
+// to-be-watermarked image, producing the result of that overlay.
+function watermarkImage(watermark, target) {
+  // ...
+  watermark;
+  // ...
+  target;
+  // ...
+  return watermark;
+}
+var my_watermark = circle(10,"red");
+testEquals(watermarkImage(my_watermark, rectangle(100,50,"black")),
+           placeImage(my_watermark, rectangle(100,50,"black"), 0, 0));
+----
+
+Now that we have all the parts on the page (so to speak), we can write
+the body. The templates are a guide, and can be removed if you end up
+not needing them (or using them in a different way), but they are
+often a useful way to start
+
+In our case, the best place to look for guidance of how to finish the
+program is either the purpose statement (which states, in english,
+what it should do), or the tests (which shows us some examples of what
+it has done). Using that, we can complete the function as:
+
+[source,javascript]
+----
+// We will watermark images, which means adding a particular image on top.
+// The mark will be an image, and so will be the input and output.
+// Image, Image -> Image
+// Takes a watermark image and places it at the top left of the
+// to-be-watermarked image, producing the result of that overlay.
+function watermarkImage(watermark, target) {
+  return placeImage(watermark, target, 0, 0);
+}
+var my_watermark = circle(10,"red");
+testEquals(watermarkImage(my_watermark, rectangle(100,50,"black")),
+           placeImage(my_watermark, rectangle(100,50,"black"), 0, 0));
+----
+
+As you are writing the function, you can continue to run your
+tests. Often, if you have many tests, some of them will start to pass
+as you write the function. In our case, our one test is now passing!
+
+In the `not` example, which had a more interesting _template_, we can
+look at how to complete it:
+
+[source,javascript]
+----
+// Involves booleans.
+// Boolean -> Boolean
+// This function inverts a boolean value, turning true to false and vice versa.
+function not(b) {
+  if (b) {
+    // since true should turn into false, in this branch we know the input is true
+    return false;
+  } else {
+    // And vice versa, here the input is false
+    return true;
+  }
+}
+test(not(true), false);
+test(not(false), true);
+----
+
+And we can see that the template indeed did end up being used.
 
 == WARNING: EVERYTHING BELOW THIS IS SUBJECT TO DEMOLITION!!!
 
