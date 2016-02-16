@@ -273,7 +273,7 @@ identifiers the same way you would your own variables.
 
 (((power example)))A function can have multiple parameters or no
 parameters at all. In the following example, `makeNoise` does not list
-any parameter names, whereas `power` lists two:
+any parameter names, whereas `emphasize` lists two:
 
 [source,javascript]
 ----
@@ -293,7 +293,7 @@ print(emphasize("hello there"));
 ----
 
 (((return value)))(((return keyword)))(((undefined)))Some functions
-explicitly `return` a value, such as `power` and `square`, and some
+explicitly `return` a value, such as `emphasize` and `square`, and some
 don't, such as `makeNoise`. A `return` statement determines the value
 the function returns. When control comes across such a statement, it
 immediately jumps out of the current function and gives the returned
