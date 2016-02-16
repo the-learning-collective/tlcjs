@@ -50,9 +50,9 @@ approach problems.
 == Designing Functions ==
 
 When we introduced functions in the last chapter, we described them
-(first) as a way to produce values that differed - there are other
-ways of thinking about them, like reducing duplication (as we saw in
-the example with drawing the frames of the bike motion), but in this
+(first) as a way to produce values that differed. But, there are other
+ways of thinking about them. Functions can also reduce duplication (as we saw in
+the example with drawing the frames of the bike motion). In this
 chapter we want discuss the process of actually creating them, as a
 creative _design_ process.
 
