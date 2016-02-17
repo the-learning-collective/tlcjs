@@ -28,23 +28,31 @@ function testRaises(desc, given) {
 // NOTE(dbp 2016-02-15): On the other hand, _this_ function is for use
 // by TLC.js students.
 var testResults = { run: 0, passed: 0, failures: [] };
+
+function updateTestDiv(container) {
+  container.textContent = "Tests: " + String(testResults.passed) + "/" + String(testResults.run) + " passed.";
+  if (testResults.failures.length !== 0) {
+    container.textContent += "\n\nFailures:\n";
+  }
+  testResults.failures.forEach(function (f) {
+    container.textContent += "  " + f + "\n";
+  });
+}
+
+
 function updateTestUi() {
   var output = document.getElementById("tlc-test-results");
+
   if (output === null) {
     var output = document.createElement("pre");
     output.id = "tlc-test-results";
     _addOutput(output);
   }
 
-  output.textContent = "Tests: " + String(testResults.passed) + "/" + String(testResults.run) + " passed.";
-  if (testResults.failures.length !== 0) {
-    output.textContent += "\n\nFailures:\n";
-  }
-  testResults.failures.forEach(function (f) {
-    output.textContent += "  " + f + "\n";
-  });
+  updateTestDiv(output);
 }
-function shouldEqual(given, expected) {
+
+function _shouldEqualInternal(redraw, given, expected) {
   testResults.run++;
   if (given === expected) {
     testResults.passed++;
@@ -55,7 +63,11 @@ function shouldEqual(given, expected) {
     var loc = s.slice(s.lastIndexOf("/")+1, s.length - 2);
     testResults.failures.push(loc + " - expected " + String(expected) + ", but got " + String(given) + ".");
   }
-  updateTestUi();
+  redraw();
+}
+
+function shouldEqual(given, expected) {
+  return _shouldEqualInternal(updateTestUi, given, expected);
 }
 
 
@@ -525,6 +537,18 @@ function tlc_sandbox_functions(win) {
     }),
     draw: _type([tObject], tNothing, draw_usage, function(image) {
       sandbox_draw(win, image);
-    })
+    }),
+    shouldEqual: function(given, expected) {
+      var output = win.output.testOutput;
+      if (typeof output === "undefined") {
+        output = document.createElement("pre");
+        win.output.testOutput = output;
+        win.output.div.appendChild(output);
+      }
+      function redraw() {
+        updateTestDiv(output);
+      }
+      return _shouldEqualInternal(redraw, given, expected);
+    }
   };
 }

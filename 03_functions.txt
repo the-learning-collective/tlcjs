@@ -27,6 +27,14 @@ Notes:
 6. Mechanical Template (exapand template for every argument based on type)
 7. Now you may write the body! (run tests until they pass!)
 
+
+Problem:
+
+- rent space for bake sale (either fixed amount $15 or 10% share of sale)
+- selling lemonade (25c) and cookies (50c)
+- function should take in the number of cookies and cups of lemonade sold, and whether you want to do a fixed price.
+
+
 ////
 
 In the previous chapter, we were introduced to how to write
@@ -106,7 +114,10 @@ crucial information both for yourself and anyone else who will see
 this later.
 
 As an example problem (which we'll follow through the whole recipe),
-we want to be able to easily identify who drew an image.
+we want to figure out how a hypothetical bake sale is going to work.
+
+We want to raise money by making lemonade and cookies, but
+unfortunately, the only place we have to sell them
 
 Thinking about the type of information that we need, and how we'll
 represent it, we come up with:
