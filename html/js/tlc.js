@@ -248,7 +248,7 @@ var rectangle = _type([tNumber, tNumber, tString], tObject, rectangle_usage, fun
 
 var line_usage = "line(): Requires four arguments, all numbers --  StartX, StartY, EndX, EndY. Line draws a line from one point to another. The first two arguments are the X,Y coordinates of the starting point. The last two arguments are the X,Y coordinates of the ending point. For example: line(0,0, 100, 200)";
 var line = _type([tNumber,tNumber,tNumber,tNumber], tObject, line_usage, function(startX, startY, endX, endY) {
-
+  
   var line = { tlc_dt: "line",
                startX: startX,
                startY: startY,
@@ -258,7 +258,7 @@ var line = _type([tNumber,tNumber,tNumber,tNumber], tObject, line_usage, functio
                y:0
              };
 
-  return { tlc_dt: "line",
+  return { tlc_dt: "image",
            elements: [line],
            width: endX,
            height: endY
@@ -271,6 +271,10 @@ var text_usage = "text(): Requires two arguments, text to place in the graphic a
 // input: string (text to print), number (size of font in pixels); output: image
 var text = _type([tString, tNumber], tObject, text_usage, function(words, fontSize){
 
+  // create a temp context in order to measure text
+  var ctx = document.createElement("canvas").getContext("2d");
+  ctx.font = '' + fontSize + "px serif";
+  
   var txt = { tlc_dt: "text",
               text: words,
               fontSize: fontSize,
@@ -278,13 +282,11 @@ var text = _type([tString, tNumber], tObject, text_usage, function(words, fontSi
               y: 0
             };
 
-  return { elements: [txt],
-           // ziggy: I'm not sure this is the "proper" way to determine the width
-           // of a text phrase...but it seems to work okay.
-           width: words.length * fontSize,
+  return { tlc_dt: "image",
+           elements: [txt],
+           width: ctx.measureText(words).width,
            height: fontSize
          };
-
 });
 
 /* image :: url -> shape */
@@ -352,7 +354,9 @@ function _drawInternal(cont, image, givenCanvas) {
       };
       break;
     case "text":
+      ctx.fillStyle = "black";
       ctx.font = '' +  shape.fontSize + "px serif";
+      console.log("font ", ctx.font, " x ", shape.x, " y ", shape.y);
       ctx.fillText(shape.text, shape.x, fontSizeHelper(shape.y, shape.fontSize));
       break;
     case "line":

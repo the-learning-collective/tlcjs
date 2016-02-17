@@ -50,7 +50,7 @@ animate(cosWiggle);
 animate(tanWiggle);
 
 draw(text('hi there', 20));
-draw(placeImage(text('hello world', 16), emptyScene(200,200), 100, 100));
+draw(overlay(text('hello world', 16), emptyScene(200,200)));
 
 function grow(number) {
     return overlay(circle(number, "red"), emptyScene(200, 200));
