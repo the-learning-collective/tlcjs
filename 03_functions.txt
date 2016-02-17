@@ -287,28 +287,39 @@ shouldEqual(not(false), true);
 
 The purpose of the template is to give you a place to start - if you
 have an argument that is a boolean, you are probably going to have an
-`if` somewhere. For our function, the template is just the
-identifier. Since we have two arguments, we should have both of those
-somewhere in our function:
+`if` somewhere. For our function, we have three arguments, so we have
+three templates to fill in. The first two are numbers, so the template
+is just the identifier, but the third one is a boolean, so it has a
+template similar to `not` above.
 
 [source,javascript]
 ----
-// We will watermark images, which means adding a particular image on top.
-// The mark will be an image, and so will be the input and output.
-// Image, Image -> Image
-// Takes a watermark image and places it at the top left of the
-// to-be-watermarked image, producing the result of that overlay.
-function watermarkImage(watermark, target) {
+// The number of cookies, glasses of lemonade are numbers.
+// Whether we will pay the flat fee is a boolean (we either will or won't).
+// We'll return a number in cents, as our prices are in cents.
+// number, number, boolean -> number
+// Takes the number of lemonades * 25 plus the number of cookies * 50
+// and then subtracts either 5000 (if the flat fee is chosen) or 10%
+// of this total (if flat fee not chosen). This number, which is the
+// number of cents, is what we return.
+function bakeSale(lemonades, cookies, useFixedCost) {
   // ...
-  watermark;
+  lemonades;
   // ...
-  target;
+  cookies;
   // ...
-  return watermark;
+  if (useFixedCost) {
+    // ...
+  } else {
+    // ...
+  }
+  return 0;
 }
-var my_watermark = circle(10,"red");
-shouldEqual(watermarkImage(my_watermark, rectangle(100,50,"black")),
-           placeImage(my_watermark, rectangle(100,50,"black"), 0, 0));
+shouldEqual(bakeSale(0,0,true), -5000);
+shouldEqual(bakeSale(0,0,false), 0);
+shouldEqual(bakeSale(200, 0, true), 0);
+shouldEqual(bakeSale(200, 200, true), 10000);
+shouldEqual(bakeSale(200, 200, false), 13500);
 ----
 
 Now that we have all the parts on the page (so to speak), we can write
@@ -316,32 +327,77 @@ the body. The templates are a guide, and can be removed if you end up
 not needing them (or using them in a different way), but they are
 often a useful way to start
 
-In our case, the best place to look for guidance of how to finish the
+Often, the best place to look for guidance of how to finish the
 program is either the purpose statement (which states, in english,
 what it should do), or the tests (which shows us some examples of what
-it has done). Using that, we can complete the function as:
+it has done). Using the purpose statement, we know that to calculate
+the total cents, we multiply the number of lemonades by 25 and the
+number of cookies by 50. That gets us further (and we have used up two
+of our templates):
 
 [source,javascript]
 ----
-// We will watermark images, which means adding a particular image on top.
-// The mark will be an image, and so will be the input and output.
-// Image, Image -> Image
-// Takes a watermark image and places it at the top left of the
-// to-be-watermarked image, producing the result of that overlay.
-function watermarkImage(watermark, target) {
-  return placeImage(watermark, target, 0, 0);
+// The number of cookies, glasses of lemonade are numbers.
+// Whether we will pay the flat fee is a boolean (we either will or won't).
+// We'll return a number in cents, as our prices are in cents.
+// number, number, boolean -> number
+// Takes the number of lemonades * 25 plus the number of cookies * 50
+// and then subtracts either 5000 (if the flat fee is chosen) or 10%
+// of this total (if flat fee not chosen). This number, which is the
+// number of cents, is what we return.
+function bakeSale(lemonades, cookies, useFixedCost) {
+  var total = lemonades * 25 + cookies * 50;
+  if (useFixedCost) {
+    // ...
+  } else {
+    // ...
+  }
+  return 0;
 }
-var my_watermark = circle(10,"red");
-shouldEqual(watermarkImage(my_watermark, rectangle(100,50,"black")),
-           placeImage(my_watermark, rectangle(100,50,"black"), 0, 0));
+shouldEqual(bakeSale(0,0,true), -5000);
+shouldEqual(bakeSale(0,0,false), 0);
+shouldEqual(bakeSale(200, 0, true), 0);
+shouldEqual(bakeSale(200, 200, true), 10000);
+shouldEqual(bakeSale(200, 200, false), 13500);
+----
+
+Now we want to use the `useFixedCost` template, so we have to think
+what happens if we want to use the fixed cost option (which is that we
+have to pay a fixed 5000 cents) and what happens if we don't (which is
+that we lose 10%, or multiply the total by 0.9). This lets us complete
+the function:
+
+[source,javascript]
+----
+// The number of cookies, glasses of lemonade are numbers.
+// Whether we will pay the flat fee is a boolean (we either will or won't).
+// We'll return a number in cents, as our prices are in cents.
+// number, number, boolean -> number
+// Takes the number of lemonades * 25 plus the number of cookies * 50
+// and then subtracts either 5000 (if the flat fee is chosen) or 10%
+// of this total (if flat fee not chosen). This number, which is the
+// number of cents, is what we return.
+function bakeSale(lemonades, cookies, useFixedCost) {
+  var total = lemonades * 25 + cookies * 50;
+  if (useFixedCost) {
+    return total - 5000;
+  } else {
+    return total * 0.9;
+  }
+  return 0;
+}
+shouldEqual(bakeSale(0,0,true), -5000);
+shouldEqual(bakeSale(0,0,false), 0);
+shouldEqual(bakeSale(200, 0, true), 0);
+shouldEqual(bakeSale(200, 200, true), 10000);
+shouldEqual(bakeSale(200, 200, false), 13500);
 ----
 
 As you are writing the function, you can continue to run your
 tests. Often, if you have many tests, some of them will start to pass
-as you write the function. In our case, our one test is now passing!
+as you write the function. In our case, all our tests are now passing!
 
-In the `not` example, which had a more interesting _template_, we can
-look at how to complete it:
+As an exercise, complete the `not` function so that all the tests pass:
 
 [source,javascript]
 ----
@@ -350,18 +406,14 @@ look at how to complete it:
 // This function inverts a boolean value, turning true to false and vice versa.
 function not(b) {
   if (b) {
-    // since true should turn into false, in this branch we know the input is true
-    return false;
+    // ...
   } else {
-    // And vice versa, here the input is false
-    return true;
+    // ...
   }
 }
 shouldEqual(not(true), false);
 shouldEqual(not(false), true);
 ----
-
-And we can see that the template indeed did end up being used.
 
 == WARNING: EVERYTHING BELOW THIS IS SUBJECT TO DEMOLITION!!!
 
