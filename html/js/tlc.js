@@ -488,6 +488,8 @@ var bigBang = _type([tAny,
 
 });
 
+var bike = circle(30, "red");
+
 
 /* Incorporating into EJS sandbox */
 function sandbox_draw(win, image) {
