@@ -53,7 +53,19 @@ draw(text('hi there', 20));
 draw(overlay(text('hello world', 16), emptyScene(200,200)));
 
 function grow(number) {
-    return overlay(circle(number, "red"), emptyScene(200, 200));
+  // center a red circle that changes radius based on the number
+  var red_circle = overlay(circle(number, "red"),
+                           rectangle(198, 198, "white"));
+
+  var label = text("Press a number key.", 16);
+  var bg = placeImage(label,
+                      emptyScene(200, 220),
+                      // center the label horizontally
+                      (200 - width(label)) / 2, 
+                      212)
+
+  // offset the circle just 1 pixel (to show the border of the scene).
+  return placeImage(red_circle, bg, 1, 1);
 }
 
 function inc1(n) {
@@ -79,3 +91,7 @@ bigBang(0, function(n) { return text(n.toString(), 16);}, function(n) { return n
 shouldEqual(1+1, 2);
 
 shouldEqual(1+2, 2);
+
+shouldEqual(width(circle(20, "red")), 40);
+shouldEqual(height(overlay(circle(20, "red"), emptyScene(200, 200))), 200);
+shouldEqual(length("hello world"), 11); 

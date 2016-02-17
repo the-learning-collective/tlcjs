@@ -374,7 +374,6 @@ function _drawInternal(cont, image, givenCanvas) {
     case "text":
       ctx.fillStyle = "black";
       ctx.font = '' +  shape.fontSize + "px serif";
-      console.log("font ", ctx.font, " x ", shape.x, " y ", shape.y);
       ctx.fillText(shape.text, shape.x, fontSizeHelper(shape.y, shape.fontSize));
       break;
     case "line":
@@ -510,8 +509,22 @@ var bigBang = _type([tAny,
 
 });
 
-var bike = circle(30, "red");
+var width_usage = "width(): Requires one argument, an image. For example: width(circle(20, 'red')).";
+var width = _type([tObject], tNumber, width_usage, function(image) {
+  return image.width;
+});
 
+                  var height_usage = "height(): Requires one argument, an image. For example: height(circle(20, 'red')).";
+var height = _type([tObject], tNumber, height_usage, function(image) {
+  return image.height;
+});
+                  
+var length_usage = "length(): Requires one argument, a string. For example: length('Hello world')."
+var length = _type([tString], tNumber, length_usage, function(string) {
+  return string.length;
+});
+               
+var bike = circle(30, "red");
 
 /* Incorporating into EJS sandbox */
 function sandbox_draw(win, image) {
