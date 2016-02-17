@@ -273,7 +273,7 @@ identifiers the same way you would your own variables.
 
 (((power example)))A function can have multiple parameters or no
 parameters at all. In the following example, `makeNoise` does not list
-any parameter names, whereas `power` lists two:
+any parameter names, whereas `emphasize` lists two:
 
 [source,javascript]
 ----
@@ -293,7 +293,7 @@ print(emphasize("hello there"));
 ----
 
 (((return value)))(((return keyword)))(((undefined)))Some functions
-explicitly `return` a value, such as `power` and `square`, and some
+explicitly `return` a value, such as `emphasize` and `square`, and some
 don't, such as `makeNoise`. A `return` statement determines the value
 the function returns. When control comes across such a statement, it
 immediately jumps out of the current function and gives the returned
@@ -529,6 +529,55 @@ function name(arg) { return arg; }
 ----
 
 The second is a little shorter and doesn't have a semicolon at the end.
+
+
+== Parameters and scopes ==
+
+(((function,application)))(((variable,from parameter)))The
+((parameter))s to a function behave like regular variables, but their
+initial values are given by the _caller_ of the function, not the code
+in the function itself.
+
+(((function,scope)))(((scope)))(((local variable)))An important
+property of functions is that the variables created inside of them,
+including their parameters, are _local_ to the function. This means
+that any variables defined within functions will be newly created
+every time the function is called, and these separate incarnations do
+not interfere with each other.
+
+indexsee:[top-level scope,global scope]
+(((var keyword)))(((global scope)))(((variable,global)))This
+“localness” of variables applies only to the parameters and to variables
+declared with the `var` keyword inside the function body. Variables
+declared outside of any function are called _global_, because they are
+visible throughout the program. It is possible to access such
+variables from inside a function, as long as you haven't declared a
+local variable with the same name.
+
+(((variable,assignment)))The following code demonstrates this. It
+declares the variable as local and thus changes only the local
+variable, which is unchanged.
+
+[source,javascript]
+----
+var x = "outside";
+
+var f1 = function() {
+  var x = "inside f1";
+};
+f1();
+print(x);
+// → outside
+----
+
+(((variable,naming)))(((scope)))(((global scope)))(((code,structure
+of)))This behavior helps prevent accidental interference between
+functions. If all variables were shared by the whole program, it'd
+take a lot of effort to make sure no name is ever used for two
+different purposes. By treating function-local variables as existing
+only within the function, the language makes it possible to read and
+understand functions as small universes, without having to worry about
+all the code at once.
 
 == Exercises ==
 

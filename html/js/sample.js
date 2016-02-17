@@ -75,3 +75,7 @@ function startAgain (world, initialSize) {
 bigBang(0, grow, inc1, startAgain);
 
 bigBang(0, function(n) { return text(n.toString(), 16);}, function(n) { return n + 1; }, function(n, key) { return n - 10; });
+
+shouldEqual(1+1, 2);
+
+shouldEqual(1+2, 2);
