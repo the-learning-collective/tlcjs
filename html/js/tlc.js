@@ -29,12 +29,12 @@ function testRaises(desc, given) {
 // by TLC.js students.
 var testResults = { run: 0, passed: 0, failures: [] };
 
-function updateTestDiv(container) {
-  container.textContent = "Tests: " + String(testResults.passed) + "/" + String(testResults.run) + " passed.";
-  if (testResults.failures.length !== 0) {
+function updateTestDiv(results, container) {
+  container.textContent = "Tests: " + String(results.passed) + "/" + String(results.run) + " passed.";
+  if (results.failures.length !== 0) {
     container.textContent += "\n\nFailures:\n";
   }
-  testResults.failures.forEach(function (f) {
+  results.failures.forEach(function (f) {
     container.textContent += "  " + f + "\n";
   });
 }
@@ -49,25 +49,31 @@ function updateTestUi() {
     _addOutput(output);
   }
 
-  updateTestDiv(output);
+  updateTestDiv(testResults, output);
 }
 
-function _shouldEqualInternal(redraw, given, expected) {
-  testResults.run++;
+function _shouldEqualInternal(includeStack, results, redraw, given, expected) {
+  results.run++;
   if (given === expected) {
-    testResults.passed++;
+    results.passed++;
   } else {
     // NOTE(dbp 2016-02-15): This is a hack to find out where the
     // assertion was called from. Eeek!
+    console.log((new Error()).stack.split("\n"));
     var s = (new Error()).stack.split("\n")[1];
     var loc = s.slice(s.lastIndexOf("/")+1, s.length - 2);
-    testResults.failures.push(loc + " - expected " + String(expected) + ", but got " + String(given) + ".");
+    if (includeStack) {
+      var msg = loc + " - expected " + String(expected) + ", but got " + String(given) + ".";
+    } else {
+      var msg = String(results.run) + ": expected " + String(expected) + ", but got " + String(given) + ".";
+    }
+    results.failures.push(msg);
   }
   redraw();
 }
 
 function shouldEqual(given, expected) {
-  return _shouldEqualInternal(updateTestUi, given, expected);
+  return _shouldEqualInternal(true, testResults, updateTestUi, given, expected);
 }
 
 
@@ -540,15 +546,16 @@ function tlc_sandbox_functions(win) {
     }),
     shouldEqual: function(given, expected) {
       var output = win.output.testOutput;
-      if (typeof output === "undefined") {
+      if (typeof output === "undefined" || !document.contains(output)) {
         output = document.createElement("pre");
         win.output.testOutput = output;
         win.output.div.appendChild(output);
+        win.output.testResults = { passed: 0, run: 0, failures: []};
       }
       function redraw() {
-        updateTestDiv(output);
+        updateTestDiv(win.output.testResults, output);
       }
-      return _shouldEqualInternal(redraw, given, expected);
+      return _shouldEqualInternal(false, win.output.testResults, redraw, given, expected);
     }
   };
 }
