@@ -196,7 +196,7 @@ In our case, we might write:
 [source,javascript]
 ----
 var my_watermark = circle(10,"red");
-testEquals(watermarkImage(my_watermark, rectangle(100,50,"black")),
+shouldEqual(watermarkImage(my_watermark, rectangle(100,50,"black")),
            placeImage(my_watermark, rectangle(100,50,"black"), 0, 0));
 ----
 
@@ -281,7 +281,7 @@ function watermarkImage(watermark, target) {
   return watermark;
 }
 var my_watermark = circle(10,"red");
-testEquals(watermarkImage(my_watermark, rectangle(100,50,"black")),
+shouldEqual(watermarkImage(my_watermark, rectangle(100,50,"black")),
            placeImage(my_watermark, rectangle(100,50,"black"), 0, 0));
 ----
 
@@ -306,7 +306,7 @@ function watermarkImage(watermark, target) {
   return placeImage(watermark, target, 0, 0);
 }
 var my_watermark = circle(10,"red");
-testEquals(watermarkImage(my_watermark, rectangle(100,50,"black")),
+shouldEqual(watermarkImage(my_watermark, rectangle(100,50,"black")),
            placeImage(my_watermark, rectangle(100,50,"black"), 0, 0));
 ----
 
@@ -331,8 +331,8 @@ function not(b) {
     return true;
   }
 }
-test(not(true), false);
-test(not(false), true);
+shouldEqual(not(true), false);
+shouldEqual(not(false), true);
 ----
 
 And we can see that the template indeed did end up being used.
