@@ -623,8 +623,10 @@ var draw_bike = function(position) {
 animate(draw_bike);
 ----
 
+3. __Extra credit: Back and forth forever__
 
-
+Using `mod`, can you figure out how to make the bike run back and
+forth across the screen forever?
 
 == Summary ==
 
