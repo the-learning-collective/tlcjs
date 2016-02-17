@@ -266,7 +266,7 @@ var rectangle = _type([tNumber, tNumber, tString], tObject, rectangle_usage, fun
 
 var line_usage = "line(): Requires four arguments, all numbers --  StartX, StartY, EndX, EndY. Line draws a line from one point to another. The first two arguments are the X,Y coordinates of the starting point. The last two arguments are the X,Y coordinates of the ending point. For example: line(0,0, 100, 200)";
 var line = _type([tNumber,tNumber,tNumber,tNumber], tObject, line_usage, function(startX, startY, endX, endY) {
-  
+
   var line = { tlc_dt: "line",
                startX: startX,
                startY: startY,
@@ -292,7 +292,7 @@ var text = _type([tString, tNumber], tObject, text_usage, function(words, fontSi
   // create a temp context in order to measure text
   var ctx = document.createElement("canvas").getContext("2d");
   ctx.font = '' + fontSize + "px serif";
-  
+
   var txt = { tlc_dt: "text",
               text: words,
               fontSize: fontSize,
@@ -514,16 +514,16 @@ var width = _type([tObject], tNumber, width_usage, function(image) {
   return image.width;
 });
 
-                  var height_usage = "height(): Requires one argument, an image. For example: height(circle(20, 'red')).";
+var height_usage = "height(): Requires one argument, an image. For example: height(circle(20, 'red')).";
 var height = _type([tObject], tNumber, height_usage, function(image) {
   return image.height;
 });
-                  
+
 var length_usage = "length(): Requires one argument, a string. For example: length('Hello world')."
 var length = _type([tString], tNumber, length_usage, function(string) {
   return string.length;
 });
-               
+
 var bike = circle(30, "red");
 
 /* Incorporating into EJS sandbox */
