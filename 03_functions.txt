@@ -69,7 +69,7 @@ information into another. In the example of `square` above, the first
 piece of information (on the _input_) was a number, and the second (or
 the _output_) was that number multiplied by itself. This relationship
 (between a number and it multiplied by itself) matches what we think
-of as _square_ing, so the name matches it well.
+of as _squaring_, so the name matches it well.
 
 All programming is about similar transformations. And, it is about the
 information. Up until now, we have introduced different types of data
@@ -116,22 +116,31 @@ this later.
 As an example problem (which we'll follow through the whole recipe),
 we want to figure out how a hypothetical bake sale is going to work.
 
-We want to raise money by making lemonade and cookies, but
-unfortunately, the only place we have to sell them
+We want to raise money by making lemonade and cookies (which we sell
+at 25c/cup and 50c/cookie), but unfortunately, the only place we have
+to sell them is run by a capitalist who makes us pay to use the
+space. They have two options we can choose between:
+
+- We pay them $50 to use the space, regardless of how much lemonade or how many cookies we sell.
+- We pay them 10% of the total amount that we make.
+
+The function we'll construct will take as input whether we want to pay
+the flat $50 fee, and how many cups of lemonade / cookies we
+sell. It'll give back our total profit.
 
 Thinking about the type of information that we need, and how we'll
 represent it, we come up with:
 
 [source,javascript]
 ----
-// We will watermark images, which means adding a particular image on top.
-// The mark will be an image, and so will be the input and output.
+// The number of cookies, glasses of lemonade are numbers.
+// Whether we will pay the flat fee is a boolean (we either will or won't).
+// We'll return a number in cents, as our prices are in cents.
 ----
 
-For this problem, it may seem pretty trivial - if we are talking about
-marking images, it makse sense that we would be dealing with images,
-but in many problems it isn't always clear how to represent a given
-part of the problem (and not understanding is a good way to get lost!).
+For this problem, it may seem pretty trivial - but in many problems it
+isn't always clear how to represent a given part of the problem (and
+not understanding is a good way to get lost!).
 
 The second step is to figure out what the input and output to our
 function will be. In the first step, we should have figured out all
@@ -142,50 +151,53 @@ output of a function.
 
 You should also write this as a comment, as it is similarly very
 helpful information for yourself and others who might be looking at
-your program (or trying to change it). In our watermarking example, we
+your program (or trying to change it). In our bake sale example, we
 end up with the following _signature_:
 
 [source,javascript]
 ----
-// Image, Image -> Image
+// number, number, boolean -> number
 ----
 
-Where that is shorthand for the function taking two images as input
-(the watermark and the to-be-watermarked image) and producing an image
-as output.
+Where that is notation for a function taking three inputs: a number
+(cups of lemonade sold), another number (number of cookies sold), and
+a boolean (true means we pay the flat fee) and producing a number (our
+total profit) as output.
 
 The third step is writing down the purpose of the function, in human
 language. Up until now, everything we have been writing down has been
 about the external attributes of the function - what it takes in and
-what it produces. This is the step where we describe, in the simplest
-possible way (but still, precisely), what the function should actually
-do. In our case, we might write:
+what it produces. There may be many different functions that have
+those inputs/outputs. This is the step where we describe, in the
+simplest possible way (but still, precisely), what the function should
+actually do. In our case, we might write:
 
 [source,javascript]
 ----
-// Takes a watermark image and places it at the top left of the
-// to-be-watermarked image, producing the result of that overlay.
+// Takes the number of lemonades * 25 plus the number of cookies * 50
+// and then subtracts either 5000 (if the flat fee is chosen) or 10%
+// of this total (if flat fee not chosen). This number, which is the
+// number of cents, is what we return.
 ----
 
 The fourth step is to write down the _header_ for the function, which
-is the name, arguments, and put in some _stub_ for the return value
-(where this _stub_ is a value that matches the signature, but is as
+is the name, arguments, and some _stub_ for the return value
+(where a _stub_ is a value that matches the signature, but is as
 simple as you can think up). Part of this step involves coming up with
 names for the function and all the arguments. In this case, we might
 write:
 
 [source,javascript]
 ----
-function watermarkImage(watermark, target) {
-  return watermark;
+function bakeSale(lemonades, cookies, useFixedCost) {
+  return 0;
 }
 ----
 
-Note that for the _stub_, I could have easily chosen `target` (which
-is also an image), or I could have written `emptyScene(1,1)` (which is
-also an image). The point of the _stub_ is not to have a sensible
-value, just to have something that matches the write type of data that
-your signature specified.
+Note that for the _stub_, I could have easily written `2`, or `1000`
+(which are all numbers). The point of the _stub_ is not to have a
+sensible value, just to have something that matches the right type of
+data that your signature specified.
 
 The fifth step is to write down example uses of your function, which
 are usually called "tests" (as they "test" that your function behaves
@@ -195,18 +207,32 @@ In our case, we might write:
 
 [source,javascript]
 ----
-var my_watermark = circle(10,"red");
-shouldEqual(watermarkImage(my_watermark, rectangle(100,50,"black")),
-           placeImage(my_watermark, rectangle(100,50,"black"), 0, 0));
+function bakeSale(lemonades, cookies, useFixedCost) {
+  return 0;
+}
+shouldEqual(bakeSale(0,0,true), -5000);
+shouldEqual(bakeSale(0,0,false), 0);
+shouldEqual(bakeSale(200, 0, true), 0);
+shouldEqual(bakeSale(200, 200, true), 10000);
+shouldEqual(bakeSale(200, 200, false), 13500);
 ----
 
-In this case, the function is pretty simple, so it's possible that
-this could be enough examples, but in most cases you will want at
-least four or five (or possibly many more).
+When writing tests, it is good to think both of the common cases (for
+example, selling a few hundred of each lemonade and cookies), but also
+the strange cases (like selling nothing at all, or all of one
+product).
 
-When you run your program (which, at this point, you should), you
-should get a message (****NOTE: WHERE???****) that the test
-failed. This is good! Since you haven't written the body of the
+
+When you run your program (which, at this point, you should), you'll
+see a report of how many tests ran and passed (and if they failed,
+you'll get a report of what went wrong). When you run them in files
+that you save, you'll get the line number when they fail (but that's
+not available within the in-text editors).
+
+In this case, most of them failed (the ones that passed happened to
+work because we used `0` as our stub, so like a broken clock that is
+right twice a day, our always-returning-0 function is sometimes
+right!). This is expected!  Since you haven't written the body of the
 function yet, the tests should be failing. If they weren't, they
 couldn't be checking much!
 
@@ -228,13 +254,13 @@ expression. So if we had a function:
 ----
 // (1) Involves booleans.
 // (2) Boolean -> Boolean
-// This function inverts a boolean value, turning true to false and vice versa.
+// (3) This function inverts a boolean value, turning true to false and vice versa.
 function not(b) { // (4)
   return true;
 }
 // (5)
-test(not(true), false);
-test(not(false), true);
+shouldEqual(not(true), false);
+shouldEqual(not(false), true);
 ----
 
 Where I've identified each step of the design recipe completed thus
@@ -255,8 +281,8 @@ function not(b) { // (4)
   return true;
 }
 // (5)
-test(not(true), false);
-test(not(false), true);
+shouldEqual(not(true), false);
+shouldEqual(not(false), true);
 ----
 
 The purpose of the template is to give you a place to start - if you
