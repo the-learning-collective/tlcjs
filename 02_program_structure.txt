@@ -358,13 +358,28 @@ There is a function `animate` that takes a function like our
 
 [source,javascript]
 ----
-var draw_bike = function(position) {
-  return placeImage(bike, emptyScene(400,100), position, 30);
+var draw_bike = function(ticksSinceStart) {
+  return placeImage(bike, emptyScene(400,100), ticksSinceStart, 30);
 };
 animate(draw_bike);
 ----
 
 == Making animations move ==
+
+_animate_ gives your drawing function a number. That number represents
+how many "ticks" have happened since the animation started.
+
+[source,javascript]
+----
+function show_how_many_ticks(ticksSinceStart) {
+  print(ticksSinceStart);
+}
+
+animate(show_how_many_ticks);
+
+// NOTE: `animate(show_how_many_ticks)` is the same as just:
+animate(print);
+----
 
 Two helpful functions for making animations are `Math.sin` and
 `Math.cos`. These are the _sin_ and _cos_ functions from math. You can
@@ -372,20 +387,44 @@ fiddle with this to get interesting things to happen:
 
 [source,javascript]
 ----
-function sinWiggle(n) {
-  var xPosition = Math.sin(n/20) * 90 + 90;
-  return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
-}
-
-function cosWiggle(n) {
-  var xPosition = Math.cos(n/20) * 90 + 90;
+function sinWiggle(ticksSinceStart) {
+  var xPosition = Math.sin(ticksSinceStart/20) * 90 + 90;
   return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
 }
 
 animate(sinWiggle);
-animate(cosWiggle);
+----
+var position = time;
+The cool thing about _sin_ and _cos_ is that _sin(anything)_ and _cos(anything)_ are always
+numbers between -1 and 1. If you multiply the result of _sin(some number)_
+by 90, you will always get a number between -90 and 90.
+
+Try it out!
+
+[source,javascript]
+----
+print(Math.sin(0));
+print(Math.sin(100));
+print(Math.sin(500000));
+
+print(Math.sin(0) * 90);
+print(Math.sin(100) * 90);
+print(Math.sin(500000) * 90);
 ----
 
+We use that fact in
+_sinWiggle_. We multiple by 90 to always get a number between -90 and 90.
+Then we add 90, so the number is always between 0 and 180.
+
+[source,javascript]
+----
+print(Math.sin(0) * 90 + 90);
+print(Math.sin(100) * 90 + 90);
+print(Math.sin(500000) * 90 + 90);
+----
+
+So _sinWiggle_ takes a number, no matter how big, and turns into an
+image that
 A helpful operator is `%`, which is pronounced _mod_. It takes the
 _remainder_ after diving the right side by the left side.
 
