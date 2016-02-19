@@ -399,7 +399,7 @@ as you write the function. In our case, all our tests are now passing!
 
 == Exercises ==
 
-1. As an exercise, complete the `not` function so that all the tests pass:
+- As an exercise, complete the `not` function so that all the tests pass:
 
 [source,javascript]
 ----
@@ -417,10 +417,10 @@ shouldEqual(not(true), false);
 shouldEqual(not(false), true);
 ----
 
-2. Use the design recipe to write a `min` function that takes as input
+- Use the design recipe to write a `min` function that takes as input
 two numbers and returns the one that is smaller.
 
-3. There is a function `stringLength()` that takes a string and returns a
+- There is a function `stringLength()` that takes a string and returns a
 number that is the number of characters in it.
 
 Using that function, can you use the design recipe to "center" a
@@ -429,7 +429,7 @@ return `" hi "`. Once you get a version working, you might work on
 figuring out what to do if the space specified is shorter than the
 string, or if the amount of space can't be even on both sides.
 
-4. There are two functions, `width()` and `height()` that takes as
+- There are two functions, `width()` and `height()` that takes as
 input images and return numbers that are the width and height
 respectively. For review, the `signature` of both functions are:
 
