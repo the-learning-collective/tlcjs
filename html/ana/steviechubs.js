@@ -19,13 +19,13 @@ var chubbyscene = overlay(chubbyhead, scene);
 var lick = function(time) {
 	var remainder = (time % 40);
 	if (remainder < 10) {
-		var tongue = placeImage(circle(15, "pink"), chubbyscene, 150, remainder + 153);
+		var tongue = placeImage(circle(15, "pink"), chubbyscene, 151, remainder + 153);
 	} else  {
-		var tongue = placeImage(circle(15, "pink"), chubbyscene, 150, 153);			
+		var tongue = placeImage(circle(15, "pink"), chubbyscene, 151, 153);			
 	}
 	var LCheek = placeImage(circle(17, "white"), tongue, 133, 142);
 	var RCheek = placeImage(circle(17, "white"), LCheek, 165, 142);
-	var head = placeImage(circle(15, "pink"), RCheek, 150, 130);
+	var head = placeImage(circle(15, "pink"), RCheek, 150, 125);
 	return head
 };
 
