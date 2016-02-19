@@ -335,6 +335,7 @@ var image = _type([tString], tObject, image_usage, function(location) {
 });
 
 function _drawInternal(cont, image, givenCanvas) {
+
   if (givenCanvas) {
     var canvas = givenCanvas;
   } else {
@@ -343,47 +344,55 @@ function _drawInternal(cont, image, givenCanvas) {
 
   var ctx = canvas.getContext("2d");
 
-  canvas.width = image.width;
-  canvas.height = image.height;
+  if (image) {
+    canvas.width = image.width;
+    canvas.height = image.height;
+  }
 
-  for (var i = 0; i < image.elements.length; i++) {
-    var shape = image.elements[i];
-    switch (shape.tlc_dt) {
-    case "rectangle":
-      ctx.fillStyle = shape.color;
-      ctx.fillRect(shape.x,
-                   shape.y,
-                   shape.width,
-                   shape.height);
-      break;
-    case "circle":
-      ctx.beginPath();
-      ctx.fillStyle = shape.color;
-      ctx.arc(shape.x + shape.radius,
-              shape.y + shape.radius,
-              shape.radius, 0, 2 * Math.PI);
-      ctx.fill();
-      break;
-    case "image":
-      shape.img.onload = function() {
-        ctx.drawImage(shape.img,
-                      shape.x,
-                      shape.y);
-      };
-      break;
-    case "text":
-      ctx.fillStyle = "black";
-      ctx.font = '' +  shape.fontSize + "px serif";
-      ctx.fillText(shape.text, shape.x, fontSizeHelper(shape.y, shape.fontSize));
-      break;
-    case "line":
-      ctx.beginPath();
-      ctx.moveTo(shape.startX,shape.startY);
-      ctx.lineTo(shape.endX,shape.endY);
-      ctx.stroke();
-      break;
-    default:
-      break;
+
+  if (typeof image === "undefined" || !image.hasOwnProperty("elements")) {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+  } else {
+
+    for (var i = 0; i < image.elements.length; i++) {
+      var shape = image.elements[i];
+      switch (shape.tlc_dt) {
+      case "rectangle":
+        ctx.fillStyle = shape.color;
+        ctx.fillRect(shape.x,
+                     shape.y,
+                     shape.width,
+                     shape.height);
+        break;
+      case "circle":
+        ctx.beginPath();
+        ctx.fillStyle = shape.color;
+        ctx.arc(shape.x + shape.radius,
+                shape.y + shape.radius,
+                shape.radius, 0, 2 * Math.PI);
+        ctx.fill();
+        break;
+      case "image":
+        shape.img.onload = function() {
+          ctx.drawImage(shape.img,
+                        shape.x,
+                        shape.y);
+        };
+        break;
+      case "text":
+        ctx.fillStyle = "black";
+        ctx.font = '' +  shape.fontSize + "px serif";
+        ctx.fillText(shape.text, shape.x, fontSizeHelper(shape.y, shape.fontSize));
+        break;
+      case "line":
+        ctx.beginPath();
+        ctx.moveTo(shape.startX,shape.startY);
+        ctx.lineTo(shape.endX,shape.endY);
+        ctx.stroke();
+        break;
+      default:
+        break;
+      }
     }
   }
 
