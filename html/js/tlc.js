@@ -519,8 +519,8 @@ var height = _type([tObject], tNumber, height_usage, function(image) {
   return image.height;
 });
 
-var length_usage = "length(): Requires one argument, a string. For example: length('Hello world')."
-var length = _type([tString], tNumber, length_usage, function(string) {
+var stringLength_usage = "length(): Requires one argument, a string. For example: length('Hello world')."
+var stringLength = _type([tString], tNumber, length_usage, function(string) {
   return string.length;
 });
 
@@ -549,6 +549,9 @@ function tlc_sandbox_functions(win) {
     text: text,
     overlay: overlay,
     line: line,
+    width: width,
+    height: height,
+    stringLength,
     placeImage: placeImage,
     emptyScene: emptyScene,
     animate: _type([tArrow([tNumber], tObject)], tNothing, animate_usage, function(tick) {
