@@ -520,7 +520,7 @@ var height = _type([tObject], tNumber, height_usage, function(image) {
 });
 
 var stringLength_usage = "length(): Requires one argument, a string. For example: length('Hello world')."
-var stringLength = _type([tString], tNumber, length_usage, function(string) {
+var stringLength = _type([tString], tNumber, stringLength_usage, function(string) {
   return string.length;
 });
 
