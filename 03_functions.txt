@@ -121,8 +121,9 @@ at 25c/cup and 50c/cookie), but unfortunately, the only place we have
 to sell them is run by a capitalist who makes us pay to use the
 space. They have two options we can choose between:
 
-- We pay them $50 to use the space, regardless of how much lemonade or how many cookies we sell.
-- We pay them 10% of the total amount that we make.
+- We pay them $50 to use the space, regardless of how much lemonade or
+- how many cookies we sell.  We pay them 10% of the total amount that
+- we make.
 
 The function we'll construct will take as input whether we want to pay
 the flat $50 fee, and how many cups of lemonade / cookies we
@@ -133,9 +134,12 @@ represent it, we come up with:
 
 [source,javascript]
 ----
+
 // The number of cookies, glasses of lemonade are numbers.
-// Whether we will pay the flat fee is a boolean (we either will or won't).
-// We'll return a number in cents, as our prices are in cents.
+// Whether we will pay the flat fee is a boolean (we either
+// will or won't). We'll return a number in cents, as our
+// prices are in cents.
+
 ----
 
 For this problem, it may seem pretty trivial - but in many problems it
@@ -174,10 +178,11 @@ actually do. In our case, we might write:
 
 [source,javascript]
 ----
-// Takes the number of lemonades * 25 plus the number of cookies * 50
-// and then subtracts either 5000 (if the flat fee is chosen) or 10%
-// of this total (if flat fee not chosen). This number, which is the
-// number of cents, is what we return.
+// Takes the number of lemonades * 25 plus the number of
+// cookies * 50 and then subtracts either 5000 (if the
+// flat fee is chosen) or 10% of this total (if flat fee not
+// chosen). This number, which is the number of cents, is
+// what we return.
 ----
 
 The fourth step is to write down the _header_ for the function, which
@@ -222,7 +227,6 @@ example, selling a few hundred of each lemonade and cookies), but also
 the strange cases (like selling nothing at all, or all of one
 product).
 
-
 When you run your program (which, at this point, you should), you'll
 see a report of how many tests ran and passed (and if they failed,
 you'll get a report of what went wrong). When you run them in files
@@ -254,7 +258,8 @@ expression. So if we had a function:
 ----
 // (1) Involves booleans.
 // (2) Boolean -> Boolean
-// (3) This function inverts a boolean value, turning true to false and vice versa.
+// (3) This function inverts a boolean value, turning true
+//     to false and vice versa.
 function not(b) { // (4)
   return true;
 }
@@ -266,12 +271,12 @@ shouldEqual(not(false), true);
 Where I've identified each step of the design recipe completed thus
 far. To example the template for `b` (the only argument), we would write:
 
-
 [source,javascript]
 ----
 // (1) Involves booleans.
 // (2) Boolean -> Boolean
-// This function inverts a boolean value, turning true to false and vice versa.
+// (3) This function inverts a boolean value, turning true to
+//     false and vice versa.
 function not(b) { // (4)
   if (b) {
     // ...
@@ -295,13 +300,15 @@ template similar to `not` above.
 [source,javascript]
 ----
 // The number of cookies, glasses of lemonade are numbers.
-// Whether we will pay the flat fee is a boolean (we either will or won't).
-// We'll return a number in cents, as our prices are in cents.
+// Whether we will pay the flat fee is a boolean (we either
+// will or won't). We'll return a number in cents, as our
+// prices are in cents.
 // number, number, boolean -> number
-// Takes the number of lemonades * 25 plus the number of cookies * 50
-// and then subtracts either 5000 (if the flat fee is chosen) or 10%
-// of this total (if flat fee not chosen). This number, which is the
-// number of cents, is what we return.
+// Takes the number of lemonades * 25 plus the number of
+// cookies * 50 and then subtracts either 5000 (if the flat
+// fee is chosen) or 10%
+// of this total (if flat fee not chosen). This number,
+// which is the  number of cents, is what we return.
 function bakeSale(lemonades, cookies, useFixedCost) {
   // ...
   lemonades;
@@ -315,8 +322,8 @@ function bakeSale(lemonades, cookies, useFixedCost) {
   }
   return 0;
 }
-shouldEqual(bakeSale(0,0,true), -5000);
-shouldEqual(bakeSale(0,0,false), 0);
+shouldEqual(bakeSale(0, 0, true), -5000);
+shouldEqual(bakeSale(0, 0, false), 0);
 shouldEqual(bakeSale(200, 0, true), 0);
 shouldEqual(bakeSale(200, 200, true), 10000);
 shouldEqual(bakeSale(200, 200, false), 13500);
@@ -338,13 +345,15 @@ of our templates):
 [source,javascript]
 ----
 // The number of cookies, glasses of lemonade are numbers.
-// Whether we will pay the flat fee is a boolean (we either will or won't).
-// We'll return a number in cents, as our prices are in cents.
+// Whether we will pay the flat fee is a boolean (we either
+// will or won't). We'll return a number in cents, as our
+// prices are in cents.
 // number, number, boolean -> number
-// Takes the number of lemonades * 25 plus the number of cookies * 50
-// and then subtracts either 5000 (if the flat fee is chosen) or 10%
-// of this total (if flat fee not chosen). This number, which is the
-// number of cents, is what we return.
+// Takes the number of lemonades * 25 plus the number of
+// cookies * 50 and then subtracts either 5000 (if the flat
+// fee is chosen) or 10%
+// of this total (if flat fee not chosen). This number,
+// which is the  number of cents, is what we return.
 function bakeSale(lemonades, cookies, useFixedCost) {
   var total = lemonades * 25 + cookies * 50;
   if (useFixedCost) {
@@ -399,7 +408,7 @@ as you write the function. In our case, all our tests are now passing!
 
 == Exercises ==
 
-- As an exercise, complete the `not` function so that all the tests pass:
+- As an exercise, complete the `not` function so that all the tests pass:=
 
 [source,javascript]
 ----
@@ -417,8 +426,44 @@ shouldEqual(not(true), false);
 shouldEqual(not(false), true);
 ----
 
+- Try making these tests pass as well!
+
+[source,javascript]
+----
+// A person's name as a string.
+// String -> String
+// This function will enthusiastically greet a person by name.
+// If the name is blank OR the name is undefined, just
+// return "Hello!!"
+function enthusiasticallyGreet(name) {
+  if (name) {
+    // ...
+  } else if (name) {
+    // ...
+  } else {
+    // ...
+  }
+}
+shouldEqual(enthusiasticallyGreet("Austin"), "Hello, Austin!!");
+shouldEqual(enthusiasticallyGreet("Pea"), "Hello, Pea!!");
+shouldEqual(enthusiasticallyGreet(""), "Hello!!");
+shouldEqual(enthusiasticallyGreet(), "Hello!!");
+----
+
 - Use the design recipe to write a `min` function that takes as input
-two numbers and returns the one that is smaller.
+two numbers and returns the one that is smaller. Here's a template:
+
+[source,javascript]
+----
+// Involves numbers
+// Number -> Number -> Number
+// This function takes two numbers as input and return the
+// one that is smaller.
+function min(x, y) {
+  //..
+}
+// Your tests here.
+----
 
 - There is a function `stringLength()` that takes a string and returns a
 number that is the number of characters in it.
@@ -448,3 +493,23 @@ print(width(rectangle(100,10,"red")));
 
 Using this, write a function `area` that takes an image as input and
 returns the total number of pixels in the image.
+
+- One more: A B52 bomber costs about $2 billion dollars (that's nine
+zeroes). That is a number that is so large, it's hard to wrap your
+head around it. Often activists will try saying, "For the cost of one
+B52 bomber, you could pay for this many of this thing." Create a
+function that will help an activist generate statements like this by
+taking the name of an item (like "year of college") and a cost per
+item ($23,872), and return a statement about how many of those items
+could be obtained for two billion dollars.
+
+[source,javascript]
+----
+// Data
+// Type
+// Function description.
+function b52Equivalence(item, cost) {
+  // ...
+}
+// Your tests here.
+---
