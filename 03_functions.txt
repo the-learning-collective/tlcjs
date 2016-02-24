@@ -66,12 +66,13 @@ creative _design_ process.
 
 Fundamentally, a function is a way of transforming one piece of
 information into another. In the example of `square` above, the first
-piece of information (on the _input_) was a number, and the second (or
+piece of information (or the _input_) was a number, and the second (or
 the _output_) was that number multiplied by itself. This relationship
 (between a number and it multiplied by itself) matches what we think
 of as _squaring_, so the name matches it well.
 
-All programming is about similar transformations. And, it is about the
+All programming is about similar transformations. And, it is mostly
+about the structure (ie, what it looks like, what it contains) of that
 information. Up until now, we have introduced different types of data
 that we can represent with javascript (like numbers, strings, images,
 etc) but haven't talked much about how we choose what representation
