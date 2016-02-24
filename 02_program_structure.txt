@@ -378,10 +378,20 @@ animate(draw_bike);
 So _animate_ calls your drawing function with a number. That number
 represents how many "ticks" have happened since the animation started.
 
+Note: in the following, we want to turn a number (of ticks) into an
+image. We have a function called `text` that takes a string (like
+`"hello"`) and turns it into an image. So if we could first take our
+number (like `12` and turn it into a string `"12"`), then we could
+turn it into an image with text. Javascript has a build in function
+that is called `String` that does just that. You can see it in use in
+the below example. If you are trying to do the reverse (turn a string
+like `"1001"` into the number `1001`), there is a corresponding
+function `Number`.
+
 [source,javascript]
 ----
 function show_how_many_ticks(ticksSinceStart) {
-  return text(ticksSinceStart, 16);
+  return text(String(ticksSinceStart), 16);
 }
 
 animate(show_how_many_ticks);
@@ -430,7 +440,7 @@ so lets pick any number... How about 100?
 [source,javascript]
 ----
 function adding(time) {
-  return text("100 + the current time (" + time + ") is " + (100 + time), 16);
+  return text("100 + the current time (" + String(time) + ") is " + (100 + time), 16);
 }
 
 animate(adding);
@@ -439,7 +449,7 @@ animate(adding);
 [source,javascript]
 ----
 function subtracting(time) {
-  return text("100 - the current time (" + time + ") is " + (100 - time), 16);
+  return text("100 - the current time (" + String(time) + ") is " + String(100 - time), 16);
 }
 
 animate(subtracting);
@@ -448,7 +458,7 @@ animate(subtracting);
 [source,javascript]
 ----
 function multiplying(time) {
-  return text("100 * the current time (" + time + ") is " + (100 * time), 16);
+  return text("100 * the current time (" + String(time) + ") is " + String(100 * time), 16);
 }
 
 animate(multiplying);
@@ -457,7 +467,7 @@ animate(multiplying);
 [source,javascript]
 ----
 function dividing(time) {
-  return text("100 / the current time (" + time + ") is " + (100 / time), 16);
+  return text("100 / the current time (" + String(time) + ") is " + String(100 / time), 16);
 }
 
 animate(dividing);
