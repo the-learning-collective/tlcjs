@@ -844,7 +844,13 @@ var draw_bike = function(position) {
 animate(draw_bike);
 ----
 
-2. __Extra credit: Go Backwards!__
+2. Make an image you already made move!
+
+In chapter 1, at the end, you may have drawn an image. Now that you
+have `animate`, you should be able to make some part (or many parts)
+of your image move.
+
+3. __Extra credit: Go Backwards!__
 
 Can you think of a way to replace the comment with code that will make the bike go backwards once it reaches the right-most part of the scene?
 
@@ -861,7 +867,7 @@ var draw_bike = function(position) {
 animate(draw_bike);
 ----
 
-3. __Extra credit: Back and forth forever__
+4. __Extra credit: Back and forth forever__
 
 Using `mod`, can you figure out how to make the bike run back and
 forth across the screen forever?
