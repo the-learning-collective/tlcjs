@@ -448,7 +448,7 @@ animate(subtracting);
 [source,javascript]
 ----
 function multiplying(time) {
-  return text("100 * the current time (" + time + ") is " + (100 * time), 16);
+  return text("the current time (" + time + ") * 100 is " + (time * 100), 16);
 }
 
 animate(multiplying);
@@ -457,10 +457,23 @@ animate(multiplying);
 [source,javascript]
 ----
 function dividing(time) {
-  return text("100 / the current time (" + time + ") is " + (100 / time), 16);
+  return text("the current time (" + time + ")/100 is " + (time/100), 16);
 }
 
 animate(dividing);
+----
+
+Now for the new operator:
+
+[source,javascript]
+----
+// `%` divides by the number by another number and returns
+// the remainder
+function modding(time) {
+  return text("the current time (" + time + ") % 100 is " + (time % 100), 16);
+}
+
+animate(modding);
 ----
 
 So you can see that the `time` going into the function is always increasing at
@@ -502,8 +515,7 @@ animate(subtracting2);
 ----
 
 The next two cause changes so fast or so slow that it's hard to
-even see. Try multiplying and dividing by 10 instead of 100
-and see what happens!
+even see.
 
 [source,javascript]
 ----
@@ -514,7 +526,7 @@ function multiplying1(time) {
 
 function multiplying2(time) {
   var xPosition = time * 100;
-  return placeImage(circle(100, "black"), emptyScene(200, 30), xPosition, 5);
+  return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
 }
 
 animate(multiplying1);
@@ -530,12 +542,34 @@ function dividing1(time) {
 
 function dividing2(time) {
   var xPosition = time / 100;
-  return placeImage(circle(100, "black"), emptyScene(200, 30), xPosition, 5);
+  return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
 }
 
 animate(dividing1);
-animate(dividing2);
+animate(dividing2); // moves so slow you can hardly tell!
 ----
+
+Try multiplying and dividing by 10 instead of 100 and see what
+happens! Try even smaller numbers and bigger numbers!
+
+[source,javascript]
+----
+function modding1(time){
+  var radius = time % 100;
+  return overlay(circle(radius, "red"), emptyScene(200, 200));
+}
+
+function modding2(time){
+  var xPosition = time % 100;
+  return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
+}
+
+animate(modding1);
+animate(modding2);
+----
+
+Using `%` in animation creates a looping effect! How would you make the
+circle in `modding2` go all the way to the end of the box?
 
 == Fluid movement with _sin_ ==
 
@@ -551,19 +585,22 @@ function sinWiggle(ticksSinceStart) {
 
 animate(sinWiggle);
 ----
-var position = time;
-The cool thing about _sin_ and _cos_ is that _sin(anything)_ and _cos(anything)_ are always
-numbers between -1 and 1. If you multiply the result of _sin(some number)_
-by 90, you will always get a number between -90 and 90.
 
-Try it out!
+The cool thing about _sin_ and _cos_ is that `Math.sin(anything)` and
+`Math.cos(anything)` are always numbers between -1 and 1.
 
 [source,javascript]
 ----
 print(Math.sin(0));
 print(Math.sin(100));
 print(Math.sin(500000));
+----
 
+If you multiply the result of `sin(some number)`
+by 90, you will always get a number between -90 and 90.
+
+[source,javascript]
+----
 print(Math.sin(0) * 90);
 print(Math.sin(100) * 90);
 print(Math.sin(500000) * 90);
@@ -584,10 +621,6 @@ So _sinWiggle_ takes a number, no matter how big, and turns that into  an
 image placing a dot.
 A helpful operator is `%`, which is pronounced _mod_. It takes the
 _remainder_ after diving the right side by the left side.
-
-For example, `10 % 3` is `1`. while `10 % 2` is `0`. This can be
-helpful when you want things to repeat, as if `n` counts from `0` to
-infinity, `n % 10` counts `0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5...`.
 
 == Control flow ==
 
