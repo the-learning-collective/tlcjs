@@ -419,35 +419,45 @@ amount of time that has passed) and turn it into a number that changes
 in a different way?
 
 We can think about the different tools we have already. We have lots
-of operators: `-`, `+`, `*`, and `/`. Let's see what happens when we
-use these operators with animate!
+of operators: `-`, `+`, `*`, and `/`. We'll also introduce a new
+operator, `%` (pronounced "mod"). Let's see what happens when we use
+these operators with animate!
 
 Hmmm. All these operators can take two arguments. One of them is
 going to be time, but we need another number. This is just an experiment
-so lets pick any number... How about 834?
+so lets pick any number... How about 100?
 
 [source,javascript]
 ----
 function adding(time) {
-  return text("834 + the current time (" + time + ") is " + (834 + time), 16);
+  return text("100 + the current time (" + time + ") is " + (100 + time), 16);
 }
 
 animate(adding);
+----
 
+[source,javascript]
+----
 function subtracting(time) {
-  return text("834 - the current time (" + time + ") is " + (834 - time), 16);
+  return text("100 - the current time (" + time + ") is " + (100 - time), 16);
 }
 
 animate(subtracting);
+----
 
+[source,javascript]
+----
 function multiplying(time) {
-  return text("834 * the current time (" + time + ") is " + (834 * time), 16);
+  return text("100 * the current time (" + time + ") is " + (100 * time), 16);
 }
 
 animate(multiplying);
+----
 
+[source,javascript]
+----
 function dividing(time) {
-  return text("834 / the current time (" + time + ") is " + (834 / time), 16);
+  return text("100 / the current time (" + time + ") is " + (100 / time), 16);
 }
 
 animate(dividing);
@@ -461,33 +471,70 @@ What does that look like when we apply it to images?
 
 [source,javascript]
 ----
-function adding(time) {
+function adding1(time) {
+  var radius = 100 + time;
+  return overlay(circle(radius, "red"), emptyScene(200, 200));
+}
+
+function adding2(time) {
   var xPosition = 100 + time;
   return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
 }
 
-animate(adding);
+animate(adding1);
+animate(adding2);
+----
 
-function subtracting(time) {
+[source,javascript]
+----
+function subtracting1(time) {
+  var radius = 100 - time;
+  return overlay(circle(radius, "red"), emptyScene(200, 200));
+}
+
+function subtracting2(time) {
   var xPosition = 100 - time;
   return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
 }
 
-animate(subtracting);
+animate(subtracting1)
+animate(subtracting2);
+----
 
-function multiplying(time) {
-  var xPosition = 100 * time;
-  return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
+The next two cause changes so fast or so slow that it's hard to
+even see. Try multiplying and dividing by 10 instead of 100
+and see what happens!
+
+[source,javascript]
+----
+function multiplying1(time) {
+  var radius = time * 100;
+  return overlay(circle(radius, "red"), emptyScene(200, 200));
 }
 
-animate(multiplying);
-
-function dividing(time) {
-  var xPosition = 100 / time;
-  return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
+function multiplying2(time) {
+  var xPosition = time * 100;
+  return placeImage(circle(100, "black"), emptyScene(200, 30), xPosition, 5);
 }
 
-animate(dividing);
+animate(multiplying1);
+animate(multiplying2); // moves so fast you can't even see it!
+----
+
+[source,javascript]
+----
+function dividing1(time) {
+  var radius = time / 100;
+  return overlay(circle(radius, "red"), emptyScene(200, 200));
+}
+
+function dividing2(time) {
+  var xPosition = time / 100;
+  return placeImage(circle(100, "black"), emptyScene(200, 30), xPosition, 5);
+}
+
+animate(dividing1);
+animate(dividing2);
 ----
 
 == Fluid movement with _sin_ ==
