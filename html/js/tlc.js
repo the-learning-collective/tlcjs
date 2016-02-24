@@ -295,7 +295,7 @@ var line = _type([tNumber,tNumber,tNumber,tNumber], tObject, line_usage, functio
 
 var text_usage = "text(): Requires two arguments, text to place in the graphic and a number, the size of the text in pixele. Example: text('Hello', 20).";
 // input: string (text to print), number (size of font in pixels); output: image
-var text = _type([tAny, tNumber], tObject, text_usage, function(wordsOrNumbers, fontSize){
+var text = _type([tString, tNumber], tObject, text_usage, function(wordsOrNumbers, fontSize){
 
   // create a temp context in order to measure text
   var ctx = document.createElement("canvas").getContext("2d");

@@ -105,6 +105,7 @@ window.addEventListener("load", function() {
       editor.focus();
     }
     var out = wrap.appendChild(elt("div", {"class": "sandbox-output"}));
+    var playButton = wrap.appendChild(elt("div", {"class": "play", title: "Run Code"}));
     var menu = wrap.appendChild(elt("div", {"class": "sandbox-menu", title: "Sandbox menu..."}));
     var sandbox = node.getAttribute("data-sandbox");
     if (lang == "text/html" && !sandbox) {
@@ -121,6 +122,7 @@ window.addEventListener("load", function() {
                                        sandbox: sandbox};
     data.output = new SandBox.Output(out);
     menu.addEventListener("click", function() { openMenu(data, menu); });
+    playButton.addEventListener("click", function() { runCode(data); });
   }
 
   function openMenu(data, node) {
