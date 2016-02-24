@@ -105,6 +105,7 @@ window.addEventListener("load", function() {
       editor.focus();
     }
     var out = wrap.appendChild(elt("div", {"class": "sandbox-output"}));
+    var playbutton = wrap.appendChild(elt("div", {"class": "play", title: "Run Code"}));
     var menu = wrap.appendChild(elt("div", {"class": "sandbox-menu", title: "Sandbox menu..."}));
     var sandbox = node.getAttribute("data-sandbox");
     if (lang == "text/html" && !sandbox) {
