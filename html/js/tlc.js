@@ -134,7 +134,7 @@ function __type(ty, err, val) {
         });
 
         // Finally, call function and check return value.
-        var res = val.apply(this, arguments);
+        var res = val.apply(this, args);
         return __type(ty.ret, err, res);
       };
     }
@@ -154,7 +154,9 @@ testRaises("__type higher order arg type", function () {
 testRaises("__type higher order return type", function () {
   return __type(tArrow([], tNumber), "", function () { return "foo";})();
 });
-
+testRaises("__type higher order return catches no return", function () {
+  return __type(tArrow([], tObject), "", function () { {};})();
+});
 
 /* This function helps make errors better by asserting that the
  * arguments to the function `f` have the number and type specified by
@@ -162,6 +164,12 @@ testRaises("__type higher order return type", function () {
 function _type(arg_types, ret, err, f) {
   return __type(tArrow(arg_types, ret), err, f);
 }
+
+testRaises("_type function argument, return type", function () {
+  return _type([tArrow([tNumber], tObject)], tNothing, "ERR", function f(g) {
+    g(10);
+  })(function (n) { /* returns noting */ });
+});
 
 var body = document.getElementById("tlc-body");
 if (body === null) {
