@@ -381,7 +381,7 @@ represents how many "ticks" have happened since the animation started.
 [source,javascript]
 ----
 function show_how_many_ticks(ticksSinceStart) {
-  text(ticksSinceStart, 16);
+  return text(ticksSinceStart, 16);
 }
 
 animate(show_how_many_ticks);
