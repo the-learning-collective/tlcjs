@@ -11,8 +11,12 @@ Outline:
 
 - introduce flat objects as way to collect different data together.
 - match this against domain modelling. ie, if we have a book, we may
-  have a title, author, pub year, which naturally models as { title : string,
-
+  have a title, author, pub year, which naturally models as
+  { title : string, author : string, year: number }
+- some examples using that (and the design recipe!)
+- introduce bigBang, showing how you can use it, and images, to make
+  games!
+- extended examples and then extended exercise building a real game!
 
 ///
 
