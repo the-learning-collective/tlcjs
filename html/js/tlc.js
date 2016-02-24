@@ -287,14 +287,22 @@ var line = _type([tNumber,tNumber,tNumber,tNumber], tObject, line_usage, functio
 
 var text_usage = "text(): Requires two arguments, text to place in the graphic and a number, the size of the text in pixele. Example: text('Hello', 20).";
 // input: string (text to print), number (size of font in pixels); output: image
-var text = _type([tString, tNumber], tObject, text_usage, function(words, fontSize){
+var text = _type([tAny, tNumber], tObject, text_usage, function(wordsOrNumbers, fontSize){
 
   // create a temp context in order to measure text
   var ctx = document.createElement("canvas").getContext("2d");
   ctx.font = '' + fontSize + "px serif";
 
+  if (typeof wordsOrNumbers == "string") {
+      var string = wordsOrNumbers;
+  } else if (typeof wordsOrNumbers == "number") {
+      var string = wordsOrNumbers.toString();
+  } else {
+      throw "text(): Requires a string or number as the first argument.";
+  };
+
   var txt = { tlc_dt: "text",
-              text: words,
+              text: string,
               fontSize: fontSize,
               x: 0,
               y: 0
@@ -302,7 +310,7 @@ var text = _type([tString, tNumber], tObject, text_usage, function(words, fontSi
 
   return { tlc_dt: "image",
            elements: [txt],
-           width: ctx.measureText(words).width,
+           width: ctx.measureText(string).width,
            height: fontSize
          };
 });

@@ -312,7 +312,7 @@ var my_function = function() {
 print(my_function());
 ----
 
-== Animations ==
+== Functions for drawing ==
 
 You can create an empty scene with:
 
@@ -353,46 +353,194 @@ print(draw_bike(200));
 print(draw_bike(300));
 ----
 
-There is a function `animate` that takes a function like our
-`draw_bike`, and calls it for increasing numbers. As long as our `draw_bike` function returns scenes that go together, we can create animations!
+This looks something like the images in a flip book, right? In a flip book,
+each page has a different image and you can view an animation by
+flipping the pages in sequence. So lets turn this into an animation!
+
+TLC.js has a function called `animate` that can create animations from
+functions like this. It takes a function that returns an image (like our
+_draw_bike_). Then it calls that function with the number 0 and draws the
+image. It calls it again with 1, and draws that image... and the
+same for 2, 3 ,4... And keeps going forever, feeding your function increasing
+numbers and drawing the result, approximately 60 times a second!
 
 [source,javascript]
 ----
-var draw_bike = function(position) {
-  return placeImage(bike, emptyScene(400,100), position, 30);
+var draw_bike = function(ticksSinceStart) {
+  var xPosition = ticksSinceStart;
+  return placeImage(bike, emptyScene(400,100), xPosition, 30);
 };
 animate(draw_bike);
 ----
 
-== Making animations move ==
+== Animation ==
 
-Two helpful functions for making animations are `Math.sin` and
-`Math.cos`. These are the _sin_ and _cos_ functions from math. You can
-fiddle with this to get interesting things to happen:
+So _animate_ calls your drawing function with a number. That number
+represents how many "ticks" have happened since the animation started.
 
 [source,javascript]
 ----
-function sinWiggle(n) {
-  var xPosition = Math.sin(n/20) * 90 + 90;
+function show_how_many_ticks(ticksSinceStart) {
+  text(ticksSinceStart, 16);
+}
+
+animate(show_how_many_ticks);
+----
+
+This number (corresponding to the annoying linear nature of time as we
+conventionally experience it) is always getting bigger at a constant
+rate. So it makes sense that we can use it to create an animation of something
+growing or moving forward:
+
+[source,javascript]
+----
+function growingCircle(time) {
+  var size = time;
+  return overlay(circle(size, "red"), emptyScene(200, 200));
+}
+
+animate(growingCircle);
+
+function movingCircle(time) {
+  var xPosition = time;
   return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
 }
 
-function cosWiggle(n) {
-  var xPosition = Math.cos(n/20) * 90 + 90;
+animate(movingCircle);
+----
+
+But while a steady march forward into infinity isn't a terrible
+approximation of how we experience changes in time, it's still not a
+very useful way to represent how things change shape or
+position. Things don't always grow, sometimes they shrink.  Things
+move backwards as well as forwards. And sometimes they move faster or
+slower. How do we take a number that is always getting bigger (the
+amount of time that has passed) and turn it into a number that changes
+in a different way?
+
+We can think about the different tools we have already. We have lots
+of operators: `-`, `+`, `*`, and `/`. Let's see what happens when we
+use these operators with animate!
+
+Hmmm. All these operators can take two arguments. One of them is
+going to be time, but we need another number. This is just an experiment
+so lets pick any number... How about 834?
+
+[source,javascript]
+----
+function adding(time) {
+  return text("834 + the current time (" + time + ") is " + (834 + time), 16);
+}
+
+animate(adding);
+
+function subtracting(time) {
+  return text("834 - the current time (" + time + ") is " + (834 - time), 16);
+}
+
+animate(subtracting);
+
+function multiplying(time) {
+  return text("834 * the current time (" + time + ") is " + (834 * time), 16);
+}
+
+animate(multiplying);
+
+function dividing(time) {
+  return text("834 / the current time (" + time + ") is " + (834 / time), 16);
+}
+
+animate(dividing);
+----
+
+So you can see that the `time` going into the function is always increasing at
+the same rate, just like before. But now, some of the resulting numbers are
+increasing and some are decreasing, and they are doing that at different rates!
+
+What does that look like when we apply it to images?
+
+[source,javascript]
+----
+function adding(time) {
+  var xPosition = 100 + time;
+  return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
+}
+
+animate(adding);
+
+function subtracting(time) {
+  var xPosition = 100 - time;
+  return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
+}
+
+animate(subtracting);
+
+function multiplying(time) {
+  var xPosition = 100 * time;
+  return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
+}
+
+animate(multiplying);
+
+function dividing(time) {
+  var xPosition = 100 / time;
+  return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
+}
+
+animate(dividing);
+----
+
+== Fluid movement with _sin_ ==
+
+Another fun function for making animations is `Math.sin`. This is the _sin_
+function from math. You can fiddle with this to get interesting things to happen:
+
+[source,javascript]
+----
+function sinWiggle(ticksSinceStart) {
+  var xPosition = Math.sin(ticksSinceStart/20) * 90 + 90;
   return placeImage(circle(10, "black"), emptyScene(200, 30), xPosition, 5);
 }
 
 animate(sinWiggle);
-animate(cosWiggle);
+----
+var position = time;
+The cool thing about _sin_ and _cos_ is that _sin(anything)_ and _cos(anything)_ are always
+numbers between -1 and 1. If you multiply the result of _sin(some number)_
+by 90, you will always get a number between -90 and 90.
+
+Try it out!
+
+[source,javascript]
+----
+print(Math.sin(0));
+print(Math.sin(100));
+print(Math.sin(500000));
+
+print(Math.sin(0) * 90);
+print(Math.sin(100) * 90);
+print(Math.sin(500000) * 90);
 ----
 
+We use that fact in
+_sinWiggle_. We multiple by 90 to always get a number between -90 and 90.
+Then we add 90, so the number is always between 0 and 180.
+
+[source,javascript]
+----
+print(Math.sin(0) * 90 + 90);
+print(Math.sin(100) * 90 + 90);
+print(Math.sin(500000) * 90 + 90);
+----
+
+So _sinWiggle_ takes a number, no matter how big, and turns that into  an
+image placing a dot.
 A helpful operator is `%`, which is pronounced _mod_. It takes the
 _remainder_ after diving the right side by the left side.
 
 For example, `10 % 3` is `1`. while `10 % 2` is `0`. This can be
 helpful when you want things to repeat, as if `n` counts from `0` to
 infinity, `n % 10` counts `0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5...`.
-
 
 == Control flow ==
 
