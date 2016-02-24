@@ -386,6 +386,13 @@ table {
 }
 
 .play {
+  position: absolute;
+  z-index: 19;
+  right: -8px; top: -1px;
+  cursor: pointer;
+  font-size: 80%;
+  overflow: hidden;
+
     width: 0;
     height: 0;
     border-top: 8px solid transparent;
