@@ -1,16 +1,21 @@
 :chap_num: 4
 :prev_link: 03_functions
 :next_link: 05_higher_order
-:load_files: ["code/jacques_journal.js", "code/chapter/04_data.js"]
-:zip: node/html
 
-///
-
-
-
-///
 
 = Compound Data: Objects =
+
+///
+
+Outline:
+
+- introduce flat objects as way to collect different data together.
+- match this against domain modelling. ie, if we have a book, we may
+  have a title, author, pub year, which naturally models as { title : string,
+
+
+///
+
 
 Note: We're not sure what this illustration is for, but maybe it will gain some purpose.
 
