@@ -6,7 +6,7 @@
 To work through this curriculum, you will need to have a way to write
 and run Javascript programs. Javascript programs can be run in various
 ways, but the most common way is to run them with a web browser like
-Firefox.
+Firefox or Chrome.
 
 In order to run a Javascript program with a web browser, you
 need a small page that tells the browser what to do. Browsers read
