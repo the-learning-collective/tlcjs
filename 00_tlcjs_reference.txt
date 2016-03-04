@@ -3,21 +3,158 @@
 
 = TLC.js Reference =
 
-print(): Requires one argument, which can be anything. For example: `print(10)`.
+This is a reference for how to use the "tlc.js" JavaScript library.
 
-circle(): Requires two arguments, a radius and a color, which should be a number and a string. For example: `circle(100, 'red')`.
+=== print() ===
 
-rectangle(): Requires three arguments, a width, a height, and a color. The first two should be numbers, the last a string. For example: `rectangle(100, 50, 'black')`.
+Requires one argument, which can be anything.
 
-line(): Requires four arguments, all numbers --  StartX, StartY, EndX, EndY. Line draws a line from one point to another. The first two arguments are the X,Y coordinates of the starting point. The last two arguments are the X,Y coordinates of the ending point. For example: `line(0,0, 100, 200)`.
+Writes or draws on the screen.
 
-text(): Requires two arguments, text to place in the graphic and a number, the size of the text in pixele. Example: `text('Hello', 20)`.
+[source, javascript]
+----
+print(10);
+----
 
-emptyScene(): Requires two arguments, a width and a height, both numbers. For example: `emptyScene(300, 200)`.
+=== circle() ===
 
-overlay(): Requires two arguments, a foreground and a background
-image. For example, `overlay(circle(10, 'red'), emptyScene(100, 100))`.
+circle(): Takes two arguments, a radius and a color, which should be a number and a string.
 
-placeImage(): Requires four arguments: a forgeground image, a background image, and the x and y coordinates for the top left of the foreground to be placed on the background (both numbers). For example, `placeImage(rectangle(10,10,'red'), rectangle(100,100,'black'), 40, 40)`.
+Returns a circle of that size and color.
 
-animate(): Requires one argument, a function that takes a number and produces a image. For example: `animate(function(n) { return overlay(circle(n, 'red'), emptyScene(100,100));})`.
+[source, javascript]
+----
+circle(100, 'red');
+----
+
+=== rectangle() ===
+
+Requires three arguments, a width, a height, and a color. The first two should be numbers, the last a string.
+
+Returns a rectangle of that size and color.
+
+[source, javascript]
+----
+rectangle(100, 50, 'black');
+----
+
+=== line() ===
+
+Requires four arguments, all numbers --  StartX, StartY, EndX, EndY. Line draws a line from one point to another. The first two arguments are the X,Y coordinates of the starting point. The last two arguments are the X,Y coordinates of the eding point.
+
+Returns a line.
+
+[source, javascript]
+----
+line(0,0, 100, 200);
+----
+
+=== width() ===
+
+Requires one argument, an image.
+
+Returns the image's width.
+
+[source, javascript]
+----
+width(circle(20, 'red'));
+----
+
+=== height() ===
+
+Requires one argument, an image.
+
+Returns the image's height.
+
+[source, javascript]
+----
+height(circle(20, 'red'));
+----
+
+=== stringLength() ===
+
+Requires one argument, a string.
+
+Returns the number of characters in the string.
+
+[source, javascript]
+----
+stringLength('Hello world');
+----
+
+=== text() ===
+
+Requires two arguments, text to place in the graphic and a number, the size of the text in pixels.
+
+Returns an image of some text.
+
+[source, javascript]
+----
+text('Hello', 20);
+----
+
+=== emptyScene() ===
+
+Requires two arguments, a width and a height, both numbers.
+
+Returns an image with a white background and a black border.
+
+[source, javascript]
+----
+emptyScene(300, 200);
+----
+
+=== overlay() ===
+
+Requires two arguments, a foreground and a background
+image.
+
+Returns the foreground image centered horizontally and vertically over the background image.
+
+[source, javascript]
+----
+overlay(circle(10, 'red'), emptyScene(100, 100));
+----
+
+=== placeImage() ===
+
+Requires four arguments: a forgeground image, a background image, and x and y coordinates (both numbers).
+
+Returns an image with the upper-left corner of the foreground image at the x and y coordinates of the background image.
+
+[source, javascript]
+----
+placeImage(rectangle(10,10,'red'), rectangle(100,100,'black'), 40, 40);
+----
+
+=== animate() ===
+
+Requires one argument, a function that takes a number and produces a image.
+
+Calls that function and prints the image, with the input of a number increasing each "tick" of the clock.
+
+[source, javascript]
+----
+animate(function(n) {
+          return overlay(circle(n, 'red'), emptyScene(100,100));
+          });
+----
+
+=== bigBang() ===
+
+Requires four arguments. The first argument is the initial state of the world. The second argument is a function that takes one argument, a world, and returns an image. The third argument is a function that takes one argument, a world, and returns another world. The last argument takes a world and string.
+
+Calls those three functions every tick. (For more detail, see Chapter 4.)
+
+[source, javascript]
+----
+bigBang(0, function(n) {
+                       return text(String(n), 16);
+           },
+           function(n) {
+                       return n + 1;
+           },
+           function(n, key) {
+                       return n - 10;
+           });
+----
