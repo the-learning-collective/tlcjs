@@ -111,6 +111,7 @@ function __type(ty, err, val) {
         return val;
       }
     } else if (typeof val !== ty) {
+      console.log("Value " + val + " has wrong type. Expected " + ty + " but got " + typeof val);
       throw new TypeError(err);
     } else {
       return val;
@@ -504,7 +505,7 @@ function _bigBangInternal(withCanvas, world, to_draw, on_tick, on_key) {
     var keysPressed = [];
 
     window.addEventListener("keydown", function(event) {
-        keysPressed.push(event.key);
+      keysPressed.push(event.code);
     }, true)
 
     var newWorld = world;

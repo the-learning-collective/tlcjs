@@ -106,10 +106,10 @@ function tick(w) {
     return { lostWithScore: w.score };
   } else {
 
-    var newVertical = Math.min(w.characterVertical + 1, 340);
+    var newVertical = Math.min(w.characterVertical + 2, 340);
 
     if (w.obstacle.left < 0) {
-      var gap = Math.floor(100 + Math.random()*100);
+      var gap = Math.floor(105 + Math.random()*100);
       var fromTop = Math.floor(Math.random()*(400-gap));
       var fromBottom = 400 - fromTop - gap;
 
@@ -144,8 +144,8 @@ shouldEqual(tick({ characterVertical: 340,
               score: 0});
 
 function onkey(w, key) {
-  if (key === " ") {
-    return { characterVertical: w.characterVertical - 20,
+  if (key === "Space") {
+    return { characterVertical: w.characterVertical - 50,
              obstacle: { fromTop: w.obstacle.fromTop,
                          fromBottom: w.obstacle.fromBottom,
                          left: w.obstacle.left
@@ -164,4 +164,6 @@ var startingWorld = { score: 0,
                                   left: 300}
                     };
 
+
+print("Hit Space to move up. Avoid the pipes! Good luck!");
 bigBang(startingWorld, drawWorld, tick, onkey);

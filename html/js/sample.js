@@ -61,7 +61,7 @@ function grow(number) {
   var bg = placeImage(label,
                       emptyScene(200, 220),
                       // center the label horizontally
-                      (200 - width(label)) / 2, 
+                      (200 - width(label)) / 2,
                       212)
 
   // offset the circle just 1 pixel (to show the border of the scene).
@@ -77,11 +77,12 @@ function inc1(n) {
 }
 
 function startAgain (world, initialSize) {
-    if (initialSize >= 0 && initialSize < 10) {
-        return (10 * parseInt(initialSize, 10)); // eek
-    } else {
-        return world;
-    }
+  var num = parseInt(initialSize.slice(5), 10);  // eek
+  if (num >= 0 && num < 10) {
+    return (10 * num);
+  } else {
+    return world;
+  }
 }
 
 bigBang(0, grow, inc1, startAgain);
@@ -94,4 +95,4 @@ shouldEqual(1+2, 2);
 
 shouldEqual(width(circle(20, "red")), 40);
 shouldEqual(height(overlay(circle(20, "red"), emptyScene(200, 200))), 200);
-shouldEqual(length("hello world"), 11); 
+shouldEqual(stringLength("hello world"), 11);
