@@ -587,6 +587,16 @@ function tlc_sandbox_functions(win) {
         win.output.div.appendChild(div);
       }, tick);
     }),
+    bigBang: _type([tAny,
+                     tArrow([tAny], tAny),
+                     tArrow([tAny], tAny),
+                     tArrow([tAny, tString], tAny)], tNothing, bigBang_usage, function(world, to_draw, on_tick, on_key) {
+                       _bigBangInternal(function (canvas) {
+                         var div = document.createElement("div");
+                         div.appendChild(canvas);
+                         win.output.div.appendChild(div);
+                       }, world, to_draw, on_tick, on_key);
+    }),
     draw: _type([tObject], tNothing, draw_usage, function(image) {
       sandbox_draw(win, image);
     }),
