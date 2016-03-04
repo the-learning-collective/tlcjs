@@ -25,8 +25,102 @@ Note: We're not sure what this illustration is for, but maybe it will gain some 
 
 image::img/weresquirrel.png[alt="The weresquirrel"]
 
-(((Babbage+++,+++ Charles)))(((object)))(((data structure)))numbers,
-booleans, images, and strings are the bricks that ((data)) structures are
-built from. But you can't make much of a house out of a single
-brick. _Objects_ allow us to group values—including other
-objects—together and thus build more complex structures.
+Numbers, booleans, images, and strings are all really useful, and
+allow us to write interesting programs! But, alone, they have some
+limitations. In particular, sometimes we want to talk about different
+pieces of data together. In the previous chapter, we talked about
+modelling the shape of the information in our program after what we
+are trying to represent in the real world. Sometimes, we can represent
+something as _just_ a number, or _just_ a string, or _just_ an image,
+but often we want to _combine_ them together.
+
+For example, if I want to write a program that I use to organize
+books, I will want to have some notion of a `book` in the program. I
+could try to figure out a way to represent it with just a string
+(perhaps an ISBN?), but realistically, I probably want a bit more
+information. To do this, we can construct `objects`. An object is a
+collection of fields, where each field has a name and a value within
+it. For example, if I wanted to represent the book "The Left Hand of
+Darkness", I might write:
+
+[source,javascript]
+----
+var lhod = { title: "The Left Hand of Darkness",
+             author: "Ursula K. Le Guin",
+             year: 1969
+           };
+----
+
+Objects are written with a `{`, then a series of field, colon, value
+clauses, each separated from one another with a comma. New lines
+between the fields are not necessary, but are often used to make it
+easier to read.
+
+We write them in signatures in the same way, except instead of the
+value, we write the type of data. For example, we might write the above as:
+
+[source,javascript]
+----
+// A book is { title: string, author: string, year: number}
+----
+
+As in the above example, we can store objects in variables, and we can pass them to functions. To get the fields out, we use `.` followed by the name of the field. For example:
+
+[source,javascript]
+----
+var lhod = { title: "The Left Hand of Darkness",
+             author: "Ursula K. Le Guin",
+             year: 1969
+           };
+print(lhod.title);
+----
+
+== Big Bang ==
+
+The majority of this chapter is an extended example using objects, the
+tools we've learned so far, and a new, more powerful verion of
+`animate` that allows us to build interactive games. This function is
+called `bigBang`. The idea of big bang is to construct an animation,
+but to allow you more control over it than you had with `animate`. In
+`animate`, your function was called with a number (that represented
+the number of _ticks_ since the animation started). With `bigBang`,
+you get to define what the _world state_ is that you get passed each
+time (in `animate`, the world state was a number), and you get to
+define how it changes each time step (with `animate`, the world state,
+which is a number, was incremented by one each time step).
+
+`bigBang` takes four arguments, and the first argument is the initial
+world state (which, if you were replicating `animate`, would be the
+number 0). The second argument is the same as `animate` - it is a
+function that takes your world (in `animate`, a number) and produces
+as output an image which will get drawn. The third argument is a
+function that takes the current world state as input and produces the
+new world state as output (in `animate`, this function just adds `1`
+to its input). The last argument is completely new: it is a function
+that takes as input the current world state and a string that
+represents a key that was pressed on the keyboard, and produces a new
+world state. This makes it so that your "animations" can respond to
+keyboard input (which makes them interactive! And can be games).
+
+To review, we can use `bigBang` to replicate the way that animate worked:
+
+
+[source,javascript]
+----
+animate(function (ticks) {
+  return placeImage(circle(10, "red"), emptyScene(400,100), ticks, 70);
+});
+----
+
+
+[source,javascript]
+----
+bigBang(0,
+        function (ticks) {
+          return placeImage(circle(10, "red"), emptyScene(400,100), ticks, 70);
+        },
+        function (world) { return world + 1; },
+        function (world, key) { return world; });
+----
+
+But we can, and will, do so much more with it!
