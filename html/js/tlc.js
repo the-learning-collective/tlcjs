@@ -54,13 +54,13 @@ function updateTestUi() {
 
 function _shouldEqualInternal(includeStack, results, redraw, given, expected) {
   results.run++;
-  if (given === expected) {
+  if (_.isEqual(given, expected)) {
     results.passed++;
   } else {
     // NOTE(dbp 2016-02-15): This is a hack to find out where the
     // assertion was called from. Eeek!
     console.log((new Error()).stack.split("\n"));
-    var s = (new Error()).stack.split("\n")[1];
+    var s = (new Error()).stack.split("\n")[2];
     var loc = s.slice(s.lastIndexOf("/")+1, s.length - 2);
     if (includeStack) {
       var msg = loc + " - expected " + String(expected) + ", but got " + String(given) + ".";
