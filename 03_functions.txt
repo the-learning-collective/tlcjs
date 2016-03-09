@@ -437,12 +437,9 @@ shouldEqual(not(false), true);
 // A person's name as a string.
 // String -> String
 // This function will enthusiastically greet a person by name.
-// If the name is blank OR the name is undefined, just
-// return "Hello!!"
+// If the name is blank, return "Hello!!"
 function enthusiasticallyGreet(name) {
-  if (name) {
-    // ...
-  } else if (name) {
+  if (/* test if name is an empty string */) {
     // ...
   } else {
     // ...
@@ -451,7 +448,6 @@ function enthusiasticallyGreet(name) {
 shouldEqual(enthusiasticallyGreet("Austin"), "Hello, Austin!!");
 shouldEqual(enthusiasticallyGreet("Pea"), "Hello, Pea!!");
 shouldEqual(enthusiasticallyGreet(""), "Hello!!");
-shouldEqual(enthusiasticallyGreet(), "Hello!!");
 ----
 
 - Use the design recipe to write a `min` function that takes as input
