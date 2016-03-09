@@ -18,14 +18,6 @@ Notes:
 - The string (piece of data) "Austin" could represent city, movie character, TLC member (things in the world)
 - The person Austin Guest (thing in the world) could be represented by: 35, "Austin Guest", "austin@example.com", "355 Broadway, Paris, TX" (pieces of data)
 
-# Actual recipe:
-1. Describe information in terms of data (define types)
-2. Signature (type of the function)
-3. Purpose Statement (what it does -- in human language!)
-4. Function Header (fn name, argument names, brackets, stub return value)
-5. Examples === Tests (run them, watch them fail)
-6. Mechanical Template (exapand template for every argument based on type)
-7. Now you may write the body! (run tests until they pass!)
 
 
 Problem:
@@ -406,6 +398,17 @@ shouldEqual(bakeSale(200, 200, false), 13500);
 As you are writing the function, you can continue to run your
 tests. Often, if you have many tests, some of them will start to pass
 as you write the function. In our case, all our tests are now passing!
+
+== Summary ==
+
+1. Describe information in terms of data (define types)
+2. Signature (type of the function)
+3. Purpose Statement (what it does -- in human language!)
+4. Function Header (function name, argument names, brackets, stub return value)
+5. Examples === Tests (run them, watch them fail)
+6. Mechanical Template (expand template for every argument based on type)
+7. Now you may write the body! (run tests until they pass!)
+
 
 == Exercises ==
 
