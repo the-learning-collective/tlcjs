@@ -439,7 +439,7 @@ shouldEqual(not(false), true);
 // This function will enthusiastically greet a person by name.
 // If the name is blank, return "Hello!!"
 function enthusiasticallyGreet(name) {
-  if (/* test if name is an empty string */) {
+  if (false) { // replace false with test that name is empty string!
     // ...
   } else {
     // ...
