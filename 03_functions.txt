@@ -399,7 +399,7 @@ As you are writing the function, you can continue to run your
 tests. Often, if you have many tests, some of them will start to pass
 as you write the function. In our case, all our tests are now passing!
 
-== Summary ==
+== Summary of Design Recipe ==
 
 1. Describe information in terms of data (define types)
 2. Signature (type of the function)
