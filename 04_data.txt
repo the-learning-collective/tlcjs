@@ -5,7 +5,7 @@
 
 = Compound Data: Objects =
 
-///
+////
 
 Outline:
 
@@ -18,7 +18,7 @@ Outline:
   games!
 - extended examples and then extended exercise building a real game!
 
-///
+////
 
 
 Note: We're not sure what this illustration is for, but maybe it will gain some purpose.
@@ -150,3 +150,110 @@ bigBang(0,
 ----
 
 But we can, and will, do so much more with it!
+
+First, lets talk a little bit about Flappy bird.
+
+Looking at what is on the screen at a given time, we can see the bird
+and the two pipes. Since both of those move over time, it seems like
+we need to be able to keep track of where they are. To start, we won't
+worry about the pipes, and will only focus on moving our bird up and
+down. Since we only go up and down, we really just need to know how
+high the bird is, which is just a number. But since we are going to
+make this more complicated, and since this is the chapter about
+objects, we'll start with a javascript with one field:
+
+[source,javascript]
+----
+// world state is { bird_position : number }
+----
+
+Now we want to figure out how to draw the scene with the bird on
+it. You can make a much better drawing, but for our example, we'll
+build a simple bird and draw it:
+
+[source,javascript]
+----
+var eye = circle(5, "white");
+var mouth = placeImage(circle(10, "rebeccapurple"), circle(10, "white"), 0, -5);
+var character = placeImage(mouth, placeImage(eye, rectangle(50, 50, "rebeccapurple"), 30, 10), 40, 20);
+var ground = placeImage(rectangle(600, 10, "brown"), emptyScene(600, 400), 0, 390);
+
+// { bird_position : number } -> image
+function drawWorld(world) {
+  return overlay(character, ground);
+}
+
+print(drawWorld({bird_position: 0}));
+----
+
+That worked, and it put our character on the background, but it didn't
+use the `bird_position`, and as a result, calling it with different
+positions doesn't change the image! Not good.
+
+So we should have `drawWorld` vary where the bird is based on the
+`bird_position` field in the world state.
+
+[source,javascript]
+----
+var eye = circle(5, "white");
+var mouth = placeImage(circle(10, "rebeccapurple"), circle(10, "white"), 0, -5);
+var character = placeImage(mouth, placeImage(eye, rectangle(50, 50, "rebeccapurple"), 30, 10), 40, 20);
+var ground = placeImage(rectangle(600, 10, "brown"), emptyScene(600, 400), 0, 390);
+
+// { bird_position : number } -> image
+function drawWorld(world) {
+  return placeImage(character, ground, 200, world.bird_position);
+}
+
+print(drawWorld({bird_position: 50}));
+print(drawWorld({bird_position: 200}));
+----
+
+And now we can see how the image varies (the bird is further from the
+top, as `placeImage` takes the distance from the left and distance
+from the top - see the Reference for more detail).
+
+Looking back at `bigBang`, we now have a world state definition (and
+the initial state could be `{bird_position: 0}`), we have a way of
+drawing the world, so we need two more things: how the world changes
+over time, and how it changes based on keyboard input.
+
+To start, lets not worry about gravity, so the only change is based on
+keyboard input (which means that the function with signature `world ->
+world` that controls how the world changes each time tick is just
+`function onTick(world) { return world; }` - the function that does
+nothing and returns its argument). That function takes the world state
+and a string that represents a key that was pressed. For our purposes,
+the only one that matters is "Space", which means the spacebar was
+pressed.
+
+
+[source,javascript]
+----
+var eye = circle(5, "white");
+var mouth = placeImage(circle(10, "rebeccapurple"), circle(10, "white"), 0, -5);
+var character = placeImage(mouth, placeImage(eye, rectangle(50, 50, "rebeccapurple"), 30, 10), 40, 20);
+var ground = placeImage(rectangle(600, 10, "brown"), emptyScene(600, 400), 0, 390);
+
+// { bird_position : number } -> image
+function drawWorld(world) {
+  return placeImage(character, ground, 200, world.bird_position);
+}
+
+// { bird_position : number } -> { bird_position : number }
+function onTick(world) {
+  return world;
+}
+
+// { bird_position : number }, string -> { bird_position : number }
+function onKey(world, key) {
+  if (key === "Space") {
+    var newPosition = world.bird_position + 1;
+    return { bird_position : newPosition };
+  } else {
+    return world;
+  }
+}
+
+bigBang({bird_position: 0}, drawWorld, onTick, onKey);
+----
