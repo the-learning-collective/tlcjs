@@ -38,10 +38,10 @@ For example, if I want to write a program that I use to organize
 books, I will want to have some notion of a `book` in the program. I
 could try to figure out a way to represent it with just a string
 (perhaps an ISBN?), but realistically, I probably want a bit more
-information. To do this, we can construct `objects`. An object is a
-collection of fields, where each field has a name and a value within
-it. For example, if I wanted to represent the book "The Left Hand of
-Darkness", I might write:
+information. To do this, Javascript allows us to construct
+`objects`. An object is a collection of fields, where each field has a
+name and a value within it. For example, if I wanted to represent the
+book "The Left Hand of Darkness", I might write:
 
 [source,javascript]
 ----
@@ -54,10 +54,16 @@ var lhod = { title: "The Left Hand of Darkness",
 Objects are written with a `{`, then a series of field, colon, value
 clauses, each separated from one another with a comma. New lines
 between the fields are not necessary, but are often used to make it
-easier to read.
+easier to read. We could have (but shouldn't) written the above as:
 
-We write them in signatures in the same way, except instead of the
-value, we write the type of data. For example, we might write the above as:
+[source,javascript]
+----
+var lhod = {title:"The Left Hand of Darkness",author:"Ursula K. Le Guin",year:1969};
+----
+
+When following the design recipe, we write them in signatures in a
+similar way, with fields, colons, and then the signature for what goes
+into that field. For example, we might write the above as:
 
 [source,javascript]
 ----
@@ -75,14 +81,32 @@ var lhod = { title: "The Left Hand of Darkness",
 print(lhod.title);
 ----
 
+Since objects are values like strings, numbers, and images, we can put
+objects into fields of other objects. For example
+
+[source,javascript]
+----
+var lhod = { title: "The Left Hand of Darkness",
+             author: {first: "Ursula K.", last: "Le Guin"},
+             year: 1969
+           };
+print("The first name is: " + lhod.author.first);
+----
+
 == Big Bang ==
 
 The majority of this chapter is an extended example using objects, the
 tools we've learned so far, and a new, more powerful verion of
 `animate` that allows us to build interactive games. This function is
 called `bigBang`. The idea of big bang is to construct an animation,
-but to allow you more control over it than you had with `animate`. In
-`animate`, your function was called with a number (that represented
+but to allow you more control over it than you had with `animate`.
+
+You can try out the finished example here (by the end of the chapter,
+you will be able to build similar, and better, games!):
+
+http://tlcjs.org/games/flappy.html[_http://tlcjs.org/games/flappy.html_]
+
+In `animate`, your function was called with a number (that represented
 the number of _ticks_ since the animation started). With `bigBang`,
 you get to define what the _world state_ is that you get passed each
 time (in `animate`, the world state was a number), and you get to
