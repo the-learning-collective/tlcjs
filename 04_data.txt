@@ -106,6 +106,8 @@ you will be able to build similar, and better, games!):
 
 http://tlcjs.org/games/flappy.html[_http://tlcjs.org/games/flappy.html_]
 
+So, let's get into it!
+
 In `animate`, your function was called with a number (that represented
 the number of _ticks_ since the animation started). With `bigBang`,
 you get to define what the _world state_ is that you get passed each
