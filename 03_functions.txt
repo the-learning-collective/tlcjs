@@ -123,8 +123,8 @@ to sell them is run by a capitalist who makes us pay to use the
 space. They have two options we can choose between:
 
 - We pay them $50 to use the space, regardless of how much lemonade or
-- How many cookies we sell.  We pay them 10% of the total amount that
-  we make
+  how many cookies we sell.
+- We pay them 10% of the total amount that we make.
 
 The function we'll construct will take as input whether we want to pay
 the flat $50 fee, and how many cups of lemonade / cookies we
