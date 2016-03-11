@@ -93,6 +93,16 @@ var lhod = { title: "The Left Hand of Darkness",
 print("The first name is: " + lhod.author.first);
 ----
 
+The signature for this is:
+
+[source,javascript]
+----
+// { title: string,
+//   author: { first : string, last: string }
+//   year: number
+// }
+----
+
 == Big Bang ==
 
 The majority of this chapter is an extended example using objects, the
@@ -109,11 +119,12 @@ http://tlcjs.org/games/flappy.html[_http://tlcjs.org/games/flappy.html_]
 So, let's get into it!
 
 In `animate`, your function was called with a number (that represented
-the number of _ticks_ since the animation started). With `bigBang`,
-you get to define what the _world state_ is that you get passed each
-time (in `animate`, the world state was a number), and you get to
-define how it changes each time step (with `animate`, the world state,
-which is a number, was incremented by one each time step).
+the number of _ticks_ since the animation started), and it returns an
+image. With `bigBang`, you get to define what the _world state_ is
+that you get passed each time (in `animate`, the world state was a
+number), and you get to define how it changes each time step (with
+`animate`, the world state, which is a number, was incremented by one
+each time step). There is also a way to respond to keyboard input.
 
 `bigBang` takes four arguments, and the first argument is the initial
 world state (which, if you were replicating `animate`, would be the
