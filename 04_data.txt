@@ -54,7 +54,7 @@ var lhod = { title: "The Left Hand of Darkness",
 Objects are written with a `{`, then a series of field, colon, value
 clauses, each separated from one another with a comma. New lines
 between the fields are not necessary, but are often used to make it
-easier to read. We could have (but shouldn't) written the above as:
+easier to read. We could (but shouldn't) have written the above as:
 
 [source,javascript]
 ----
@@ -162,7 +162,7 @@ bigBang(0,
 
 But we can, and will, do so much more with it!
 
-First, lets talk a little bit about Flappy bird.
+First, lets talk a little bit about Flappy Bird.
 
 Looking at what is on the screen at a given time, we can see the bird
 and the two pipes. Since both of those move over time, it seems like
