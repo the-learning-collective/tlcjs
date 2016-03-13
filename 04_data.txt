@@ -588,7 +588,201 @@ bigBang({bird_position: 100}, drawWorld, onTick, onKey);
 
 Two things to notice - it is _way_ to hard to get into the air! And
 the answer to the exercise above, it definitely seems like we aren't
-stopping soon enough. As an exercise, figure out how to fix both of
-these problems.
+stopping soon enough - the bird goes into the ground. As an exercise,
+figure out how to fix both of these problems.
 
 Once you've finished that, let's move onto the next part - adding pipes.
+
+First, we need to think a little bit about what it means to have
+pipes. We'll need to draw them, so we'll need to change our
+`drawWorld` function, but also, they move over time, which means they
+need to be in our world state, and we'll need to update them in our
+`onTick` function. We won't worry about collisions / ending the game
+yet.
+
+Let's think about how we might represent the pipes. We need to record
+how far from the left that they are, as that's what we'll be changing
+(so that they move). We also will, eventually, need to allow their
+height to vary, but we'll not worry about that for now and just assume
+that the pipes are always the same height.
+
+So we'll just add, to our world state, a `pipes_position` field, which
+is a number that represents the distance (in pixels) from the left
+that the pipes are. That means that everywhere above where we wrote
+`{ bird_position : number }` in signatures for our world, we now will write:
+`{ bird_position : number, pipes_position : number }` instead.
+
+Let's modify each function, starting with the drawing.
+
+[source,javascript]
+----
+var eye = circle(5, "white");
+var mouth = placeImage(circle(10, "rebeccapurple"), circle(10, "white"), 0, -5);
+var character = placeImage(mouth, placeImage(eye, rectangle(50, 50, "rebeccapurple"), 30, 10), 40, 20);
+var ground = placeImage(rectangle(600, 10, "brown"), emptyScene(600, 400), 0, 390);
+var pipe = rectangle(30, 100, "green");
+
+// { bird_position : number, pipes_position : number } -> image
+function drawWorld(world) {
+  return placeImage(pipe,
+                    placeImage(pipe,
+                               placeImage(character, ground, 200, world.bird_position),
+                               world.pipes_position,
+                               0),
+                    world.pipes_position,
+                    300);
+}
+
+print(drawWorld({bird_position: 0, pipes_position: 300}));
+----
+
+Next, we want to make it so that the pipes move to the left. Let's
+follow the design recipe to guide us how we want to change the
+existing function.
+
+We already know the signature - it is what it was, except the world
+now has a `pipes_position` field:
+
+[source,javascript]
+----
+// { bird_position : number, pipes_position : number }
+// -> { bird_position : number, pipes_position : number }
+----
+
+We now want to modify the purpose statement. We need to modify it to
+specify what happens to the `pipes_position` field. In particular, we
+want it to decrease until it is 0 (when the pipes will go off the
+screen to the left) and at that point, for them to re-appear (or, if
+you will, for new pipes to appear) all the way to the right, which is
+position 600.
+
+Written out:
+
+[source,javascript]
+----
+// This returns a new world where the bird position has increased
+// by one (which corresponds to the bird _falling_, since the position
+// counts from the top) and the pipes position has decreased by
+// 1. However, if the bird position is 390 (ie, bird is
+// at bottom) we just return the same world unchanged, and if the
+// pipes position is 0, we instead set it to 600.
+----
+
+Now we can fix the tests and add a new one to cover the pipe behavior:
+
+[source,javascript]
+----
+function onTick(world) {
+}
+shouldEqual(onTick({ bird_position: 0, pipes_position: 500 }), {bird_position: 1, pipes_position: 499});
+shouldEqual(onTick({ bird_position: 50, pipes_position: 500 }), {bird_position: 51, pipes_position: 499});
+shouldEqual(onTick({ bird_position: 390, pipes_position: 500 }), {bird_position: 390, pipes_position: 499});
+shouldEqual(onTick({ bird_position: 0, pipes_position: 0 }), {bird_position: 1, pipes_position: 600});
+----
+
+Using this, we can rewrite the body to be:
+
+[source,javascript]
+----
+function onTick(world) {
+  if (world.bird_position === 390) {
+     var newBird = 390;
+  } else {
+     var newBird = world.bird_position + 1;
+  }
+
+  if (world.pipes_position === 0) {
+     var newPipes = 600;
+  } else {
+     var newPipes = world.pipes_position - 1;
+  }
+
+  return { bird_position: newBird, pipes_position: newPipes };
+}
+shouldEqual(onTick({ bird_position: 0, pipes_position: 500 }), {bird_position: 1, pipes_position: 499});
+shouldEqual(onTick({ bird_position: 50, pipes_position: 500 }), {bird_position: 51, pipes_position: 499});
+shouldEqual(onTick({ bird_position: 390, pipes_position: 500 }), {bird_position: 390, pipes_position: 499});
+shouldEqual(onTick({ bird_position: 0, pipes_position: 0 }), {bird_position: 1, pipes_position: 600});
+----
+
+Note that we did something somewhat new here - we defined variables
+within an `if`, which allows us to easily handle the _multiple_
+conditions that we now have (the bird can get to the bottom of the
+screen and the pipes can get to the left of the screen). If you do
+this, be sure you define the _same_ variables in both branches, or
+else you may have a variable that isn't defined.
+
+And now we can put this together with flappy version 2 to get flappy
+version 3 (note: We had to make _minor_ changes to `onKey` - we just
+had to make sure when we created a new world, we included our new
+`pipes_position` field, and the signature/tests had to correspondingly
+change):
+
+[source,javascript]
+----
+var eye = circle(5, "white");
+var mouth = placeImage(circle(10, "rebeccapurple"), circle(10, "white"), 0, -5);
+var character = placeImage(mouth, placeImage(eye, rectangle(50, 50, "rebeccapurple"), 30, 10), 40, 20);
+var ground = placeImage(rectangle(600, 10, "brown"), emptyScene(600, 400), 0, 390);
+var pipe = rectangle(30, 100, "green");
+
+// { bird_position : number, pipes_position : number } -> image
+function drawWorld(world) {
+  return placeImage(pipe,
+                    placeImage(pipe,
+                               placeImage(character, ground, 200, world.bird_position),
+                               world.pipes_position,
+                               0),
+                    world.pipes_position,
+                    300);
+}
+
+
+// { bird_position : number, pipes_position : number }
+// -> { bird_position : number, pipes_position : number }
+// This returns a new world where the bird position has increased
+// by one (which corresponds to the bird _falling_, since the position
+// counts from the top) and the pipes position has decreased by
+// 1. However, if the bird position is 390 (ie, bird is
+// at bottom) we just return the same world unchanged, and if the
+// pipes position is 0, we instead set it to 600.
+function onTick(world) {
+  if (world.bird_position === 390) {
+     var newBird = 390;
+  } else {
+     var newBird = world.bird_position + 1;
+  }
+
+  if (world.pipes_position === 0) {
+     var newPipes = 600;
+  } else {
+     var newPipes = world.pipes_position - 1;
+  }
+
+  return { bird_position: newBird, pipes_position: newPipes };
+}
+shouldEqual(onTick({ bird_position: 0, pipes_position: 500 }), {bird_position: 1, pipes_position: 499});
+shouldEqual(onTick({ bird_position: 50, pipes_position: 500 }), {bird_position: 51, pipes_position: 499});
+shouldEqual(onTick({ bird_position: 390, pipes_position: 500 }), {bird_position: 390, pipes_position: 499});
+shouldEqual(onTick({ bird_position: 0, pipes_position: 0 }), {bird_position: 1, pipes_position: 600});
+
+// { bird_position : number, pipes_position : number }, string
+// -> { bird_position : number, pipes_position : number }
+function onKey(world, key) {
+  if (key === "Space") {
+    return { bird_position: world.bird_position - 10, pipes_position: world.pipes_position };
+  } else {
+    return world;
+  }
+}
+shouldEqual(onKey({ bird_position: 100, pipes_position: 100 }, "Space"),
+            { bird_position: 90, pipes_position: 100 });
+shouldEqual(onKey({ bird_position: 100, pipes_position: 100 }, "Something Else"),
+            { bird_position: 100, pipes_position: 100 });
+shouldEqual(onKey({ bird_position: 0, pipes_position: 100 }, "Space"),
+            { bird_position: -10, pipes_position: 100 });
+
+bigBang({bird_position: 100, pipes_position: 600}, drawWorld, onTick, onKey);
+----
+
+Next, we'll make it so that if you run into the pipes you actually lose!
