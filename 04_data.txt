@@ -40,7 +40,7 @@ could try to figure out a way to represent it with just a string
 (perhaps an ISBN?), but realistically, I probably want a bit more
 information. To do this, Javascript allows us to construct
 `objects`. An object is a collection of fields, where each field has a
-name and a value within it. For example, if I wanted to represent the
+name and a value. For example, if I wanted to represent the
 book "The Left Hand of Darkness", I might write:
 
 [source,javascript]
@@ -118,22 +118,26 @@ http://tlcjs.org/games/flappy.html[_http://tlcjs.org/games/flappy.html_]
 
 So, let's get into it!
 
-In `animate`, your function was called with a number (that represented
-the number of _ticks_ since the animation started), and it returns an
+In `animate`, your function was called with a number (that was the
+number of _ticks_ since the animation started, and that we sometimes
+thought of as time, sometimes as a position, etc), and it returns an
 image. With `bigBang`, you get to define what the _world state_ is
 that you get passed each time (in `animate`, the world state was a
 number), and you get to define how it changes each time step (with
 `animate`, the world state, which is a number, was incremented by one
 each time step). There is also a way to respond to keyboard input.
 
-`bigBang` takes four arguments, and the first argument is the initial
-world state (which, if you were replicating `animate`, would be the
-number 0). The second argument is the same as `animate` - it is a
-function that takes your world (in `animate`, a number) and produces
-as output an image which will get drawn. The third argument is a
-function that takes the current world state as input and produces the
-new world state as output (in `animate`, this function just adds `1`
-to its input). The last argument is completely new: it is a function
+`bigBang` takes four arguments:
+
+- The first argument is the initial world state (which, if you were
+replicating `animate`, would be the number 0).
+- The second argument is the same as `animate` - it is a
+function that takes your world state (in `animate`, a number) and produces
+as output an image which will get drawn.
+- The third argument is a function that takes the current world state
+as input and produces the new world state as output (in `animate`, this
+function just adds `1` to its input).
+- The last argument is completely new: it is a function
 that takes as input the current world state and a string that
 represents a key that was pressed on the keyboard, and produces a new
 world state. This makes it so that your "animations" can respond to
@@ -162,7 +166,10 @@ bigBang(0,
 
 But we can, and will, do so much more with it!
 
-First, lets talk a little bit about Flappy Bird.
+== Flappy Bird ==
+
+First, lets talk a little bit about our Flappy bird:
+http://tlcjs.org/games/flappy.html[_http://tlcjs.org/games/flappy.html_]
 
 Looking at what is on the screen at a given time, we can see the bird
 and the two pipes. Since both of those move over time, it seems like
@@ -171,7 +178,7 @@ worry about the pipes, and will only focus on moving our bird up and
 down. Since we only go up and down, we really just need to know how
 high the bird is, which is just a number. But since we are going to
 make this more complicated, and since this is the chapter about
-objects, we'll start with a javascript with one field:
+objects, we'll start with an object with one field:
 
 [source,javascript]
 ----
@@ -180,7 +187,7 @@ objects, we'll start with a javascript with one field:
 
 Now we want to figure out how to draw the scene with the bird on
 it. You can make a much better drawing, but for our example, we'll
-build a simple bird and draw it:
+build a simple "bird" and draw it:
 
 [source,javascript]
 ----
@@ -199,7 +206,8 @@ print(drawWorld({bird_position: 0}));
 
 That worked, and it put our character on the background, but it didn't
 use the `bird_position`, and as a result, calling it with different
-positions doesn't change the image! Not good.
+positions doesn't change the image (try this by modifying the line
+that prints out the world in the above example)! Not good.
 
 So we should have `drawWorld` vary where the bird is based on the
 `bird_position` field in the world state.
@@ -222,7 +230,7 @@ print(drawWorld({bird_position: 200}));
 
 And now we can see how the image varies (the bird is further from the
 top, as `placeImage` takes the distance from the left and distance
-from the top - see the Reference for more detail).
+from the top - see the link:00_tlcjs_reference.html[Reference] for more detail).
 
 Looking back at `bigBang`, we now have a world state definition (and
 the initial state could be `{bird_position: 0}`), we have a way of
@@ -236,8 +244,125 @@ world` that controls how the world changes each time tick is just
 nothing and returns its argument). That function takes the world state
 and a string that represents a key that was pressed. For our purposes,
 the only one that matters is "Space", which means the spacebar was
-pressed.
+pressed (note: the cross-browser support for this stuff is _terrible_
+- for TLCjs, we chose to use what seems to be the best supported
+between firefox and chrome, but doesn't work elsewhere. And there may
+be differences even between those two browsers - you can see a table
+of value
+https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code).
 
+Let's follow the design recipe for this function.
+
+First, we'll write a signature. From the documentation of `bigBang`,
+we know that it takes two arguments: our world state and a string
+representing a key that was pressed. And it is supposed to return a
+new world. So, we write:
+
+[source,javascript]
+----
+// { bird_position : number }, string -> { bird_position : number }
+----
+
+Next, we'll write a purpose statement. In this case:
+
+[source,javascript]
+----
+// If the second argument is "Space", we return
+// a new world, where the bird_position has decreased by 10, which will
+// move the bird up by 10 pixels. Otherwise, we return the world unchanged.
+----
+
+Now we need to write out the function header and some tests:
+
+[source,javascript]
+----
+function onKey(world, key) {
+
+}
+shouldEqual(onKey({ bird_position: 100 }, "Space"), { bird_position: 90 });
+shouldEqual(onKey({ bird_position: 100 }, "Something Else"), { bird_position: 100 });
+----
+
+And in writing those, I wonder whether the bird should be able to go
+off the top of the screen - ie, should this test pass?
+
+[source,javascript]
+----
+shouldEqual(onKey({ bird_position: 0 }, "Space"), { bird_position: -10 });
+----
+
+Or should this one:
+
+[source,javascript]
+----
+shouldEqual(onKey({ bird_position: 0 }, "Space"), { bird_position: 0 });
+----
+
+For now, we'll go with the first option (as it's a little simpler),
+but as an exercise, you could use the second one instead. Now we fill
+in the template. For objects, there is one template for each field in
+the object. So in our case, it looks like:
+
+
+[source,javascript]
+----
+function onKey(world, key) {
+  world.bird_position;
+  key;
+}
+shouldEqual(onKey({ bird_position: 100 }, "Space"), { bird_position: 90 });
+shouldEqual(onKey({ bird_position: 100 }, "Something Else"), { bird_position: 100 });
+shouldEqual(onKey({ bird_position: 0 }, "Space"), { bird_position: -10 });
+----
+
+If the world had more fields, we would have more parts of the
+template. Now we're ready to write the body. Looking at the purpose
+statement, we see the sentance _if the second argument is "Space"_,
+which makes it seem like we should have `if (key === "Space")`
+somewhere, so let's add that (note: since we have used `key`, I
+removed the template version):
+
+[source,javascript]
+----
+function onKey(world, key) {
+  if (key === "Space") {
+
+  } else {
+
+  }
+  world.bird_position;
+}
+shouldEqual(onKey({ bird_position: 100 }, "Space"), { bird_position: 90 });
+shouldEqual(onKey({ bird_position: 100 }, "Something Else"), { bird_position: 100 });
+shouldEqual(onKey({ bird_position: 0 }, "Space"), { bird_position: -10 });
+----
+
+Now it says that if that's true, we return a new world where
+bird_position has decreased by ten. Which we can do with `return { bird_position: world.bird_position - 10 };` Otherwise, it says (so, in
+the `else` branch), we are supposed to return the unchanged world.
+
+We can put that together to get:
+
+[source,javascript]
+----
+function onKey(world, key) {
+  if (key === "Space") {
+    return { bird_position: world.bird_position - 10 };
+  } else {
+    return world;
+  }
+}
+shouldEqual(onKey({ bird_position: 100 }, "Space"), { bird_position: 90 });
+shouldEqual(onKey({ bird_position: 100 }, "Something Else"), { bird_position: 100 });
+shouldEqual(onKey({ bird_position: 0 }, "Space"), { bird_position: -10 });
+----
+
+And, all our tests pass! So we're done with `onKey`.
+
+We said we weren't going to worry about gravity just yet, which means
+that nothing is going to change over time, so we can just use
+`function onTick(world) { return word; }` as our function that changes
+the world over time and can put all the pieces together. We get flappy version 1:
 
 [source,javascript]
 ----
@@ -256,15 +381,214 @@ function onTick(world) {
   return world;
 }
 
-// { bird_position : number }, string -> { bird_position : number }
+shouldEqual(onTick({ bird_position: 100}), { bird_position: 100 });
+
 function onKey(world, key) {
   if (key === "Space") {
-    var newPosition = world.bird_position + 1;
-    return { bird_position : newPosition };
+    return { bird_position: world.bird_position - 10 };
   } else {
     return world;
   }
 }
+shouldEqual(onKey({ bird_position: 100 }, "Space"), { bird_position: 90 });
+shouldEqual(onKey({ bird_position: 100 }, "Something Else"), { bird_position: 100 });
+shouldEqual(onKey({ bird_position: 0 }, "Space"), { bird_position: -10 });
 
-bigBang({bird_position: 0}, drawWorld, onTick, onKey);
+bigBang({bird_position: 100}, drawWorld, onTick, onKey);
 ----
+
+
+Which if you click on the screen (so the Space goes to that, rather
+than telling the browser to scroll), you can move the bird up (and out
+of the screen). So the first part is working!
+
+Now let's revisit gravity. The problem, so far, is that our bird
+doesn't fall down. In the game, if you aren't actively flapping, you
+are supposed to fall to the ground. This happens automatically,
+without input, so it has to happen in the function that changes the
+world each tick (which we named `onTick`).
+
+Let's follow the design recipe for it.
+
+We already have the signature:
+
+[source,javascript]
+----
+// { bird_position : number } -> { bird_position : number }
+----
+
+Which says it takes a world and produces a new world (one tick
+later). Thinking about what we wrote above about gravity, it seems
+like the purpose statement should be something like:
+
+[source,javascript]
+----
+// This returns a new world where the bird position has increased
+// by one (which corresponds to the bird _falling_, since the position
+// counts from the top).
+----
+
+We can now write the header and some tests:
+
+[source,javascript]
+----
+function onTick(world) {
+
+}
+shouldEqual(onTick({ bird_position: 0 }), {bird_position: 1});
+shouldEqual(onTick({ bird_position: 50 }), {bird_position: 51});
+----
+
+Writing that, we might wonder what should happen when the bird hits
+the ground. In some versions of the game, the game ends, and you could
+also (as in our example version) just make the bird stop when it hits
+the ground. Let's do the latter - as an exercise, you could make the
+game end (we'll see, later, how we could accomplish that!).
+
+Making the bird stop amounts to the behavior:
+
+[source,javascript]
+----
+shouldEqual(onTick({ bird_position: 390 }), { bird_position: 390 });
+----
+
+Since when we defined the scene in our drawing function above, we made
+the ground start at 390 from the top (exercise: is that right? Will
+the bird actually overlap with the ground?).
+
+The template is similar for the `onKey` function - mainly it is just
+`world.bird_position`, so we'll go right to writing the body, knowing
+we should probably use `world.bird_position`. Based on the purpose
+statement, we are supposed to return a new world, and the
+bird_position value is supposed to be one more than the previous:
+
+
+[source,javascript]
+----
+// { bird_position : number } -> { bird_position : number }
+// This returns a new world where the bird position has increased
+// by one (which corresponds to the bird _falling_, since the position
+// counts from the top).
+function onTick(world) {
+  return { bird_position: world.bird_position + 1 };
+}
+shouldEqual(onTick({ bird_position: 0 }), {bird_position: 1});
+shouldEqual(onTick({ bird_position: 50 }), {bird_position: 51});
+shouldEqual(onTick({ bird_position: 390 }), { bird_position: 390 });
+----
+
+But one of our tests failed! Oops, we said we would stop at the
+bottom, but we never updated our purpose statement, so, following
+that, we wrote the wrong function. Let's fix the purpose statement first:
+
+[source,javascript]
+----
+// This returns a new world where the bird position has increased
+// by one (which corresponds to the bird _falling_, since the position
+// counts from the top). However, if the position is 390 (ie, bird is
+// at bottom) we just return the same world unchanged.
+----
+
+Now we see in the purpose statement _if the position is 390_, which
+makes it sound like we should have `if (world.bird_position === 390)`
+in our function, so lets fill that in and see what we have:
+
+
+[source,javascript]
+----
+// { bird_position : number } -> { bird_position : number }
+// This returns a new world where the bird position has increased
+// by one (which corresponds to the bird _falling_, since the position
+// counts from the top). However, if the position is 390 (ie, bird is
+// at bottom) we just return the same world unchanged.
+function onTick(world) {
+  if (world.bird_position === 390) {
+
+  } else {
+
+  }
+}
+shouldEqual(onTick({ bird_position: 0 }), {bird_position: 1});
+shouldEqual(onTick({ bird_position: 50 }), {bird_position: 51});
+shouldEqual(onTick({ bird_position: 390 }), { bird_position: 390 });
+----
+
+So it seemed like we were write in the case that the position was
+_not_ 390. So we can put in our old answer for the `else` branch. What
+do we do in the `if` branch? Well, the purpose statement now says we
+just return the same world, which we can do!
+
+
+
+[source,javascript]
+----
+// { bird_position : number } -> { bird_position : number }
+// This returns a new world where the bird position has increased
+// by one (which corresponds to the bird _falling_, since the position
+// counts from the top). However, if the position is 390 (ie, bird is
+// at bottom) we just return the same world unchanged.
+function onTick(world) {
+  if (world.bird_position === 390) {
+     return world;
+  } else {
+     return { bird_position: world.bird_position + 1 };
+  }
+}
+shouldEqual(onTick({ bird_position: 0 }), {bird_position: 1});
+shouldEqual(onTick({ bird_position: 50 }), {bird_position: 51});
+shouldEqual(onTick({ bird_position: 390 }), { bird_position: 390 });
+----
+
+And now all our tests pass! Great. So lets take this new version of
+`onTick` and put it into our flappy version 1 to get flappy version 2.
+
+
+[source,javascript]
+----
+var eye = circle(5, "white");
+var mouth = placeImage(circle(10, "rebeccapurple"), circle(10, "white"), 0, -5);
+var character = placeImage(mouth, placeImage(eye, rectangle(50, 50, "rebeccapurple"), 30, 10), 40, 20);
+var ground = placeImage(rectangle(600, 10, "brown"), emptyScene(600, 400), 0, 390);
+
+// { bird_position : number } -> image
+function drawWorld(world) {
+  return placeImage(character, ground, 200, world.bird_position);
+}
+
+// { bird_position : number } -> { bird_position : number }
+// This returns a new world where the bird position has increased
+// by one (which corresponds to the bird _falling_, since the position
+// counts from the top). However, if the position is 390 (ie, bird is
+// at bottom) we just return the same world unchanged.
+function onTick(world) {
+  if (world.bird_position === 390) {
+     return world;
+  } else {
+     return { bird_position: world.bird_position + 1 };
+  }
+}
+shouldEqual(onTick({ bird_position: 0 }), {bird_position: 1});
+shouldEqual(onTick({ bird_position: 50 }), {bird_position: 51});
+shouldEqual(onTick({ bird_position: 390 }), { bird_position: 390 });
+
+// { bird_position : number }, string -> { bird_position : number }
+function onKey(world, key) {
+  if (key === "Space") {
+    return { bird_position: world.bird_position - 10 };
+  } else {
+    return world;
+  }
+}
+shouldEqual(onKey({ bird_position: 100 }, "Space"), { bird_position: 90 });
+shouldEqual(onKey({ bird_position: 100 }, "Something Else"), { bird_position: 100 });
+shouldEqual(onKey({ bird_position: 0 }, "Space"), { bird_position: -10 });
+
+bigBang({bird_position: 100}, drawWorld, onTick, onKey);
+----
+
+Two things to notice - it is _way_ to hard to get into the air! And
+the answer to the exercise above, it definitely seems like we aren't
+stopping soon enough. As an exercise, figure out how to fix both of
+these problems.
+
+Once you've finished that, let's move onto the next part - adding pipes.
