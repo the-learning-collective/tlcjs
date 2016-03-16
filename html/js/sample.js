@@ -96,3 +96,15 @@ shouldEqual(1+2, 2);
 shouldEqual(width(circle(20, "red")), 40);
 shouldEqual(height(overlay(circle(20, "red"), emptyScene(200, 200))), 200);
 shouldEqual(stringLength("hello world"), 11);
+
+var scene = overlay(circle(50, "red"), rectangle(100, 150, "white"));
+
+print(scene);
+
+print(scale(scene, 50));
+
+var scene2 = placeImage(circle(50, "red"), emptyScene(125, 150), 10, 10);
+
+print(scene2);
+
+print(scale(scene2, 50));

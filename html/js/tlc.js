@@ -545,6 +545,38 @@ var bigBang = _type([tAny,
 
 });
 
+var scale_usage = "scale(): Requires two arguments, an image and a percentage. For example: scale(circle(20, 'red'), 50)."
+var scale = _type([tObject, tNumber], tObject, scale_usage, function(image, percentage) {
+    return  _.assign({}, image, {
+        width: image.width * percentage / 100,
+        height: image.height * percentage / 100,
+        elements: image.elements.map(function(element){
+            return scale_element(element, percentage);
+        })
+    });
+});
+
+var scale_element = function (shape, percentage) {
+    return ({
+        circle: _.assign({}, shape, {
+            radius: shape.radius * percentage / 100,
+            x: shape.x * percentage / 100,
+            y: shape.y * percentage / 100
+        }),
+        rectangle: _.assign({}, shape, {
+            width: shape.width * percentage / 100,
+            height: shape.height * percentage / 100,
+            x: shape.x * percentage / 100,
+            y: shape.y * percentage / 100
+        }),
+        text: _.assign({}, shape, {
+            fontSize: shape.fontSize * percentage / 100,
+            x: shape.x * percentage / 100,
+            y: shape.y * percentage / 100
+        })
+    })[shape.tlc_dt];
+};
+
 var width_usage = "width(): Requires one argument, an image. For example: width(circle(20, 'red')).";
 var width = _type([tObject], tNumber, width_usage, function(image) {
   return image.width;
@@ -622,7 +654,8 @@ function tlc_sandbox_functions(win) {
     line: line,
     width: width,
     height: height,
-    stringLength,
+    stringLength: stringLength,
+    scale: scale,
     placeImage: placeImage,
     emptyScene: emptyScene,
     animate: _type([tArrow([tNumber], tObject)], tNothing, animate_usage, function(tick) {
