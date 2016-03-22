@@ -786,3 +786,306 @@ bigBang({bird_position: 100, pipes_position: 600}, drawWorld, onTick, onKey);
 ----
 
 Next, we'll make it so that if you run into the pipes you actually lose!
+
+
+== Ending the game ==
+
+There are two parts of this:
+
+1. Figuring out if we have run into a pipe.
+2. Ending the game.
+
+We'll handle both of these. First, let's figure out how to detect if
+we have run into a pipe. When adding things to an existing program,
+it's always important to think about _where_ that functionality should
+go. In our game, we have a few possibilities:
+
+- In our drawing function.
+- In our `onTick` function.
+- In our `onKey` function.
+
+Let's think about the last one first. If we put this in `onKey`, then
+it can only run when someone is pressing a key. But we need to detect
+collisions even if they aren't actively hitting a key, so this seems
+like not an ideal place for it. We could also try to put it in the
+drawing function, which might work - we could draw something else if
+they had collided. But, since drawing can't actually update the world
+state, once the bird had passed through the wall (when we would be
+drawing it as collided), it would end up on the other side unchanged!
+
+This leaves `onTick` as the only place that makes sense. And, there is
+good reason for this: having lost the game seems like it is part of
+the important information about the game, which means it should live
+in the world state, and `onTick` is how we update the world state as
+time passes.
+
+We'll do this in two parts:
+
+1. We'll create a new function `hasCollided` that takes a world state
+and returns `true` if the bird in that world has run into the pipe and
+`false` otherwise.
+2. We'll use this function in the body of `onTick` to change the world
+state to indicate that the game is over.
+
+But first, what does it mean for the game to be over? How should we
+represent that? Well, it seems like we could add another field to our
+world state that is `is_game_over` that would start as `false` and
+then if we ever collide would turn to `true`. This would allow us to
+change how we draw the game once it is over.
+
+So our new world state now looks like:
+
+[source,javascript]
+----
+// a world is { bird_position : number,
+//              pipes_position : number,
+//              is_game_over : boolean
+//            }
+----
+
+And we can now use that to write `hasCollided`:
+
+We'll do this abbreviated. As an exercise, follow through the design
+recipe for this function on your own, and then check against what we
+do here to see where you made different choices (different tests,
+different names, etc).
+
+[source,javascript]
+----
+// { bird_position : number, pipes_position : number, is_game_over : boolean } -> boolean
+// This function calculates whether the world passed
+// to it represents a bird that has collided into the pipes.
+function hasCollided(world) {
+  world.bird_position;
+  world.pipes_position;
+  return true;
+}
+
+shouldEqual(hasCollided({ bird_position: 200, pipes_position: 200 }), false);
+shouldEqual(hasCollided({ bird_position: 0, pipes_position: 200 }), true);
+shouldEqual(hasCollided({ bird_position: 0, pipes_position: 400 }), false);
+----
+
+Here we've combined the first several steps of the design recipe -
+thinking about data, writing signature, writing header, writing
+tests. We also added some templates, and eliminated one -
+`world.is_game_over`, as probably `hasCollided` doesn't have to worry
+about that - once the game is over, collisions are no longer relevant!
+
+Now let's fill it is to get the tests to pass:
+
+
+[source,javascript]
+----
+// { bird_position : number, pipes_position : number, is_game_over : boolean } -> boolean
+// This function calculates whether the world passed
+// to it represents a bird that has collided into the pipes.
+function hasCollided(world) {
+  world.bird_position;
+  world.pipes_position;
+  if (world.pipes_position > 150 && world.pipes_position < 250) {
+    if (world.bird_position < 100 || world.bird_position > 250) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
+shouldEqual(hasCollided({ bird_position: 200, pipes_position: 200 }), false);
+shouldEqual(hasCollided({ bird_position: 0, pipes_position: 200 }), true);
+shouldEqual(hasCollided({ bird_position: 0, pipes_position: 400 }), false);
+----
+
+Now let's change `onTick`. Here is the old `onTick`, with the
+signature changed to include `is_game_over`. Where should we put this
+logic?
+
+[source,javascript]
+----
+// { bird_position : number, pipes_position : number, is_game_over : boolean }
+// -> { bird_position : number, pipes_position : number, is_game_over : boolean }
+function onTick(world) {
+  if (world.bird_position === 390) {
+     var newBird = 390;
+  } else {
+     var newBird = world.bird_position + 1;
+  }
+
+  if (world.pipes_position === 0) {
+     var newPipes = 600;
+  } else {
+     var newPipes = world.pipes_position - 1;
+  }
+
+  return { bird_position: newBird, pipes_position: newPipes };
+}
+----
+
+Well, first, if the game is _already_ over, we probably don't need to
+change anything about the world, so let's add a case for that:
+
+
+[source,javascript]
+----
+// { bird_position : number, pipes_position : number, is_game_over : boolean }
+// -> { bird_position : number, pipes_position : number, is_game_over : boolean }
+function onTick(world) {
+  if (world.game_is_over) {
+    return world;
+  } else if (/* check for collision */) {
+
+  } else {
+    if (world.bird_position === 390) {
+       var newBird = 390;
+    } else {
+       var newBird = world.bird_position + 1;
+    }
+
+    if (world.pipes_position === 0) {
+       var newPipes = 600;
+    } else {
+       var newPipes = world.pipes_position - 1;
+    }
+
+    return { bird_position: newBird, pipes_position: newPipes };
+  }
+}
+----
+
+I added an `else if` branch for what to do if we detect a collision,
+as it seems like we should do something different. But detecting a
+collision is a problem we've already solved! If we have collided, we
+should return the same bird/pipes position, but set `is_game_over` to
+true. This gets us to:
+
+[source,javascript]
+----
+// { bird_position : number, pipes_position : number, is_game_over : boolean }
+// -> { bird_position : number, pipes_position : number, is_game_over : boolean }
+function onTick(world) {
+  if (world.game_is_over) {
+    return world;
+  } else if (hasCollided(world)) {
+    return { bird_position: world.bird_position, pipes_position: world.pipes_position, is_game_over: true };
+  } else {
+    if (world.bird_position === 390) {
+       var newBird = 390;
+    } else {
+       var newBird = world.bird_position + 1;
+    }
+
+    if (world.pipes_position === 0) {
+       var newPipes = 600;
+    } else {
+       var newPipes = world.pipes_position - 1;
+    }
+
+    return { bird_position: newBird, pipes_position: newPipes, is_game_over: false };
+  }
+}
+----
+
+Now if we put it together (note, we had to add `is_game_over` to
+`onKey` and the initial world), we have a game that detects collisions
+and stops when we collide! As an exercise, prevent `onKey` from
+changing the world once the game is over, and as another exercise,
+draw something on the world when the game is over, so it is easier to
+tell what happened!
+
+
+[source,javascript]
+----
+var eye = circle(5, "white");
+var mouth = placeImage(circle(10, "rebeccapurple"), circle(10, "white"), 0, -5);
+var character = placeImage(mouth, placeImage(eye, rectangle(50, 50, "rebeccapurple"), 30, 10), 40, 20);
+var ground = placeImage(rectangle(600, 10, "brown"), emptyScene(600, 400), 0, 390);
+var pipe = rectangle(30, 100, "green");
+
+// { bird_position : number, pipes_position : number, is_game_over : boolean } -> image
+function drawWorld(world) {
+  return placeImage(pipe,
+                    placeImage(pipe,
+                               placeImage(character, ground, 200, world.bird_position),
+                               world.pipes_position,
+                               0),
+                    world.pipes_position,
+                    300);
+}
+
+// { bird_position : number, pipes_position : number, is_game_over : boolean } -> boolean
+// This function calculates whether the world passed
+// to it represents a bird that has collided into the pipes.
+function hasCollided(world) {
+  world.bird_position;
+  world.pipes_position;
+  if (world.pipes_position > 150 && world.pipes_position < 250) {
+    if (world.bird_position < 100 || world.bird_position > 250) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
+shouldEqual(hasCollided({ bird_position: 200, pipes_position: 200 }), false);
+shouldEqual(hasCollided({ bird_position: 0, pipes_position: 200 }), true);
+shouldEqual(hasCollided({ bird_position: 0, pipes_position: 400 }), false);
+
+
+// { bird_position : number, pipes_position : number, is_game_over : boolean }
+// -> { bird_position : number, pipes_position : number, is_game_over : boolean }
+// This returns a new world where the bird position has increased
+// by one (which corresponds to the bird _falling_, since the position
+// counts from the top) and the pipes position has decreased by
+// 1. However, if the bird position is 390 (ie, bird is
+// at bottom) we just return the same world unchanged, and if the
+// pipes position is 0, we instead set it to 600.
+function onTick(world) {
+  if (world.game_is_over) {
+    return world;
+  } else if (hasCollided(world)) {
+    return { bird_position: world.bird_position, pipes_position: world.pipes_position, is_game_over: true };
+  } else {
+    if (world.bird_position === 390) {
+       var newBird = 390;
+    } else {
+       var newBird = world.bird_position + 1;
+    }
+
+    if (world.pipes_position === 0) {
+       var newPipes = 600;
+    } else {
+       var newPipes = world.pipes_position - 1;
+    }
+
+    return { bird_position: newBird, pipes_position: newPipes, is_game_over: false };
+  }
+}
+shouldEqual(onTick({ bird_position: 0, pipes_position: 500, is_game_over: false }), {bird_position: 1, pipes_position: 499, is_game_over: false});
+shouldEqual(onTick({ bird_position: 50, pipes_position: 500, is_game_over: false }), {bird_position: 51, pipes_position: 499, is_game_over: false});
+shouldEqual(onTick({ bird_position: 390, pipes_position: 500, is_game_over: false }), {bird_position: 390, pipes_position: 499, is_game_over: false});
+shouldEqual(onTick({ bird_position: 0, pipes_position: 0, is_game_over: false }), {bird_position: 1, pipes_position: 600, is_game_over: false});
+
+// { bird_position : number, pipes_position : number, is_game_over : boolean}, string
+// -> { bird_position : number, pipes_position : number, is_game_over : boolean }
+function onKey(world, key) {
+  if (key === "Space") {
+    return { bird_position: world.bird_position - 10, pipes_position: world.pipes_position, is_game_over: world.is_game_over };
+  } else {
+    return world;
+  }
+}
+shouldEqual(onKey({ bird_position: 100, pipes_position: 100, is_game_over: false }, "Space"),
+            { bird_position: 90, pipes_position: 100, is_game_over: false });
+shouldEqual(onKey({ bird_position: 100, pipes_position: 100, is_game_over: false }, "Something Else"),
+            { bird_position: 100, pipes_position: 100, is_game_over: false });
+shouldEqual(onKey({ bird_position: 0, pipes_position: 100, is_game_over: false }, "Space"),
+            { bird_position: -10, pipes_position: 100, is_game_over: false });
+
+bigBang({bird_position: 100, pipes_position: 600, is_game_over: false}, drawWorld, onTick, onKey);
+----
