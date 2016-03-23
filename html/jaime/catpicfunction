@@ -1,0 +1,62 @@
+var odinObject = {
+    background: rectangle(400, 400, "grey"),
+    body: circle(140, "white"),
+    ear: {
+        outterEar: circle(26, "white"),
+        innerEar: circle(20, "pink")
+    },
+    head: (circle(90, "white")),
+    eye: circle(10, "green"),
+    nose: circle(13, "pink"),
+    spot: circle(25, "black")
+};
+
+function catPic (odinObject) {    
+    return placeImage(
+      odinObject.eye,
+      placeImage(
+        odinObject.nose,
+        placeImage(
+          odinObject.head,
+          placeImage(
+            odinObject.ear.innerEar,
+            placeImage(
+              odinObject.ear.innerEar,
+              placeImage(
+                odinObject.ear.outterEar,
+                placeImage(
+                  odinObject.ear.outterEar,
+                  placeImage(
+      	            odinObject.spot,
+		                placeImage(
+                      odinObject.spot, 
+                      placeImage(
+                        odinObject.spot,
+                        placeImage(
+                          odinObject.body,
+                          odinObject.background,
+                          33,
+                          140),
+                        180,
+                        200),
+                      110, 
+                      170), 
+              	    55,
+	                	220),
+                  210,
+                  20),
+                270,
+                20),
+              215,
+              25),
+            275,
+            25),
+          180,
+          40),
+        250,
+        110),
+      225,
+      75)
+};
+
+print(catPic(odinObject));
