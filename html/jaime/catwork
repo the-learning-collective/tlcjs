@@ -1,0 +1,148 @@
+//write the cat as an object instead!
+
+//a cat pic is an object made of shapes on shapes on shapes.
+// so, a catpic = {bodypart: shape, body part: shape, bodypart: shape, etc...}
+var eyelid = circle(12, "white"); /*this is for the blinking later*/
+var odinObject = {
+    background: rectangle(400, 400, "grey"),
+    body: circle(140, "white"),
+    ear: {
+        outterEar: circle(26, "white"),
+        innerEar: circle(20, "pink")
+    },
+    head: (circle(90, "white")),
+    eye: circle(10, "green"),
+    nose: circle(13, "pink"),
+    spot: circle(25, "black")
+};
+
+//and then write a function that draws him. first thing will appear on the top. stack & nest them.
+
+function catPic (odinObject) {    
+    return placeImage(
+      odinObject.eye,
+      placeImage(
+        odinObject.nose,
+        placeImage(
+          odinObject.head,
+          placeImage(
+            odinObject.ear.innerEar,
+            placeImage(
+              odinObject.ear.innerEar,
+              placeImage(
+                odinObject.ear.outterEar,
+                placeImage(
+                  odinObject.ear.outterEar,
+                  placeImage(
+                    odinObject.spot,
+                    placeImage(
+                      odinObject.spot, 
+                      placeImage(
+                        odinObject.spot,
+                        placeImage(
+                          odinObject.body,
+                          odinObject.background,
+                          33,
+                          140),
+                        180,
+                        200),
+                      110, 
+                      170), 
+                    55,
+                    220),
+                  210,
+                  20),
+                270,
+                20),
+              215,
+              25),
+            275,
+            25),
+          180,
+          40),
+        250,
+        110),
+      225,
+      75)
+};
+print(catPic(odinObject));
+
+
+//Now let's try to bigBang it.
+//bigBang takes 4 arguements: 1.initial world state "0"; 2.function that draws the world state in (1)
+//(that'll be catPic(odinObject)); 3.function that takes the current world state & produces a new one 
+//(that'll be blink once I get it moving); 4.function with input of current world state & a keystroke 
+//(represtented by a string), producing a new world state. 
+//My bigBang animations will be 1.cat blinking & 2. saying "meow" 
+
+//To get a red dot moving across a field bigBang is thus: 
+bigBang(0,
+        function (ticks) {
+          return placeImage(circle(10, "red"), emptyScene(400,100), ticks, 70);
+        },
+        function (world) { return world + 1; },
+        function (world, key) { return world; });
+
+
+//write function that moves eyelid over the function catpic?
+//to put eyelid exactly over eye: position 223, 70. Movement will be btwn 50 & 72. 
+//to make it blink, need to have a variation of position instead of 72.
+
+function blink(lid) {
+    return placeImage(eyelid, catPic(odinObject), 223, lid.blink_position)
+};
+print(blink({blink_position: 50}));
+print(blink({blink_position: 60}));
+print(blink({blink_position: 72})); 
+//these 3 lines show the eyelid in different positions!
+//that is, the world state varies based on the blink_position!
+//for bigBang, initial world state will be blink_position: 50 (open eye).
+
+//Next: change based on keyboard input.
+//world --> world
+
+//write some tests
+//{blink_position: number}, string --> {blink_position: number}
+//For this simple version, 2nd argument "Space" returns new world with blink_position decread by 11 
+//(which will raise the eyelid by 11). Otherwise return world unchanged.
+
+shouldEqual(blinkKey({blink_position: 50}, "Space"), {blink_position: 61});
+shouldEqual(blinkKey({blink_position: 50}, "Something Else"), {blink_position: 50});
+
+function makeBlink(lid, key) {
+    if (key === "Space") {
+        return {blink_position: lid.blink_position + 11}; /*the change of blink_position 50-72-50*/
+    } else {
+        return lid; /*starting world state of blink_position: 50*/
+    }
+};
+
+bigBang({blink_position: 50}, blink, onTick, makeBlink);
+
+
+
+//now, make the blink move the whole 22 down, then after that onTick divided by something to slowly open.
+
+//this work, it just falls from 52 until forever. need to go the other way & have it stop.
+function onTick(lid) {
+    return { blink_position: lid.blink_position + 1}
+};
+
+//this work, goes up forever. need to start at 70 (would if had already space blinked) & stop do nothing 50.
+function onTick(lid) { 
+    return {blink_position: lid.blink_position - 1}
+};
+
+//this should stop it at 50?
+if {blink_position: 50} {
+    return {blink_position: lid.blink_position}
+}
+
+//or (i think this one, not that it works) YES THIS WORKS
+function onTick(lid) {
+  if (lid.blink_position === 50) {
+    return {blink_position: 50}
+} else {
+    return {blink_position: lid.blink_position - 1}
+  }
+};
