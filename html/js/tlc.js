@@ -63,9 +63,9 @@ function _shouldEqualInternal(includeStack, results, redraw, given, expected) {
     var s = (new Error()).stack.split("\n")[2];
     var loc = s.slice(s.lastIndexOf("/")+1, s.length - 2);
     if (includeStack) {
-      var msg = loc + " - expected " + String(expected) + ", but got " + String(given) + ".";
+      var msg = loc + " - expected " + JSON.stringify(expected) + ", but got " + JSON.stringify(given) + ".";
     } else {
-      var msg = String(results.run) + ": expected " + String(expected) + ", but got " + String(given) + ".";
+      var msg = String(results.run) + ": expected " + JSON.stringify(expected) + ", but got " + JSON.stringify(given) + ".";
     }
     results.failures.push(msg);
   }
