@@ -1,8 +1,4 @@
-//write the cat as an object instead!
-
-//a cat pic is an object made of shapes on shapes on shapes.
-// so, a catpic = {bodypart: shape, body part: shape, bodypart: shape, etc...}
-var eyelid = circle(12, "white"); /*this is for the blinking later*/
+var eyelid = circle(12, "white");
 var odinObject = {
     background: rectangle(400, 400, "grey"),
     body: circle(140, "white"),
@@ -15,8 +11,6 @@ var odinObject = {
     nose: circle(13, "pink"),
     spot: circle(25, "black")
 };
-
-//and then write a function that draws him. first thing will appear on the top. stack & nest them.
 
 function catPic (odinObject) {    
     return placeImage(
@@ -65,21 +59,25 @@ function catPic (odinObject) {
       225,
       75)
 };
-print(catPic(odinObject));
 
+function blink(lid) {
+    return placeImage(eyelid, catPic(odinObject), 223, lid.blink_position)
+};
 
-//Now let's try to bigBang it.
-//bigBang takes 4 arguements: 1.initial world state "0"; 2.function that draws the world state in (1)
-//(that'll be catPic(odinObject)); 3.function that takes the current world state & produces a new one 
-//(that'll be blink once I get it moving); 4.function with input of current world state & a keystroke 
-//(represtented by a string), producing a new world state. 
-//My bigBang animations will be 1.cat blinking & 2. saying "meow" 
+function makeBlink(lid, key) {
+    if (key === "Space") {
+        return {blink_position: lid.blink_position + 22};
+    } else {
+        return lid; /*starting world state of blink_position: 50*/
+    }
+};
 
-//write function that moves eyelid over the function catpic?
-//to put eyelid exactly over eye: position 223, 70. Movement will be btwn 50 & 72. 
-//to make it blink, need to have a variation of position instead of 72.
+function onTick(lid) {
+  if (lid.blink_position === 50) {
+    return {blink_position: 50}
+} else {
+    return {blink_position: lid.blink_position - 1}
+  }
+};
 
-function blink (eyelid) {
-    return placeImage(eyelid, catPic(odinObject), 223, 72)
-}
-print(blink(eyelid));
+bigBang({blink_position: 50}, blink, onTick, makeBlink);
