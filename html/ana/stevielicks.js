@@ -33,9 +33,6 @@ function drawWorld(world) {
 };
 
 
-print(drawWorld({lick_position: 145}));
-print(drawWorld({lick_position: 162}));
-
 //{ lick_position : number
 //	lick_direction : string} --> { lick_position : number 
 //									lick_direction : string}
