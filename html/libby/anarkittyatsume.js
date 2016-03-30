@@ -81,7 +81,15 @@ function makeBlink(cat) {
 // Cuddle decrease neediness
 // If cuddlemeter is full, Odin sleeps
 function cuddle(cat, key) {
-  if (key === "c") {
+
+  function increaseCuddle(cuddles) {
+
+    return cat.cuddles + 20;
+
+  }
+
+  if (key === "Space") {
+    console.log("c");
     if (cat.cuddles >= 99) {
         return { sleeping: true,
                  blink_timer: 0,
@@ -91,7 +99,7 @@ function cuddle(cat, key) {
       return { sleeping: cat.sleeping,
                blink_timer: cat.blink_timer,
                blink_position: cat.blink_position,
-               cuddles: cat.cuddles + 1};
+               cuddles: increaseCuddle(cat.cuddles)};
     }
   } else {
       return cat; /*starting world state of blink_position: 50*/
@@ -107,28 +115,25 @@ shouldEqual(cuddle({blink_position: 0, cuddles: 0}, "v"),
                    {blink_position: 0, cuddles: 0});*/
 
 // Odin blinks unless he's asleep
+function decreaseCuddles(cuddles) {
+
+  return cuddles - (cuddles/100)
+
+}
+
 function onTick(cat) {
-  if (cat.sleeping === true) {
-    if (cat.cuddles > 50) {
-      return { sleeping: true,
-               blink_timer: cat.blink_timer,
-               blink_position: cat.blink_position,
-               cuddles: cat.cuddles - 1};
-    } else {
-        return { sleeping: false,
-                 blink_timer: cat.blink_timer,
-                 blink_position: 50,
-                 cuddles: cat.cuddles};
-    }
+  if (cat.sleeping) {
+    return (cat.cuddles > 50) ? Object.assign({}, cat, { cuddles: decreaseCuddles(cat.cuddles) })
+                              : Object.assign({}, cat, { sleeping: false, cuddles: decreaseCuddles(cat.cuddles) })
   } else {
     if (cat.blink_timer === 0) {
       return {sleeping: false,
               blink_timer: 0,
               blink_position: cat.blink_position + 22,
-              cuddles: cat.cuddles - 1};
+              cuddles: decreaseCuddles(cat.cuddles)};
     } else {
       if (cat.blink_position === 50) {
-        return {sleeping: false, blink_timer: 0, blink_position: 50, cuddles: cat.cuddles - 1};
+        return {sleeping: false, blink_timer: 0, blink_position: 50, cuddles: decreaseCuddles(cat.cuddles)};
       } else {
         return {sleeping: false,
                 blink_timer: 0,
