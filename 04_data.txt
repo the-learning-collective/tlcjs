@@ -106,7 +106,7 @@ The signature for this is:
 == Big Bang ==
 
 The majority of this chapter is an extended example using objects, the
-tools we've learned so far, and a new, more powerful verion of
+tools we've learned so far, and a new, more powerful version of
 `animate` that allows us to build interactive games. This function is
 called `bigBang`. The idea of big bang is to construct an animation,
 but to allow you more control over it than you had with `animate`.
@@ -129,8 +129,8 @@ each time step). There is also a way to respond to keyboard input.
 
 `bigBang` takes four arguments:
 
-- The first argument is the initial world state (which, if you were
-replicating `animate`, would be the number 0).
+- The first argument is the initial world state which, if you were
+replicating `animate`, would be the number 0.
 - The second argument is the same as `animate` - it is a
 function that takes your world state (in `animate`, a number) and produces
 as output an image which will get drawn.
@@ -176,9 +176,10 @@ and the two pipes. Since both of those move over time, it seems like
 we need to be able to keep track of where they are. To start, we won't
 worry about the pipes, and will only focus on moving our bird up and
 down. Since we only go up and down, we really just need to know how
-high the bird is, which is just a number. But since we are going to
-make this more complicated, and since this is the chapter about
-objects, we'll start with an object with one field:
+high the bird is, which is just a number.
+
+But, since we are going to make this more complicated, and since this is the chapter about
+objects, our world state will be an object with (for now) one field:
 
 [source,javascript]
 ----
@@ -186,14 +187,13 @@ objects, we'll start with an object with one field:
 ----
 
 Now we want to figure out how to draw the scene with the bird on
-it. You can make a much better drawing, but for our example, we'll
-build a simple "bird" and draw it:
+it. In a moment, we'll make a much better drawing, but for now, we'll
+build a simple "bird" and draw it over some ground. To do this, we'll
+define our shapes and then create our drawWorld function:
 
 [source,javascript]
 ----
-var eye = circle(5, "white");
-var mouth = placeImage(circle(10, "rebeccapurple"), circle(10, "white"), 0, -5);
-var character = placeImage(mouth, placeImage(eye, rectangle(50, 50, "rebeccapurple"), 30, 10), 40, 20);
+var bird = circle(25, "blue");
 var ground = placeImage(rectangle(600, 10, "brown"), emptyScene(600, 400), 0, 390);
 
 // { bird_position : number } -> image
@@ -204,24 +204,22 @@ function drawWorld(world) {
 print(drawWorld({bird_position: 0}));
 ----
 
-That worked, and it put our character on the background, but it didn't
-use the `bird_position`, and as a result, calling it with different
-positions doesn't change the image (try this by modifying the line
-that prints out the world in the above example)! Not good.
+That worked, and it put our character on the background but, as you
+may have noticed, it didn't use the "world" object or its `bird_position`. As a result, calling it with different
+positions doesn't change the image. You can verify this by modifying the line
+that prints out the world in the above example -- nothing will change about the image that is created.
 
 So we should have `drawWorld` vary where the bird is based on the
 `bird_position` field in the world state.
 
 [source,javascript]
 ----
-var eye = circle(5, "white");
-var mouth = placeImage(circle(10, "rebeccapurple"), circle(10, "white"), 0, -5);
-var character = placeImage(mouth, placeImage(eye, rectangle(50, 50, "rebeccapurple"), 30, 10), 40, 20);
+var bird = circle(25, "blue");
 var ground = placeImage(rectangle(600, 10, "brown"), emptyScene(600, 400), 0, 390);
 
 // { bird_position : number } -> image
 function drawWorld(world) {
-  return placeImage(character, ground, 200, world.bird_position);
+  return placeImage(bird, ground, 200, world.bird_position);
 }
 
 print(drawWorld({bird_position: 50}));
