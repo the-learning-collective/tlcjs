@@ -29,14 +29,14 @@ books. They add books to their bookshelves all the time (and could,
 theoretically, remove them as well). At any given moment, they might
 not know exactly what's on their shelf. So they want to be able to
 ask: how many books do I have? where on the shelf are they? do I have
-a copy of Watchmen? to whom did I len d my copy of Pedagogy of the
+a copy of Watchmen? to whom did I lend my copy of Pedagogy of the
 Oppressed? For all but the last, we can answer these questions with a
 program! (We could make a lending library program if we wanted to
 answer the last as well, but we'll leave that as an exercise for the
 reader!) But to answer questions about collections like this, we need
 to structure the data very differently from the example above.
 
-So lets try structuring the data differently. One way to do that is to
+So, lets try structuring the data differently. One way to do that is to
 think about how the books are arranged. We start with one book, then
 say how the other books are arranged in relation to that book. The
 left-most book on my bookshelf is _The Dispossessed_ by Ursula
