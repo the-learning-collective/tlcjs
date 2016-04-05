@@ -325,7 +325,11 @@ To see how `countBooks` works with recursion, try "stepping through" it here:
 
 Let's do a couple more exercises to better understand our bookshelf.
 
+<<<<<<< HEAD
 *EXERCISE*: Can you write a function called `firstBook` that takes a shelf and returns the left-most book on the shelf?
+=======
+*EXERCISE*: Can you write a function called `firstBook` that takes a shelf and returns the left-most book on the shelf? (HINT: This function doesn't require any recursion!) (ANOTHER HINT: What happens if a shelf is empty?) (OTOH it requires handling the case of an empty shelf?! -- yup. Partial functions are the worst!)
+>>>>>>> 9d8c535f84b7fd1cacbc354c6d9ec1f16c4c40f0
 
 [NOTE]
 ============
