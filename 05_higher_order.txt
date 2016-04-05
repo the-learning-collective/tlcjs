@@ -29,7 +29,7 @@ books. They add books to their bookshelves all the time (and could,
 theoretically, remove them as well). At any given moment, they might
 not know exactly what's on their shelf. So they want to be able to
 ask: how many books do I have? where on the shelf are they? do I have
-a copy of Watchmen? to whom did I lend my copy of Pedagogy of the
+a copy of Watchmen? to whom did I len d my copy of Pedagogy of the
 Oppressed? For all but the last, we can answer these questions with a
 program! (We could make a lending library program if we wanted to
 answer the last as well, but we'll leave that as an exercise for the
@@ -48,11 +48,10 @@ This book has neighbors to the right -- starting with _The Lathe
 of Heaven_ by the same author.
 
 -----------------------------------------------------------------------------
-books = { book: { title: "The Disposessed"
-                , author: { first: "Ursula K.", last: "LeGuin" } }
-        , neighbors: { book: { title: "Lathe of Heaven"
-                              author: { first: "Ursula K.", last: "LeGuin" }
-                    }
+books = { book: { title: "The Disposessed",
+                  author: { first: "Ursula K.", last: "LeGuin" } },
+          neighbors: { book: { title: "Lathe of Heaven"
+                              author: { first: "Ursula K.", last: "LeGuin" } } }
         }
 -----------------------------------------------------------------------------
 
@@ -62,12 +61,12 @@ course, _The Left Hand of Darkness_!
 image::img/bookshelf-2.png[alt="A shelf as a book with neighbors that are also books with neighbors!"]
 
 ---------------------------------------------------------------------------------------------
-books = { book: { title: "The Disposessed"
-                , author: { first: "Ursula K.", last: "LeGuin" } }
-        , neighbors: { book: { title: "Lathe of Heaven"
-                              , author: { first: "Ursula K.", last: "LeGuin" }
-                     , neighbors: { book: { title: "Left Hand of Darkness"
-                                           , author: { first: "Ursula K.", last: "LeGuin" }
+books = { book: { title: "The Disposessed",
+                  author: { first: "Ursula K.", last: "LeGuin" } },
+          neighbors: { book: { title: "Lathe of Heaven",
+                               author: { first: "Ursula K.", last: "LeGuin" } },
+                       neighbors: { book: { title: "Left Hand of Darkness",
+                                            author: { first: "Ursula K.", last: "LeGuin" } }
                                 }
                     }
         }
@@ -86,13 +85,13 @@ image::img/bookshelf-3.png[alt="A shelf as a book with neighbors -- even if the 
 ------------------------------------------------------------------------------------------
 endOfShelf = {} // an empty object, named for clarity!
 
-shelf = { book: { title: "The Disposessed"
-                , author: { first: "Ursula K.", last: "LeGuin" } }
-        , neighbors: { book: { title: "Lathe of Heaven"
-                            , author: { first: "Ursula K.", last: "LeGuin" }
-                      neighbors: { book: { title: "Left Hand of Darkness"
-                                         , author: { first: "Ursula K.", last: "LeGuin" }
-                                , neighbors: endOfShelf
+books = { book: { title: "The Disposessed",
+                  author: { first: "Ursula K.", last: "LeGuin" } },
+          neighbors: { book: { title: "Lathe of Heaven",
+                               author: { first: "Ursula K.", last: "LeGuin" } },
+                       neighbors: { book: { title: "Left Hand of Darkness",
+                                            author: { first: "Ursula K.", last: "LeGuin" } },
+                                    neighbors: endOfShelf }
                                 }
                     }
         }
@@ -122,7 +121,7 @@ So a shelf must be:
 
 ---------------------------------------------------------------------
 // { book: { title: string,
-//          author: { first: string, last: string } },
+//           author: { first: string, last: string } },
 //   neighbors: {book: { title: string,
 //                       author: { first: string, last: string } },
 //               neighbors: { book: ...wait...???????
@@ -135,24 +134,22 @@ How can we describe this odd object?
 First, we can give the whole object structure a *name*, then refer to it by name within the structure itself.
 Secondly, we can say the structure *could* be a different sort of object -- we add an "OR". A `shelf` is an `emptyShelf` "OR" this more complicated structure.
 
-----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 // shelf = emptyShelf OR { book : { title: string,
-//                                  author : {first: string, last: string}
-//                                },
+//                                  author : {first: string, last: string} },
 //                         neighbors : shelf }
-----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
 A data structure that refers to itself is called a _recursive data structure_.
 
 Now we can finish the `countBooks` function signature by saying what kind of value we expect back:
 
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 // shelf = emptyShelf OR { book : { title: string,
-//                                  author : {first: string, last: string}
-//                                 },
+//                                  author : {first: string, last: string} },
 //                         neighbors : shelf }
 // shelf -> number
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
 We want a number representing the number of books on my shelf. Makes sense! What about the purpose statement?
 
@@ -214,7 +211,7 @@ we know we'll have to handle both cases.
 
 --------------------------------------------------------------
 function countBooks (shelf) {
-    if (_.isEqual(shelf, emptyShelf) {
+    if (_.isEqual(shelf, emptyShelf)) {
       // if it's empty
     } else {
       // if it's not empty, we might need `shelf`'s fields:
@@ -227,9 +224,14 @@ function countBooks (shelf) {
 
 [NOTE]
 ================
-What is `_.isEqual`? It's a function from another JavaScript library, lodash. It takes two objects and tells whether they're equal (as you may have guessed). We have to use `_.isEqual` because JavaScript's `===` doesn't work on objects. In general, we've been avoiding using outside libraries because we don't want you to have to worry about this stuff, but we got lazy with this chapter I guess.
+What is `_.isEqual`? It's a function from another JavaScript library,
+lodash. It takes two objects and tells whether they're equal (as you
+may have guessed). We have to use `_.isEqual` because JavaScript's
+`===` doesn't work in the way you'd expect on objects. In general,
+we've been avoiding using outside libraries because we don't want you
+to have to worry about this stuff, but we got lazy with this chapter I
+guess.
 ================
-
 
 Now tests!
 
@@ -248,20 +250,20 @@ function countBooks (shelf) {
 
 endOfShelf = {}
 
-myShelf = { book: { title: "The Disposessed"
-                , author: { first: "Ursula K.", last: "LeGuin" } }
-        , neighbors: { book: { title: "Lathe of Heaven"
-                            , author: { first: "Ursula K.", last: "LeGuin" }
-                      neighbors: { book: { title: "Left Hand of Darkness"
-                                         , author: { first: "Ursula K.", last: "LeGuin" }
-                                , neighbors: endOfShelf
+books = { book: { title: "The Disposessed",
+                  author: { first: "Ursula K.", last: "LeGuin" } },
+          neighbors: { book: { title: "Lathe of Heaven",
+                               author: { first: "Ursula K.", last: "LeGuin" } },
+                       neighbors: { book: { title: "Left Hand of Darkness",
+                                            author: { first: "Ursula K.", last: "LeGuin" } },
+                                    neighbors: endOfShelf }
                                 }
                     }
         }
 emptyShelf = endOfShelf;
 
 shouldEqual(countBooks(emptyShelf), 0);
-shouldEqual(countBooks(myShelf), 3);
+shouldEqual(countBooks(books), 3);
 ----
 
 Okay, looking at the problem statement, I already know one branch:
@@ -325,11 +327,7 @@ To see how `countBooks` works with recursion, try "stepping through" it here:
 
 Let's do a couple more exercises to better understand our bookshelf.
 
-<<<<<<< HEAD
 *EXERCISE*: Can you write a function called `firstBook` that takes a shelf and returns the left-most book on the shelf?
-=======
-*EXERCISE*: Can you write a function called `firstBook` that takes a shelf and returns the left-most book on the shelf? (HINT: This function doesn't require any recursion!) (ANOTHER HINT: What happens if a shelf is empty?) (OTOH it requires handling the case of an empty shelf?! -- yup. Partial functions are the worst!)
->>>>>>> 9d8c535f84b7fd1cacbc354c6d9ec1f16c4c40f0
 
 [NOTE]
 ============
@@ -338,25 +336,30 @@ This function doesn't require any recursion!
 
 [NOTE]
 ============
-What happens if a shelf is empty? What is the "first book" on an empty shelf?
+What happens if a shelf is empty? What is the
+"first book" on an empty shelf?
 
-One possibility: We've seen that if JavaScript doesn't know what a value is, it returns "undefined". So you can return undefined! Question: is this a good idea?
+One possibility: We've seen that if JavaScript doesn't know what a
+value is, it returns "undefined". So you can return `undefined`!
 
-Another possiblity: Throw an "error"! Think of all the errors you've gotten while learning to program. You can make your own!
+Another possiblity: Think of all the errors you've gotten while
+learning to program. You can make your own!
 
------------
-throw Error("What are you thinking?! That's a terrible idea!!");
-----------
+`throw Error("What?! First in an empty list, that makes no sense!");`
 
-You can "throw" an error instead of returning a value!
+You can "throw" an error (maybe a less judgmental one) instead of
+returning a value!
 
 OR maybe some other value makes sense?
 
-This is a debate we're having on the mailing list right now. What do you think is the best?
-
+This is a debate we're having on the mailing list right now. What do
+you think is the best thing to do?
 ===========
 
-A `firstBook` function doesn't require any recursion (it's only accessing the `book` field), but what about `lastBook`? Can you look at the structure of our bookshelf data and guess how we could determine the *right-most* book on a shelf?
+A `firstBook` function doesn't require any recursion (it's only
+accessing the `book` field), but what about `lastBook`? Can you look
+at the structure of our bookshelf data and guess how we could
+determine the *right-most* book on a shelf?
 
 This solution *does* require recursion.
 
@@ -388,7 +391,7 @@ themselves*, so we can add that to the template and
 [source,javascript]
 ----
 function lastBook(shelf) {
-    if (_.isEqual(shelf, emptyShelf) {
+    if (_.isEqual(shelf, emptyShelf)) {
       // if it's empty
     } else {
       // if it's not empty, we might need `shelf`'s fields:
@@ -402,19 +405,19 @@ function lastBook(shelf) {
 
 endOfShelf = {}
 
-myShelf = { book: { title: "The Disposessed"
-                , author: { first: "Ursula K.", last: "LeGuin" } }
-        , neighbors: { book: { title: "Lathe of Heaven"
-                            , author: { first: "Ursula K.", last: "LeGuin" }
-                      neighbors: { book: { title: "Left Hand of Darkness"
-                                         , author: { first: "Ursula K.", last: "LeGuin" }
-                                , neighbors: endOfShelf
+books = { book: { title: "The Disposessed",
+                  author: { first: "Ursula K.", last: "LeGuin" } },
+          neighbors: { book: { title: "Lathe of Heaven",
+                               author: { first: "Ursula K.", last: "LeGuin" } },
+                       neighbors: { book: { title: "Left Hand of Darkness",
+                                            author: { first: "Ursula K.", last: "LeGuin" } },
+                                    neighbors: endOfShelf }
                                 }
                     }
-        }
+        };
 emptyShelf = endOfShelf;
 
-shouldError(lastBook(emptyShelf), "an error"); // does this function exist? or is it something else???
+//shouldError(lastBook(emptyShelf)); <- this function does't exist yet, oops
 shouldEqual(lastBook(myShelf), { book: { title: "Left Hand of Darkness"
                                        , author: { first: "Ursula K.", last: "LeGuin" });
 ----
@@ -448,6 +451,8 @@ matching that string?
 
 Example: Removing a book from a shelf -- exercise that returns a bookshelf!
 
+Signature, problem statuement
+
 [source,javascript]
 ----
 // shelf = emptyShelf OR { book : { title: string,
@@ -468,14 +473,19 @@ function removeBook (bookTitle, shelf) {
       // if it's empty
     } else {
       // if it's not empty, we might need `shelf`'s fields:
-       shelf.book;
-       shelf.neighbors;
-       //  we'll call lastBook here with the recursive part of the data structure
-       removeBook(shelf.neighbors);
+      shelf.book;
+      shelf.neighbors;
+      // and this is not the "base case" so we might need:
+      removeBook;
     }
     return shelf;
 }
+----
 
+Tests and solution:
+
+[source,javascript]
+----
 endOfShelf = {}
 
 myShelf = { book: { title: "The Disposessed"
@@ -518,7 +528,7 @@ function removeBook (bookTitle, shelf) {
 }
 ----
 
-== Collections: not just for books! ==
+== Not just for books ==
 
 Recursive structures are a very very powerful programming concept! The
 more general term for the recursive structure of our bookshelves is
