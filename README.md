@@ -9,7 +9,8 @@ Feedback welcome, in the form of issues and pull requests.
 
 ## Writing with AsciiDoc
 
-AsciiDoc is a form of markup.
+AsciiDoc is a form of markup. It has a [user guide](http://asciidoc.org/userguide.html) for more 
+information than you could possibly want.
 
 Here are some useful things:
 
