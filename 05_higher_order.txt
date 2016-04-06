@@ -1,7 +1,7 @@
 :chap_num: 5
 :prev_link: 04_data
 :next_link: 06_object
-:load_files: ["js/lodash.min.js", "js/ancestry.js", "code/chapter/05_higher_order.js", "code/intro.js"]
+:load_files: ["js/lodash.min.js", "code/chapter/05_higher_order.js", "code/intro.js"]
 
 = Lists and Recursion =
 
@@ -248,7 +248,7 @@ function countBooks (shelf) {
     return 0;
 }
 
-endOfShelf = {}
+endOfShelf = {};
 
 books = { book: { title: "The Disposessed",
                   author: { first: "Ursula K.", last: "LeGuin" } },
@@ -256,10 +256,10 @@ books = { book: { title: "The Disposessed",
                                author: { first: "Ursula K.", last: "LeGuin" } },
                        neighbors: { book: { title: "Left Hand of Darkness",
                                             author: { first: "Ursula K.", last: "LeGuin" } },
-                                    neighbors: endOfShelf }
-                                }
-                    }
-        }
+                                    neighbors: endOfShelf
+                                  }
+                     }
+        };
 emptyShelf = endOfShelf;
 
 shouldEqual(countBooks(emptyShelf), 0);
@@ -411,15 +411,15 @@ books = { book: { title: "The Disposessed",
                                author: { first: "Ursula K.", last: "LeGuin" } },
                        neighbors: { book: { title: "Left Hand of Darkness",
                                             author: { first: "Ursula K.", last: "LeGuin" } },
-                                    neighbors: endOfShelf }
-                                }
-                    }
+                                    neighbors: endOfShelf
+                                  }
+                     }
         };
 emptyShelf = endOfShelf;
 
 //shouldError(lastBook(emptyShelf)); <- this function does't exist yet, oops
-shouldEqual(lastBook(myShelf), { book: { title: "Left Hand of Darkness"
-                                       , author: { first: "Ursula K.", last: "LeGuin" });
+shouldEqual(lastBook(books), { title: "Left Hand of Darkness",
+                               author: { first: "Ursula K.", last: "LeGuin" }});
 ----
 
 So, failing tests!
@@ -447,11 +447,11 @@ Tests should pass now!!
 `findBook(title)` that takes a string and finds a book with a title
 matching that string?
 
--- Changing shelves --
+== Changing shelves ==
 
-Example: Removing a book from a shelf -- exercise that returns a bookshelf!
+Another example, in a little less detail: Removing a book from a shelf -- an exercise that returns a bookshelf!
 
-Signature, problem statuement
+Signature, problem statuement:
 
 [source,javascript]
 ----
@@ -469,7 +469,7 @@ Signature, problem statuement
 
 function removeBook (bookTitle, shelf) {
     bookTitle;
-    if (_.isEqual(shelf, emptyShelf) {
+    if (_.isEqual(shelf, emptyShelf)) {
       // if it's empty
     } else {
       // if it's not empty, we might need `shelf`'s fields:
@@ -488,34 +488,34 @@ Tests and solution:
 ----
 endOfShelf = {}
 
-myShelf = { book: { title: "The Disposessed"
-                , author: { first: "Ursula K.", last: "LeGuin" } }
-        , neighbors: { book: { title: "Lathe of Heaven"
-                            , author: { first: "Ursula K.", last: "LeGuin" }
+books = { book: { title: "The Disposessed",
+                  author: { first: "Ursula K.", last: "LeGuin" } },
+          neighbors: { book: { title: "Lathe of Heaven",
+                               author: { first: "Ursula K.", last: "LeGuin" } },
                       neighbors: { book: { title: "Left Hand of Darkness"
-                                         , author: { first: "Ursula K.", last: "LeGuin" }
-                                , neighbors: endOfShelf
+                                         , author: { first: "Ursula K.", last: "LeGuin" } },
+                                   neighbors: endOfShelf
                                 }
                     }
-        }
+         };
+
 emptyShelf = endOfShelf;
 
 shouldEqual(removeBook("Left Hand of Darkness", emptyShelf), emptyShelf);
-shouldEqual(removeBook("Left Hand of Darkness", myShelf),
-            { book: { title: "The Disposessed"
-                    , author: { first: "Ursula K.", last: "LeGuin" } }
-            , neighbors: { book: { title: "Lathe of Heaven"
-                                 , author: { first: "Ursula K.", last: "LeGuin" }
-                         , neighbors: endOfShelf
+shouldEqual(removeBook("Left Hand of Darkness", books),
+            { book: { title: "The Disposessed",
+                      author: { first: "Ursula K.", last: "LeGuin" } },
+              neighbors: { book: { title: "Lathe of Heaven",
+                                   author: { first: "Ursula K.", last: "LeGuin" } },
+                           neighbors: endOfShelf
                          }
             });
-
-shouldEqual(removeBook("Wizard of Earthsea", myShelf), myShelf);
+shouldEqual(removeBook("Wizard of Earthsea", books), books);
 // I don't own Wizard of Earthsea, so "removing" it doesn't change my shelf!
 
 function removeBook (bookTitle, shelf) {
     bookTitle;
-    if (_.isEqual(shelf, emptyShelf) {
+    if (_.isEqual(shelf, emptyShelf)) {
       return shelf;
     } else {
       // if it's not empty, we might need `shelf`'s fields:
@@ -523,7 +523,8 @@ function removeBook (bookTitle, shelf) {
         return shelf.neighbors;
       } else {
         return { book: shelf.book,
-                 neighbors: removeBook(shelf.neighbors) };
+                 neighbors: removeBook(bookTitle, shelf.neighbors) };
+      }
     }
 }
 ----
