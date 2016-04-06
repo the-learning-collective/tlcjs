@@ -1,20 +1,56 @@
-# TODO
-
-[x] print
-[x] placeImage
-[x] overlay -- centered image
-[ ] emptyScene -- width and height
-[ ] animate -- function that takes single arg -> image -> image
-[ ] image
-
-
-
-# Eloquent JavaScript
+# TLCJS
 
 These are the sources used to build the second edition of Eloquent
 JavaScript (http://eloquentjavascript.net).
 
+We're slowly writing it.
+
 Feedback welcome, in the form of issues and pull requests.
+
+## Writing with AsciiDoc
+
+AsciiDoc is a form of markup.
+
+Here are some useful things:
+
+```
+[source,javascript]
+----
+// javascript that you can run within the book
+----
+```
+
+```
+[NOTE]
+.A heading for the note
+==================
+An indented note
+==================
+```
+
+Haven't tried this one yet:
+
+```
+.An Example Sidebar
+************************************************
+Any AsciiDoc SectionBody element (apart from
+SidebarBlocks) can be placed inside a sidebar.
+************************************************
+```
+
+## Eloquent Javascript-specific Markup
+
+This is for "markup" that isn't in the AsciiDoc documentation, but 
+has been added just to EJS.
+
+```
+!! hint !!
+
+A hint that will be hidden unless the reader clicks on it. (Good 
+for tricky exercises!)
+
+!! hint !!
+```
 
 ## Building
 
