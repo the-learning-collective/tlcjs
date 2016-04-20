@@ -374,26 +374,24 @@ Here's the signature for this function:
 
 [source,javascript]
 ----
--------------------------------------------------------------------------------------------
 // shelf = emptyShelf OR { book : { title: string,
 //                                  author : {first: string, last: string}
 //                                 },
 //                         neighbors : shelf }
 // shelf -> { title: string,
 //            author : {first: string, last: string} }
--------------------------------------------------------------------------------------------
+----
 
 Just like `firstBook`, it takes a shelf and returns a book. Now for the problem statement:
 
 [source,javascript]
 ----
----------------------------------------------------------------------------
 // Finds the last book on the shelf. If the shelf is an emptyShelf,
 // then there is no last book -- throw an error.  Otherwise, if
 // it's a book with no right-hand neighbors, that book must be the end
 // of the shelf. If it's a book that does have neighbors, then return the
 // last of the neighboring books.
----------------------------------------------------------------------------
+----
 
 This function has the same input, so the template is almost the same
 as `countBooks`. But now we know that recursive functions will *call
