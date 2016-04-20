@@ -596,14 +596,14 @@ var stringLength = _type([tString], tNumber, stringLength_usage, function(string
 
 /* Array functions */
 
-var link_usage = "link(): Requires two arguments, an item to add to the beginning an array, and an array. For example: link(1, [2,3,4,5])."
-var link = _type([tAny, tArray], tArray, link_usage, function(item, array) {
+var prefix_usage = "prefix(): Requires two arguments, an item to add to the beginning an array, and an array. For example: prefix(1, [2,3,4,5])."
+var prefix = _type([tAny, tArray], tArray, prefix_usage, function(item, array) {
     var newArray = _.cloneDeep(array);
     newArray.unshift(item);
     return newArray;
 });
-test ("link add to empty", [1], function () { return link(1, []); });
-test ("link add to existing", [1,2], function () { return link (1, [2]); });
+test ("prefix add to empty", [1], function () { return prefix(1, []); });
+test ("prefix add to existing", [1,2], function () { return prefix (1, [2]); });
 
 var isEmpty_usage = "isEmpty(): Requires one argument, an array. For example: isEmpty([])."
 var isEmpty = _type([tArray], tBoolean, isEmpty_usage, function(array) {
@@ -647,6 +647,10 @@ function tlc_sandbox_functions(win) {
       }
     }),
     bike: circle(30, "red"),
+    prefix: prefix,
+    head: head,
+    tail: tail,
+    emptyList: [],
     circle: circle,
     rectangle: rectangle,
     text: text,

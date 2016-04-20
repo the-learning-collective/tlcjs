@@ -8,19 +8,21 @@
 In the objects chapter, we looked at books as
 an example of data modeling with objects:
 
-------------------------------------------------------------------
-disposessed = { title: "The Disposessed"
-              , author: { first: "Ursula K.", last: "LeGuin" }
-              }
-------------------------------------------------------------------
+[source,javascript]
+----
+var disposessed = { title: "The Disposessed"
+                  , author: { first: "Ursula K.", last: "LeGuin" }
+                  }
+----
 
 How do you model a bunch of books? You could say:
 
-------------------------------------------
-bookshelf = { book1: disposessed
-            , book2: latheofheaven
-            , book3: lefthandofdarkness }
-------------------------------------------
+[source,javascript]
+----
+var bookshelf = { book1: disposessed
+                , book2: latheofheaven
+                , book3: lefthandofdarkness }
+----
 
 image::img/bookshelf-asregularobj.png[alt="A shelf of books represented as an object."]
 
@@ -47,30 +49,32 @@ image::img/bookshelf-1.png[alt="A shelf as a book with neighbors."]
 This book has neighbors to the right -- starting with _The Lathe
 of Heaven_ by the same author.
 
------------------------------------------------------------------------------
-books = { book: { title: "The Disposessed",
-                  author: { first: "Ursula K.", last: "LeGuin" } },
-          neighbors: { book: { title: "Lathe of Heaven"
+[source,javascript]
+----
+var books = { book: { title: "The Disposessed",
+                      author: { first: "Ursula K.", last: "LeGuin" } },
+             neighbors: { book: { title: "Lathe of Heaven"
                               author: { first: "Ursula K.", last: "LeGuin" } } }
-        }
------------------------------------------------------------------------------
+            };
+----
 
 But does _Lathe of Heaven_ have a right-hand neighbor on the shelf? Of
 course, _The Left Hand of Darkness_!
 
 image::img/bookshelf-2.png[alt="A shelf as a book with neighbors that are also books with neighbors!"]
 
----------------------------------------------------------------------------------------------
-books = { book: { title: "The Disposessed",
+[source,javascript]
+----
+var books = { book: { title: "The Disposessed",
                   author: { first: "Ursula K.", last: "LeGuin" } },
-          neighbors: { book: { title: "Lathe of Heaven",
+             neighbors: { book: { title: "Lathe of Heaven",
                                author: { first: "Ursula K.", last: "LeGuin" } },
-                       neighbors: { book: { title: "Left Hand of Darkness",
-                                            author: { first: "Ursula K.", last: "LeGuin" } }
-                                }
-                    }
-        }
----------------------------------------------------------------------------------------------
+                          neighbors: { book: { title: "Left Hand of Darkness",
+                                               author: { first: "Ursula K.", last: "LeGuin" } }
+                                     }
+                        }
+            };
+----
 
 This is a very short bookshelf that only holds my very favorite Ursula
 K. LeGuin books, so that's it. _The Left Hand of Darkness_ has no
@@ -82,20 +86,21 @@ special value to represent that there is no book there.
 
 image::img/bookshelf-3.png[alt="A shelf as a book with neighbors -- even if the neighbor is empty!."]
 
-------------------------------------------------------------------------------------------
-endOfShelf = {} // an empty object, named for clarity!
+[source,javascript]
+----
+var endOfShelf = {} // an empty object, named for clarity!
 
-books = { book: { title: "The Disposessed",
-                  author: { first: "Ursula K.", last: "LeGuin" } },
-          neighbors: { book: { title: "Lathe of Heaven",
-                               author: { first: "Ursula K.", last: "LeGuin" } },
-                       neighbors: { book: { title: "Left Hand of Darkness",
-                                            author: { first: "Ursula K.", last: "LeGuin" } },
-                                    neighbors: endOfShelf }
-                                }
-                    }
-        }
--------------------------------------------------------------------------------------------
+var books = { book: { title: "The Disposessed",
+                      author: { first: "Ursula K.", last: "LeGuin" } },
+             neighbors: { book: { title: "Lathe of Heaven",
+                                  author: { first: "Ursula K.", last: "LeGuin" } },
+                          neighbors: { book: { title: "Left Hand of Darkness",
+                                               author: { first: "Ursula K.", last: "LeGuin" } },
+                                       neighbors: endOfShelf }
+                                     }
+                        }
+            };
+----
 
 Now if we want to know what is to the right of a book, we just have to
 look at the neighbors field. `shelf.book` is definitely the first book
@@ -112,20 +117,23 @@ First thing is the signature. What is a shelf?
 
 The signature for a book is this:
 
----------------------------------------------
+
+[source,javascript]
+----
 // { title: string,
      author: {first: string, last: string }
 ---------------------------------------------
 
 So a shelf must be:
 
----------------------------------------------------------------------
+[source,javascript]
+----
 // { book: { title: string,
 //           author: { first: string, last: string } },
 //   neighbors: {book: { title: string,
 //                       author: { first: string, last: string } },
 //               neighbors: { book: ...wait...???????
-----------------------------------------------------------------------
+----
 
 This signaure seems different from other object signatures. To describe my shelf of Ursula LeGuin novels, we'd need three nested objects representing three books. But we don't want to describe just my shelf as it is right now -- this structure should apply to ANY shelf, whether it has no books or 3 books or 30 books or even more. So it seems like our nested signatures could just go on and on forever -- or, if it's empty, it could end right where it starts!
 
@@ -134,32 +142,35 @@ How can we describe this odd object?
 First, we can give the whole object structure a *name*, then refer to it by name within the structure itself.
 Secondly, we can say the structure *could* be a different sort of object -- we add an "OR". A `shelf` is an `emptyShelf` "OR" this more complicated structure.
 
-------------------------------------------------------------------------------
+[source,javascript]
+----
 // shelf = emptyShelf OR { book : { title: string,
 //                                  author : {first: string, last: string} },
 //                         neighbors : shelf }
-------------------------------------------------------------------------------
+----
 
 A data structure that refers to itself is called a _recursive data structure_.
 
 Now we can finish the `countBooks` function signature by saying what kind of value we expect back:
 
-------------------------------------------------------------------------------
+[source,javascript]
+----
 // shelf = emptyShelf OR { book : { title: string,
 //                                  author : {first: string, last: string} },
 //                         neighbors : shelf }
 // shelf -> number
-------------------------------------------------------------------------------
+----
 
 We want a number representing the number of books on my shelf. Makes sense! What about the purpose statement?
 
 If we look at the signature for a shelf, we can see that it's one of two things, an empty shelf "OR" a book with neighboring books. We have to describe what to do in each case.
 
----------------------------------------------------------------------
+[source,javascript]
+----
 // Tells how many books are in the shelf. If the shelf is an
 // emptyShelf... If the shelf is a book with neighbors (the rest of
 // the shelf)...
----------------------------------------------------------------------
+----
 
 Let's look at the first case, emptyShelf. How many books are on an
 empty shelf? None! `countBooks` should return "0" if it's called with
@@ -175,7 +186,8 @@ know the shelf isn't empty (we already handled that case), we know the
 shelf has two parts: a book and the book's neighbors. We'll break up
 the shelf and do something with each part.
 
-----------------------------------------------------------------------
+[source,javascript]
+----
 // If the shelf is an emptyShelf, then I don't have any books, the
 // count is 0. If the shelf is a book with neighbors (the rest of the
 // shelf), then (do something) with the book and (do something) with
@@ -186,20 +198,23 @@ The something we want to do with this function is *count*. So we can
 count the book, and count the neighbors. But how do we get a single
 number out of that? We add the counts together.
 
-----------------------------------------------------------------------
+[source,javascript]
+----
 // If the shelf is an emptyShelf, the count is 0. If the shelf is a
 // book with neighbors (the rest of the shelf), then return the count
 // of the book and count of the neighbors added together.
-----------------------------------------------------------------------
+----
 
 Is there a simpler way of saying that? Well, counting a single book is
 always going to give you the same answer -- 1!
 
-----------------------------------------------------------------------
+
+[source,javascript]
+----
 // If the shelf is an emptyShelf, the count is 0. If the shelf is a
 // book with neighbors (the rest of the shelf), then return "1" added
 // to the count of the neighbors.
-----------------------------------------------------------------------
+----
 
 This is a good purpose statement for `countbooks`.
 
@@ -209,7 +224,9 @@ two things, an `emptyShelf` *or* a book with neighbors. So just like
 with booleans, we can create a template with an `if` statement because
 we know we'll have to handle both cases.
 
---------------------------------------------------------------
+
+[source,javascript]
+----
 function countBooks (shelf) {
     if (_.isEqual(shelf, emptyShelf)) {
       // if it's empty
@@ -220,7 +237,7 @@ function countBooks (shelf) {
     }
     return 0;
 }
---------------------------------------------------------------
+----
 
 [NOTE]
 ================
@@ -248,27 +265,14 @@ function countBooks (shelf) {
     return 0;
 }
 
-endOfShelf = {};
-
-books = { book: { title: "The Disposessed",
-                  author: { first: "Ursula K.", last: "LeGuin" } },
-          neighbors: { book: { title: "Lathe of Heaven",
-                               author: { first: "Ursula K.", last: "LeGuin" } },
-                       neighbors: { book: { title: "Left Hand of Darkness",
-                                            author: { first: "Ursula K.", last: "LeGuin" } },
-                                    neighbors: endOfShelf
-                                  }
-                     }
-        };
-emptyShelf = endOfShelf;
-
 shouldEqual(countBooks(emptyShelf), 0);
 shouldEqual(countBooks(books), 3);
 ----
 
 Okay, looking at the problem statement, I already know one branch:
 
------------------------------------------
+[source,javascript]
+----
 function countBooks (shelf) {
     if (_.isEqual(shelf, emptyShelf) {
       return 0;
@@ -278,7 +282,7 @@ function countBooks (shelf) {
     }
     return 0;
 }
------------------------------------------
+----
 
 If you add this branch and run the tests, you'll find that the one for
 an empty shelf is still passing! The other is also still failing, but
@@ -307,7 +311,9 @@ How can we find the count of the neighbors? Well, if our function was
 working correctly, we could use `countBooks`! Then our purpose
 statement says we just add "1" to that.
 
----------------------------------------------------
+
+[source,javascript]
+----
 function countBooks(shelf) {
     if (_.isEqual(shelf,emptyShelf) {
         return 0;
@@ -315,7 +321,7 @@ function countBooks(shelf) {
        return (1 + countBooks(shelf.neighbors));
     }
 }
---------------------------------------------------
+----
 
 Add this branch and try the tests again! `countBooks` works!
 
@@ -365,6 +371,9 @@ This solution *does* require recursion.
 
 Here's the signature for this function:
 
+
+[source,javascript]
+----
 -------------------------------------------------------------------------------------------
 // shelf = emptyShelf OR { book : { title: string,
 //                                  author : {first: string, last: string}
@@ -376,6 +385,8 @@ Here's the signature for this function:
 
 Just like `firstBook`, it takes a shelf and returns a book. Now for the problem statement:
 
+[source,javascript]
+----
 ---------------------------------------------------------------------------
 // Finds the last book on the shelf. If the shelf is an emptyShelf,
 // then there is no last book -- throw an error.  Otherwise, if
@@ -403,20 +414,6 @@ function lastBook(shelf) {
     return shelf.book; // definitely return a book
 }
 
-endOfShelf = {}
-
-books = { book: { title: "The Disposessed",
-                  author: { first: "Ursula K.", last: "LeGuin" } },
-          neighbors: { book: { title: "Lathe of Heaven",
-                               author: { first: "Ursula K.", last: "LeGuin" } },
-                       neighbors: { book: { title: "Left Hand of Darkness",
-                                            author: { first: "Ursula K.", last: "LeGuin" } },
-                                    neighbors: endOfShelf
-                                  }
-                     }
-        };
-emptyShelf = endOfShelf;
-
 //shouldError(lastBook(emptyShelf)); <- this function does't exist yet, oops
 shouldEqual(lastBook(books), { title: "Left Hand of Darkness",
                                author: { first: "Ursula K.", last: "LeGuin" }});
@@ -429,8 +426,8 @@ Now all we have to do is follow the directions from the purpose statement:
 [source,javascript]
 ----
 function lastBook (shelf) {
-    if (_.isEqual(shelf, emptyShelf) {
-      throw Error "Can't find the last book on an empty shelf!";
+    if (_.isEqual(shelf, emptyShelf)) {
+      throw Error("Can't find the last book on an empty shelf!");
     } else {
       if (_.isEqual(shelf.neighbors, emptyShelf)) {
           return shelf.book;
@@ -439,6 +436,10 @@ function lastBook (shelf) {
        }
     }
 }
+
+//shouldError(lastBook(emptyShelf)); <- this function does't exist yet, oops
+shouldEqual(lastBook(books), { title: "Left Hand of Darkness",
+                               author: { first: "Ursula K.", last: "LeGuin" }});
 ----
 
 Tests should pass now!!
@@ -447,11 +448,13 @@ Tests should pass now!!
 `findBook(title)` that takes a string and finds a book with a title
 matching that string?
 
+*THINK ABOUT IT*: We have first and last books -- what about `secondBook` or `thirdBook`? What about these functions is different from `lastBook`? This introduces a new idea (_accumulators_) so we should probably work on it together!
+
 == Changing shelves ==
 
 Another example, in a little less detail: Removing a book from a shelf -- an exercise that returns a bookshelf!
 
-Signature, problem statuement:
+Signature, problem statement, and template:
 
 [source,javascript]
 ----
@@ -486,21 +489,6 @@ Tests and solution:
 
 [source,javascript]
 ----
-endOfShelf = {}
-
-books = { book: { title: "The Disposessed",
-                  author: { first: "Ursula K.", last: "LeGuin" } },
-          neighbors: { book: { title: "Lathe of Heaven",
-                               author: { first: "Ursula K.", last: "LeGuin" } },
-                      neighbors: { book: { title: "Left Hand of Darkness"
-                                         , author: { first: "Ursula K.", last: "LeGuin" } },
-                                   neighbors: endOfShelf
-                                }
-                    }
-         };
-
-emptyShelf = endOfShelf;
-
 shouldEqual(removeBook("Left Hand of Darkness", emptyShelf), emptyShelf);
 shouldEqual(removeBook("Left Hand of Darkness", books),
             { book: { title: "The Disposessed",
@@ -514,7 +502,6 @@ shouldEqual(removeBook("Wizard of Earthsea", books), books);
 // I don't own Wizard of Earthsea, so "removing" it doesn't change my shelf!
 
 function removeBook (bookTitle, shelf) {
-    bookTitle;
     if (_.isEqual(shelf, emptyShelf)) {
       return shelf;
     } else {
@@ -539,37 +526,48 @@ added some functions to the tlc.js library:
 
 `emptyList` is an empty list.
 
-`join(item, list)` will add some `item` to the beginning of some `list`.
+`prefix(item, list)` will add some `item` to the beginning of some `list`.
 
 You can create a list of strings by doing this:
 
--------------------------------------------------------------------------------
-join("first string", join("second string", join ("third string", emptyList)));
--------------------------------------------------------------------------------
+[source,javascript]
+----
+prefix("first string", prefix("second string", prefix ("third string", emptyList)));
+----
 
 You can also make lists of numbers:
 
---------------------------------------
-join(1, join(2, join (3, emptyList)));
---------------------------------------
+[source,javascript]
+----
+prefix(1, prefix(2, prefix (3, emptyList)));
+----
 
 You can make a list of your cats:
 
----------------------------------------------------------------------------------
-join({name: "Macgonagall", age: 4}, join({name: "Haskell", age: 3}, emptyList));
----------------------------------------------------------------------------------
+[source,javascript]
+----
+prefix({name: "Macgonagall", age: 4}, prefix({name: "Haskell", age: 3}, emptyList));
+----
 
 or even of images!:
 
-----------------------------------------------------------------------------------------------
-join(circle(20, "red"), join(rectangle(40, 60, "blue"), join(text("hello", 12), emptyList)));
------------------------------------------------------------------------------------------------
+[source,javascript]
+----
+prefix(circle(20, "red"), prefix(rectangle(40, 60, "blue"), prefix(text("hello", 12), emptyList)));
+----
 
 We've also added `head` and `tail` functions that are a little like
 "firstBook" and "neighbors". `head(list)` gets the first item in a
 list. `tail(list)` gets the rest of a list.
 
+[source,javascript]
+----
+var listOfImages = prefix(circle(20, "red"), prefix(rectangle(40, 60, "blue"), prefix(text("hello", 12), emptyList)));
+
+shouldEqual(head(listOfImages), circle(20, "red"));
+----
+
 EXERCISES:
 
-1) Can you change `myShelf` so it's represented as a list instead of a `shelf`?
-2) Can you take the `lastBook` function and change it to a function called `last` that works with any list?
+1. Can you change `books` so it's represented as a list instead of a `shelf`?
+2. Can you take the `lastBook` function and change it to a function called `last` that works with any list?
