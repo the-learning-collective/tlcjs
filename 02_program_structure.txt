@@ -469,14 +469,14 @@ all the code at once.
 
 == Animation ==
 
-So _animate_ calls your drawing function with a number. That number
+_animate_ calls your drawing function with a number. That number
 represents how many "ticks" have happened since the animation started.
 
 Note: in the following, we want to turn a number (of ticks) into an
 image. We have a function called `text` that takes a string (like
 `"hello"`) and turns it into an image. So if we could first take our
 number (like `12` and turn it into a string `"12"`), then we could
-turn it into an image with text. Javascript has a build in function
+turn it into an image with text. Javascript has a built in function
 that is called `String` that does just that. You can see it in use in
 the below example. If you are trying to do the reverse (turn a string
 like `"1001"` into the number `1001`), there is a corresponding
