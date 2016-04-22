@@ -394,7 +394,17 @@ functions like this. It takes a function that returns an image (like our
 _draw_bike_). Then it calls that function with the number 0 and draws the
 image. It calls it again with 1, and draws that image... and the
 same for 2, 3 ,4... And keeps going forever, feeding your function increasing
-numbers and drawing the result, approximately 60 times a second!
+numbers and drawing the result.
+
+`animate` uses JavaScript's native animation functions that try to draw 60
+frames per second. You can think of each frame as one page in the flip
+book. The browser's JavaScript engine can only do one thing at a time,
+so if there are lots of animations on a page, it will try to draw one frame
+from each of them before moving on to the next frame. That's why
+webpages with many animations can feel slow and choppy. The time between
+frames is longer! That time period is called a "tick", and the number
+of ticks since the animation starts is what is passed to the drawing
+function in `animate`.
 
 [source,javascript]
 ----
